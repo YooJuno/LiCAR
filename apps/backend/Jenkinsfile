@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'master', credentialsId: 'git-credentials', url: 'https://lab.ssafy.com/s13-mobility-smarthome-sub1/S13P21C206.git'
+                git branch: 'develop', credentialsId: 'git-credentials', url: 'https://lab.ssafy.com/s13-mobility-smarthome-sub1/S13P21C206.git'
             }
         }
 
@@ -12,7 +12,8 @@ pipeline {
             steps {
                 script {
                     // sh 'docker build -t your-username/spring-app:latest ./backend'
-                    sh 'cd licar && chmod +x gradlew && ./gradlew clean build -x test'
+                    sh 'cd apps/backend/licar && chmod +x gradlew && ./gradlew clean build -x test'
+                    // sh 'cd licar && chmod +x gradlew && ./gradlew clean build -x test'
                 }
             }
         }
