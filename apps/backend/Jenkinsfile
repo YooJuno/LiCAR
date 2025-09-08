@@ -29,7 +29,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    sh 'cd apps/backend/licar'
+                    sh 'cd apps/backend'
                     sh 'docker compose down'
                     sh 'docker compose up -d'
                 }
