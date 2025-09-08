@@ -29,9 +29,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    sh 'cd apps/backend'
-                    sh 'docker compose down'
-                    sh 'docker compose up -d'
+                    sh 'cd apps/backend && docker compose down && docker compose up -d'
                 }
             }
         }
