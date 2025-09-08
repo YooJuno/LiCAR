@@ -1,0 +1,5 @@
+### Env ###
+.env
+
+### Jenkins ###
+jenkins/jenkins_home/*
