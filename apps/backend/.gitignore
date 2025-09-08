@@ -3,3 +3,8 @@
 
 ### Jenkins ###
 jenkins/jenkins_home/*
+!jenkins/jenkins_home/.gitkeep
+jenkins/data/certbot/conf/*
+!jenkins/data/certbot/conf/.gitkeep
+jenkins/data/certbot/www/*
+!jenkins/data/certbot/www/.gitkeep
