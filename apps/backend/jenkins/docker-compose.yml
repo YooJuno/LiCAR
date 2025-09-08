@@ -13,7 +13,7 @@ services:
     environment:
       - JENKINS_OPTS=--prefix=/jenkins
     group_add:
-      - 122
+      - 0
     networks:
       - drug-network
   
