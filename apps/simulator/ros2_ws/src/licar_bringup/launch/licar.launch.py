@@ -10,7 +10,7 @@ def generate_launch_description():
     world_arg  = DeclareLaunchArgument(
         'world',
         default_value=os.path.join(
-            '/home/juno/sim_ws/src/aws-robomaker-hospital-world/worlds',
+            '/home/juno/aws-robomaker-hospital-world/worlds',
             'hospital.world'
         )
     )

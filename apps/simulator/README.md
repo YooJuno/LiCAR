@@ -31,3 +31,31 @@
 - Gazebo 공식 문서: https://gazebosim.org/docs
 
 각 워크스페이스별 상세 내용은 해당 디렉터리의 README.md를 참고하세요.
+
+
+## bashrc
+
+```bash
+# Linux
+alias sb="source ~/.bashrc; echo \"bashrc is reloaded.\""
+
+# ROS2 Init
+alias humble="source /opt/ros/humble/setup.bash; ros_domain; echo \"ROS2 Humble is activated.\""
+
+# ROS2 Paths
+export ROS2_WS_PATH=/home/juno/S13P21C206/apps/robotics/ros2_ws
+export AWS_HOSPITAL_PATH=/home/juno/aws-robomaker-hospital-world
+
+# ROS2 Env
+export TURTLEBOT3_MODEL=burger #
+export GAZEBO_MODEL_PATH=${AWS_HOSPITAL_PATH}/models:${AWS_HOSPITAL_PATH}/fuel_models
+export ROS_DOMAIN_ID=1
+
+# ROS2 Source
+source /opt/ros/humble/setup.bash
+source ${ROS2_WS_PATH}/install/local_setup.bash
+
+# ROS2 Tools
+alias cb='cd ${ROS2_WS_PATH} && colcon build --symlink-install && source install/local_setup.bash && echo "ros2 build success"'
+alias killgazebo="killall gzserver gzclient"
+```

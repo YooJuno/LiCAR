@@ -25,11 +25,6 @@ __pycache__/
 *.test.pyc
 *.params.pyc
 
-# CMake
-CMakeFiles/
-CMakeCache.txt
-cmake_install.cmake
-Makefile
 
 # Other common ignores
 *.swp
@@ -39,8 +34,3 @@ Makefile
 *.orig
 *.user
 *.~*
-
-# ROS2 workspace overlay
-*.rosinstall
-.rosdep/
-.ros/
