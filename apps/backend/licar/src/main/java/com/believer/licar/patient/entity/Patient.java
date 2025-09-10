@@ -37,4 +37,12 @@ public class Patient {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "nurse_id", nullable = false)
     private Nurse nurse;
+
+    public Patient(String name, LocalDate birthday, LocalDate admissionDate, Integer roomNumber, Nurse nurse) {
+        this.name = name;
+        this.birthday = birthday;
+        this.admissionDate = admissionDate;
+        this.roomNumber = roomNumber;
+        this.nurse = nurse;
+    }
 }
