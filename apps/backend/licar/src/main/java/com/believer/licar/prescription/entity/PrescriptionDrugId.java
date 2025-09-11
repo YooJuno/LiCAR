@@ -11,6 +11,6 @@ import java.io.Serializable;
 @EqualsAndHashCode
 public class PrescriptionDrugId implements Serializable {
 
-    private int prescriptionId;
-    private int drugId;
+    private int prescription;
+    private int drug;
 }
