@@ -35,6 +35,9 @@ public class Delivery {
     @Column(name = "status")
     private DeliveryStatus status;
 
+    @Column(name = "robot_id", nullable = false)
+    private Integer robotId;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "nurse_id", nullable = false)
     private Nurse nurse;
@@ -53,7 +56,8 @@ public class Delivery {
         this.status = DeliveryStatus.requested;
     }
 
-    public Delivery(Nurse nurse, Pharmacist pharmacist, Patient patient) {
+    public Delivery(Integer robotId, Nurse nurse, Pharmacist pharmacist, Patient patient) {
+        this.robotId = robotId;
         this.nurse = nurse;
         this.pharmacist = pharmacist;
         this.patient = patient;

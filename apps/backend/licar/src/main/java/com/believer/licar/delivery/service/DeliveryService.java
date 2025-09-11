@@ -41,7 +41,7 @@ public class DeliveryService {
         Pharmacist pharmacist = pharmacistRepository.findById(request.getPharmacistId())
                 .orElseThrow(() -> new CustomException(ErrorCode.PHARMACIST_NOT_FOUND));
 
-        Delivery delivery = new Delivery(nurse, pharmacist, patient);
+        Delivery delivery = new Delivery(request.getRobotId(), nurse, pharmacist, patient);
         Delivery savedDelivery = deliveryRepository.save(delivery);
 
         // SSE
@@ -85,8 +85,12 @@ public class DeliveryService {
     }
 
     @Transactional(readOnly = true)
-    public List<DrugResponse> findValidDrugsForDelivery(int patientId) {
-        return prescriptionService.findValidDrugsForPatient(patientId, LocalDate.now());
+    public List<DrugResponse> findValidDrugsForDelivery(int deliveryId) {
+        Delivery delivery = findDeliveryEntityById(deliveryId);
+        int patientId = delivery.getPatient().getPatientId();
+        LocalDate requestDate = delivery.getRequestTime().toLocalDate();
+
+        return prescriptionService.findValidDrugsForPatient(deliveryId, LocalDate.now());
     }
 
     private Delivery findDeliveryEntityById(int deliveryId) {

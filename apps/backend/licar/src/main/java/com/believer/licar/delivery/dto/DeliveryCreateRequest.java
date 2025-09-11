@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class DeliveryCreateRequest {
 
+    private Integer robotId;
     private int nurseId;
     private int pharmacistId;
     private int patientId;

@@ -16,6 +16,7 @@ public class DeliveryResponse {
     private final LocalDateTime sendTime;
     private final LocalDateTime successTime;
     private final DeliveryStatus status;
+    private final Integer robotId;
     private final String nurseName;
     private final String pharmacistName;
     private final String patientName;
@@ -27,6 +28,7 @@ public class DeliveryResponse {
                 .sendTime(delivery.getSendTime())
                 .successTime(delivery.getSuccessTime())
                 .status(delivery.getStatus())
+                .robotId(delivery.getRobotId())
                 .nurseName(delivery.getNurse().getName())
                 .pharmacistName(delivery.getPharmacist().getName())
                 .patientName(delivery.getPatient().getName())

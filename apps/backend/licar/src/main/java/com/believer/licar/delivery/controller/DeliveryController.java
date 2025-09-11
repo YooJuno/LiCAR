@@ -58,18 +58,10 @@ public class DeliveryController {
         return ResponseEntity.ok(response);
     }
 
-    // GET /deliveries/valid-drugs?=patient_id
-    @GetMapping("/valid-drugs")
-    public ResponseEntity<List<DrugResponse>> getValidDrugsForDelivery(@RequestParam("patient_id") int patientId) {
-        List<DrugResponse> response = deliveryService.findValidDrugsForDelivery(patientId);
-
-        return ResponseEntity.ok(response);
-    }
-
     // GET /deliveries/{delivery_id}/valid-drugs
     @GetMapping("/{delivery_id}/valid-drugs")
-    public ResponseEntity<List<DrugResponse>> getValidDrugsForDeliveryRequest(@PathVariable("delivery_id") int deliveryId) {
-        List<DrugResponse> response = deliveryService.findValidDrugsForDeliveryRequest(deliveryId);
+    public ResponseEntity<List<DrugResponse>> getValidDrugsForDelivery(@PathVariable("delivery_id") int deliveryId) {
+        List<DrugResponse> response = deliveryService.findValidDrugsForDelivery(deliveryId);
 
         return ResponseEntity.ok(response);
     }
