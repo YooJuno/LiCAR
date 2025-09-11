@@ -15,7 +15,6 @@ def generate_launch_description():
     x_pose = LaunchConfiguration('x_pose', default='-2.0')
     y_pose = LaunchConfiguration('y_pose', default='-0.5')
 
-    world = '/home/juno/turtle_ws/src/turtlebot3_simulations/turtlebot3_gazebo/worlds/hospital.world'
     world_hospital = '/home/juno/aws-robomaker-hospital-world/worlds/hospital.world'
     world_hospital_second = '/home/juno/aws-robomaker-hospital-world/worlds/hospital_two_floors.world'
     world_hospital_third = '/home/juno/aws-robomaker-hospital-world/worlds/hospital_three_floors.world'
