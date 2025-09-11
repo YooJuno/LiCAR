@@ -22,7 +22,7 @@ INSERT INTO deliveries (request_time, send_time, success_time, status, robot_id,
 ('2025-09-07 15:05:00', NULL, NULL, 'requested', 3, 2, 1, 3);
 
 -- 처방전 테이블 (환자 테이블의 ID 참조)
-INSERT INTO prescriptions (prescription_date, period, counseling_note, patient_id) VALUES
+INSERT INTO prescriptions (prescription_date, period, counselling_note, patient_id) VALUES
 ('2025-09-06', 7, '식후 30분 복용 - 1회 아스피린 500 mg, 타이레놀 250mg', 1),
 ('2025-09-07', 14, '매시 복용 - 1회 항생제A 1정', 2),
 ('2025-09-07', 3, '통증 시 복용 - 1회 아스피린 500mg, 항생제A 1정', 3);
