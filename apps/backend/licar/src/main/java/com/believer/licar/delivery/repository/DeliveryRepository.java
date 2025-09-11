@@ -1,4 +1,7 @@
 package com.believer.licar.delivery.repository;
 
-public interface DeliveryRepository {
+import com.believer.licar.delivery.entity.Delivery;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface DeliveryRepository extends JpaRepository<Delivery, Integer> {
 }
