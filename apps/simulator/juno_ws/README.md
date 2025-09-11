@@ -1,48 +1,94 @@
 # Robotics Project Workspace
 
-이 프로젝트는 ROS 2 기반의 로봇 소프트웨어 개발을 위한 여러 워크스페이스로 구성되어 있습니다.
+Gazebo 환경에서 AWS Hospital 맵을 불러와 Nav2를 수행하는 시나리오.
 
-## 워크스페이스 구조
+## Dev Env
+- Ubunutu 22.04
+- ROS2 Humble
 
-- **ros2_ws**  
-    ROS 2 패키지 개발 및 빌드를 위한 메인 워크스페이스입니다.  
-    주요 ROS 2 노드, 메시지, 서비스 등이 이곳에 위치합니다.
-
-
-## 참고
-
-- ROS 2 공식 문서: https://docs.ros.org/en/foxy/index.html
-- Gazebo 공식 문서: https://gazebosim.org/docs
-
-각 워크스페이스별 상세 내용은 해당 디렉터리의 README.md를 참고하세요.
-
-## TurtleSim Installation (HUMBLE)
+## 1. ROS2 Installation
+[Reference Link](https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debs.html#id4)
 ```bash
-$ cd ~
-$ mkdir -p turtle_ws/src && cd turtle_ws/src
+locale  # check for UTF-8
 
-$ git clone https://github.com/ROBOTIS-GIT/turtlebot3.git -b humble
-$ git clone https://github.com/ROBOTIS-GIT/turtlebot3_msgs.git -b humble
-$ git clone https://github.com/ROBOTIS-GIT/turtlebot3_simulations.git -b humble
+sudo apt update && sudo apt install locales
+sudo locale-gen en_US en_US.UTF-8
+sudo update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
+export LANG=en_US.UTF-8
 
-$ cd ..
+locale  # verify settings
+```
+```bash
+sudo apt install software-properties-common
+sudo add-apt-repository universe
+```
+```bash
+sudo apt update && sudo apt install curl -y
+export ROS_APT_SOURCE_VERSION=$(curl -s https://api.github.com/repos/ros-infrastructure/ros-apt-source/releases/latest | grep -F "tag_name" | awk -F\" '{print $4}')
+curl -L -o /tmp/ros2-apt-source.deb "https://github.com/ros-infrastructure/ros-apt-source/releases/download/${ROS_APT_SOURCE_VERSION}/ros2-apt-source_${ROS_APT_SOURCE_VERSION}.$(. /etc/os-release && echo $VERSION_CODENAME)_all.deb" # If using Ubuntu derivates use $UBUNTU_CODENAME
+sudo dpkg -i /tmp/ros2-apt-source.deb
+```
+```bash
+sudo apt update
+sudo apt upgrade
 
-$ rosdep init
-$ rosdep update
-$ rosdep install --from-paths src --ignore-src -r -y
-
-$ colcon build --symlink-install && source install/local_setup.bash
+sudo apt install ros-humble-desktop
 ```
 
-## Nav2 Installation
-```bashrc
 
+## 2. AWS Hospital Map installation
+[Reference Link](https://github.com/aws-robotics/aws-robomaker-hospital-world/tree/ros2)
+```bash
+cd ~
+git clone https://github.com/aws-robotics/aws-robomaker-hospital-world.git -b ros2
+cd aws-robomaker-hospital-world
+rosdep install --from-paths . --ignore-src -r -y
+chmod +x setup.sh
+./setup.sh
+colcon build
+```
+
+## 3. TurtleSim Installation (HUMBLE)
+[Reference Link](https://kimbrain.tistory.com/entry/%ED%84%B0%ED%8B%80%EB%B4%87-%EC%8A%A4%ED%84%B0%EB%94%94-1%EC%A3%BC%EC%B0%A8-%ED%84%B0%ED%8B%80%EB%B4%873-%EC%8B%9C%EB%AE%AC%EB%A0%88%EC%9D%B4%EC%85%98-%EB%93%80%ED%86%A0%EB%A6%AC%EC%96%BC-%EC%A7%84%ED%96%89%ED%95%98%EA%B8%B0)
+```bash
+cd ~
+mkdir -p turtle_ws/src && cd turtle_ws/src
+
+git clone https://github.com/ROBOTIS-GIT/turtlebot3.git -b humble
+git clone https://github.com/ROBOTIS-GIT/turtlebot3_msgs.git -b humble
+git clone https://github.com/ROBOTIS-GIT/turtlebot3_simulations.git -b humble
+
+cd ..
+
+sudo apt install python3-rosdep2
+sudo apt install python3-colcon-common-extensions
+
+rosdep init
+rosdep update
+rosdep install --from-paths src --ignore-src -r -y
+
+colcon build --symlink-install && source install/local_setup.bash
+```
+
+## 4. Cartographer
+```bash
+
+
+```
+
+## 5. Nav2 Installation
+```bashrc
+sudo apt install ros-humble-navigation2
+sudo apt install ros-humble-nav2-bringup
+sudo apt install ros-humble-turtlebot3-gazebo
+
+# example
+ros2 launch nav2_bringup tb3_simulation_launch.py headless:=False
 ```
 
 ## bashrc
 
 ```bash
-
 # Linux
 alias sb="source ~/.bashrc; echo \"bashrc is reloaded.\""
 
@@ -75,4 +121,6 @@ source /usr/share/gazebo/setup.sh
 alias cb='cd ${ROS2_WS_PATH} && colcon build --symlink-install && source install/local_setup.bash && echo "ros2 build success"'
 alias killgazebo="killall gzserver gzclient"
 
+export LIBGL_ALWAYS_SOFTWARE=1 
+export QT_QPA_PLATFORM=xcb 
 ```
