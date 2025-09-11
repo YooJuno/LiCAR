@@ -77,7 +77,7 @@ colcon build --symlink-install && source install/local_setup.bash
 ```
 
 ## 5. Nav2 Installation
-```bashrc
+```bash
 sudo apt install ros-humble-navigation2
 sudo apt install ros-humble-nav2-bringup
 sudo apt install ros-humble-turtlebot3-gazebo
