@@ -34,7 +34,7 @@ public class Patient {
     @Column(name = "room_number")
     private Integer roomNumber;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "nurse_id", nullable = false)
     private Nurse nurse;
 
