@@ -30,7 +30,7 @@ public class Prescription {
     @Column(name = "counseling_note")
     private String counsellingNote;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "patient_id", nullable = false)
     private Patient patient;
 

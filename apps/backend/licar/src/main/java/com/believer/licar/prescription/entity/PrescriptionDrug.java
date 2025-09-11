@@ -13,12 +13,12 @@ import lombok.NoArgsConstructor;
 public class PrescriptionDrug {
 
     @Id
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "prescription_id")
     private Prescription prescription;
 
     @Id
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "drug_id")
     private Drug drug;
 
