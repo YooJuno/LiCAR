@@ -38,8 +38,9 @@ CREATE TABLE deliveries (
     pharmacist_id   INTEGER     NOT NULL,
     patient_id      INTEGER     NOT NULL,
     CHECK (
-        (request_time IS NULL OR send_time IS NULL OR success_time IS NULL)
-        OR (request_time <= send_time AND send_time <= success_time)
+        (send_time IS NULL OR request_time <= send_time) 
+        AND 
+        (success_time IS NULL OR send_time <= success_time)
     ),
     FOREIGN KEY (nurse_id) REFERENCES nurses (nurse_id),
     FOREIGN KEY (pharmacist_id) REFERENCES pharmacists (pharmacist_id),
