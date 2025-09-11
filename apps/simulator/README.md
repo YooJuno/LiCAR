@@ -89,7 +89,6 @@ ros2 launch nav2_bringup tb3_simulation_launch.py headless:=False
 ## bashrc
 
 ```bash
-
 # 환경 변수
 export ROS2_WS_PATH=$HOME/S13P21C206/apps/simulator/ros2_ws
 export AWS_HOSPITAL_WS_PATH=$HOME/aws-robomaker-hospital-world
