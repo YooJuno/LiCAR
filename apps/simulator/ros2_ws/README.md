@@ -92,11 +92,12 @@ ros2 launch nav2_bringup tb3_simulation_launch.py headless:=False
 # Linux
 alias sb="source ~/.bashrc; echo \"bashrc is reloaded.\""
 
+export USER_NAME='juno'
 
 # ROS2 Paths
-export ROS2_WS_PATH=/home/juno/S13P21C206/apps/simulator/juno_ws
-export AWS_HOSPITAL_WS_PATH=/home/juno/aws-robomaker-hospital-world
-export TURTLE_WS_PATH=/home/juno/turtle_ws
+export ROS2_WS_PATH=/home/${USER_NAME}/S13P21C206/apps/simulator/ros2_ws
+export AWS_HOSPITAL_WS_PATH=/home/${USER_NAME}/aws-robomaker-hospital-world
+export TURTLE_WS_PATH=/home/${USER_NAME}/turtle_ws
 
 # ROS2 Init
 alias humble="source /opt/ros/humble/setup.bash; echo \"ROS2 Humble is activated.\""
@@ -106,7 +107,7 @@ alias turtlebot="humble; source ${TURTLE_WS_PATH}/install/local_setup.bash; echo
 export TURTLEBOT3_MODEL=burger #
 export GAZEBO_MODEL_PATH=${AWS_HOSPITAL_WS_PATH}/models:${AWS_HOSPITAL_WS_PATH}/fuel_models
 # export GAZEBO_MODEL_PATH=$GAZEBO_MODEL_PATH:/opt/ros/humble/share/turtlebot3_gazebo/models # nav2 용
-# export GAZEBO_MODEL_PATH=$GAZEBO_MODEL_PATH:/home/juno/turtle_ws/src/turtlebot3_simulations/turtlebot3_gazebo/models
+# export GAZEBO_MODEL_PATH=$GAZEBO_MODEL_PATH:/home/${USER_NAME}/turtle_ws/src/turtlebot3_simulations/turtlebot3_gazebo/models
 
 export ROS_DOMAIN_ID=1
 

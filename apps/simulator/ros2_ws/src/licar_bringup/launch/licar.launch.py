@@ -1,47 +1,61 @@
-from launch import LaunchDescription
-from launch.actions import ExecuteProcess, DeclareLaunchArgument
-from launch.substitutions import LaunchConfiguration
 import os
 
+from ament_index_python.packages import get_package_share_directory
+from launch import LaunchDescription
+from launch.actions import IncludeLaunchDescription, DeclareLaunchArgument
+from launch.launch_description_sources import PythonLaunchDescriptionSource
+from launch.substitutions import LaunchConfiguration
+
+
 def generate_launch_description():
-    gui_arg    = DeclareLaunchArgument('gui',     default_value='true')
-    paused_arg = DeclareLaunchArgument('paused',  default_value='false')
-    verb_arg   = DeclareLaunchArgument('verbose', default_value='false')
-    world_arg  = DeclareLaunchArgument(
-        'world',
-        default_value=os.path.join(
-            '/home/juno/aws-robomaker-hospital-world/worlds',
-            'hospital.world'
+    launch_file_dir = os.path.join(get_package_share_directory('turtlebot3_gazebo'), 'launch')
+    pkg_gazebo_ros = get_package_share_directory('gazebo_ros')
+
+    use_sim_time = LaunchConfiguration('use_sim_time', default='true')
+    x_pose = LaunchConfiguration('x_pose', default='-2.0')
+    y_pose = LaunchConfiguration('y_pose', default='-0.5')
+
+    world = '/home/juno/turtle_ws/src/turtlebot3_simulations/turtlebot3_gazebo/worlds/hospital.world'
+    world_hospital = '/home/juno/aws-robomaker-hospital-world/worlds/hospital.world'
+    world_hospital_second = '/home/juno/aws-robomaker-hospital-world/worlds/hospital_two_floors.world'
+    world_hospital_third = '/home/juno/aws-robomaker-hospital-world/worlds/hospital_three_floors.world'
+
+    gzserver_cmd = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(pkg_gazebo_ros, 'launch', 'gzserver.launch.py')
+        ),
+        launch_arguments={'world': world_hospital}.items()
+    )
+
+    gzclient_cmd = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(pkg_gazebo_ros, 'launch', 'gzclient.launch.py')
         )
     )
 
-    gzserver = ExecuteProcess(
-        cmd=[
-            'gzserver',
-            LaunchConfiguration('world'),
-            ['--verbose' if LaunchConfiguration('verbose') == 'true' else ''],
-            ['-u' if LaunchConfiguration('paused') == 'true' else ''],
-            '-s', 'libgazebo_ros_factory.so'
-        ],
-        output='screen'
+    robot_state_publisher_cmd = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(launch_file_dir, 'robot_state_publisher.launch.py')
+        ),
+        launch_arguments={'use_sim_time': use_sim_time}.items()
     )
 
-    gzclient = ExecuteProcess(
-        cmd=['gzclient'],
-        output='screen'
+    spawn_turtlebot_cmd = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(launch_file_dir, 'spawn_turtlebot3.launch.py')
+        ),
+        launch_arguments={
+            'x_pose': x_pose,
+            'y_pose': y_pose
+        }.items()
     )
 
-    rviz = ExecuteProcess(
-        cmd=['rviz2'],
-        output='screen'
-    )
+    ld = LaunchDescription()
 
-    return LaunchDescription([
-        gui_arg, 
-        paused_arg, 
-        verb_arg, 
-        world_arg,
-        gzserver, 
-        gzclient,
-        rviz
-    ])
+    # Add the commands to the launch description
+    ld.add_action(gzserver_cmd)
+    ld.add_action(gzclient_cmd)
+    ld.add_action(robot_state_publisher_cmd)
+    ld.add_action(spawn_turtlebot_cmd)
+
+    return ld
