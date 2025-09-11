@@ -1,4 +1,4 @@
-# Robotics Project Workspace
+# LiCar Simulator
 
 Gazebo 환경에서 AWS Hospital 맵을 불러와 Nav2를 수행하는 시나리오.
 
