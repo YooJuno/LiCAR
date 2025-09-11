@@ -51,7 +51,7 @@ CREATE TABLE prescriptions (
     prescription_id SERIAL      PRIMARY KEY,
     prescription_date   DATE,
     period          INTEGER,
-    counseling_note VARCHAR(300),
+    counselling_note VARCHAR(300),
     patient_id      INTEGER     NOT NULL,
     CHECK (period > 0),
     FOREIGN KEY (patient_id) REFERENCES patients (patient_id)
