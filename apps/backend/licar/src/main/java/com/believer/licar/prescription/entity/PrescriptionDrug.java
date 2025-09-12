@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "prescription_drug")
+@Table(name = "prescription_drugs")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @IdClass(PrescriptionDrugId.class)
