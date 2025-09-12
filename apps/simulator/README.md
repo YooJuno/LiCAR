@@ -71,19 +71,22 @@ colcon build --symlink-install && source install/local_setup.bash
 ```
 
 ## 4. Cartographer
+- 맵 생성
 ```bash
-
-
+ros2 launch turtlebot3_cartographer cartographer.launch.py use_sim_time:=True
+```
+- 터틀봇 조작
+```bash
+ros2 run turtlebot3_teleop teleop_keyboard
+```
+- 맵 저장
+```bash
+ros2 run nav2_map_server map_saver_cli -f $HOME/S13P21C206/apps/simulator/maps/MMDD_HHMM/map
 ```
 
-## 5. Nav2 Installation
+## 5. 자율 주행
 ```bash
-sudo apt install ros-humble-navigation2
-sudo apt install ros-humble-nav2-bringup
-sudo apt install ros-humble-turtlebot3-gazebo
-
-# example
-ros2 launch nav2_bringup tb3_simulation_launch.py headless:=False
+ros2 launch turtlebot3_navigation2 navigation2.launch.py use_sim_time:=True map:=$HOME/S13P21C206/apps/simulator/maps/MMDD_HHMM/map.yaml
 ```
 
 ## bashrc
