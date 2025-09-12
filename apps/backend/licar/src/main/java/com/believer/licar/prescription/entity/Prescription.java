@@ -34,7 +34,7 @@ public class Prescription {
     @JoinColumn(name = "patient_id", nullable = false)
     private Patient patient;
 
-    @OneToMany(mappedBy = "prescriptions", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "prescription", cascade = CascadeType.ALL)
     private List<PrescriptionDrug> prescriptionDrugs = new ArrayList<>();
 
     public Prescription(Patient patient, LocalDate date, Integer period, String counsellingNote) {
