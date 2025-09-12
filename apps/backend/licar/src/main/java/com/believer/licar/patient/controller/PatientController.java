@@ -1,8 +1,8 @@
 package com.believer.licar.patient.controller;
 
 import com.believer.licar.patient.dto.PatientCreateRequest;
-import com.believer.licar.patient.dto.PatientResponse;
-import com.believer.licar.patient.dto.PatientSearchResponse;
+import com.believer.licar.patient.dto.PatientDetailResponse;
+import com.believer.licar.patient.dto.PatientSimpleResponse;
 import com.believer.licar.patient.service.PatientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,27 +18,35 @@ public class PatientController {
 
     private final PatientService patientService;
 
-    // POST /patients
+    // POST /api/v1/patients
     @PostMapping
-    public ResponseEntity<PatientResponse> createPatient(@RequestBody PatientCreateRequest request) {
-        PatientResponse createdPatient = patientService.createPatient(request);
+    public ResponseEntity<PatientSimpleResponse> createPatient(@RequestBody PatientCreateRequest request) {
+        PatientSimpleResponse createdPatient = patientService.createPatient(request);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(createdPatient);
     }
 
-    // GET /patients
+    // GET /api/v1/patients
     @GetMapping
-    public ResponseEntity<List<PatientResponse>> getAllPatients() {
-        List<PatientResponse> patients = patientService.findAllPatients();
+    public ResponseEntity<List<PatientSimpleResponse>> getAllPatients() {
+        List<PatientSimpleResponse> patients = patientService.findAllPatients();
 
         return ResponseEntity.ok(patients);
     }
 
-    // GET /patients?name={name}
+    // GET /api/v1/patients?name={name}
     @GetMapping(params = "name")
-    public ResponseEntity<List<PatientSearchResponse>> searchPatientsByName(@RequestParam String name) {
-        List<PatientSearchResponse> patients = patientService.searchPatientsByName(name);
+    public ResponseEntity<List<PatientSimpleResponse>> searchPatientsByName(@RequestParam String name) {
+        List<PatientSimpleResponse> patients = patientService.searchPatientsByName(name);
 
         return ResponseEntity.ok(patients);
+    }
+
+    // GET /api/v1/patients/{id}
+    @GetMapping("/{id}")
+    public ResponseEntity<PatientDetailResponse> getPatientDetail(@PathVariable int id ) {
+        PatientDetailResponse patient = patientService.findPatientById(id);
+
+        return ResponseEntity.ok(patient);
     }
 }

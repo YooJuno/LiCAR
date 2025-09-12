@@ -6,17 +6,17 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class PatientSearchResponse {
+public class PatientSimpleResponse {
 
     private final int patientID;
     private final String name;
     private final Integer roomNumber;
 
-    public static PatientSearchResponse from(Patient patient) {
-        return PatientSearchResponse.builder()
+    public static PatientSimpleResponse from(Patient patient) {
+        return PatientSimpleResponse.builder()
                 .patientID(patient.getPatientId())
                 .name(patient.getName())
-                .roomNumber(patient.getPatientId())
+                .roomNumber(patient.getRoomNumber())
                 .build();
     }
 }
