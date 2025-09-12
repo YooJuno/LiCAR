@@ -14,6 +14,6 @@ public interface PrescriptionRepository extends JpaRepository<Prescription, Inte
 
     @Query(value = "SELECT * FROM prescriptions p " +
             "WHERE p.patient_id = :patientId AND :targetDate " +
-            "BETWEEN p.date AND (p.date + p.period * INTERVAL '1 day')", nativeQuery = true)
+            "BETWEEN p.prescription_date AND (p.prescription_date + p.period * INTERVAL '1 day')", nativeQuery = true)
     List<Prescription> findValidPrescriptionsForPatient(@Param("patientId") int patientId, @Param("targetDate")LocalDate targetDate);
 }
