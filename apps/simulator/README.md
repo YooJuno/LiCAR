@@ -7,7 +7,7 @@ Gazebo 환경에서 AWS Hospital 맵을 불러와 Nav2를 수행하는 시나리
 - ROS2 Humble
 
 ## 1. ROS2 Installation
-[Reference Link](https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debs.html#id4)
+<b> [Reference Link](https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debs. html#id4) </b>
 ```bash
 locale  # check for UTF-8
 
@@ -37,7 +37,7 @@ sudo apt install ros-humble-desktop
 
 
 ## 2. AWS Hospital Map installation
-[Reference Link](https://github.com/aws-robotics/aws-robomaker-hospital-world/tree/ros2)
+<b> [Reference Link](https://github.com/aws-robotics/aws-robomaker-hospital-world/tree/ros2) </b>
 ```bash
 cd ~
 git clone https://github.com/aws-robotics/aws-robomaker-hospital-world.git -b ros2
@@ -68,6 +68,17 @@ rosdep update
 rosdep install --from-paths src --ignore-src -r -y
 
 colcon build --symlink-install && source install/local_setup.bash
+```
+
+<b> 라이다 센서 최대 범위 수정 </b>
+```bash
+code $HOME/turtle_ws/src/turtlebot3_simulations/turtlebot3_gazebo/models/turtlebot3_burger/model.sdf
+
+# 156번줄 <max>200.0</max> 으로 수정
+
+cd ~/turtle_ws
+colcon build --symlink-install
+turtlebot
 ```
 
 ## 4. Cartographer
