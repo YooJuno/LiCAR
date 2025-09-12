@@ -21,26 +21,26 @@ public class Prescription {
     @Column(name = "prescription_id")
     private int prescriptionId;
 
-    @Column(name = "date")
+    @Column(name = "prescription_date")
     private LocalDate date;
 
     @Column(name = "period")
     private Integer period;
 
-    @Column(name = "counseling_note")
+    @Column(name = "counselling_note")
     private String counsellingNote;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "patient_id", nullable = false)
     private Patient patient;
 
-    @OneToMany(mappedBy = "prescription", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "prescriptions", cascade = CascadeType.ALL)
     private List<PrescriptionDrug> prescriptionDrugs = new ArrayList<>();
 
-    public Prescription(Patient patient, LocalDate date, Integer period, String counselingNote) {
+    public Prescription(Patient patient, LocalDate date, Integer period, String counsellingNote) {
         this.patient = patient;
         this.date = date;
         this.period = period;
-        this.counsellingNote = counselingNote;
+        this.counsellingNote = counsellingNote;
     }
 }
