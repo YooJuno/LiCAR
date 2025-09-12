@@ -21,7 +21,7 @@ public class Prescription {
     @Column(name = "prescription_id")
     private int prescriptionId;
 
-    @Column(name = "date")
+    @Column(name = "prescription_date")
     private LocalDate date;
 
     @Column(name = "period")
