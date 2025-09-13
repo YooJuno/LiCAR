@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
 public enum ErrorCode {
 
     // 400 Bad Request
-    INVALID_INPUT_VALUE(HttpStatus.BAD_REQUEST, "E001", "입력 값이 올바르지 않습니다."),
+    INVALID_INPUT_VALUE(HttpStatus.BAD_REQUEST, "E001", "요청 값이 올바르지 않습니다."),
 
     // 401 Unauthorized
     NURSE_AUTHENTICATION_FAILED(HttpStatus.UNAUTHORIZED, "E002", "간호사 인증에 실패했습니다."),

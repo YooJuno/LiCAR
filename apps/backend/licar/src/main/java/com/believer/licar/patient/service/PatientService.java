@@ -3,8 +3,8 @@ package com.believer.licar.patient.service;
 import com.believer.licar.global.exception.CustomException;
 import com.believer.licar.global.exception.ErrorCode;
 import com.believer.licar.patient.dto.PatientCreateRequest;
-import com.believer.licar.patient.dto.PatientResponse;
-import com.believer.licar.patient.dto.PatientSearchResponse;
+import com.believer.licar.patient.dto.PatientDetailResponse;
+import com.believer.licar.patient.dto.PatientSimpleResponse;
 import com.believer.licar.patient.entity.Patient;
 import com.believer.licar.patient.repository.PatientRepository;
 import com.believer.licar.user.entity.Nurse;
@@ -24,7 +24,7 @@ public class PatientService {
     private final NurseRepository nurseRepository;
 
     @Transactional
-    public PatientResponse createPatient(PatientCreateRequest request) {
+    public PatientSimpleResponse createPatient(PatientCreateRequest request) {
         Nurse nurse = nurseRepository.findById(request.getNurseId())
                 .orElseThrow(() -> new CustomException(ErrorCode.NURSE_NOT_FOUND));
 
@@ -32,20 +32,28 @@ public class PatientService {
 
         Patient savedPatient = patientRepository.save(newPatient);
 
-        return PatientResponse.from(savedPatient);
+        return PatientSimpleResponse.from(savedPatient);
     }
 
     @Transactional(readOnly = true)
-    public List<PatientResponse> findAllPatients() {
+    public List<PatientSimpleResponse> findAllPatients() {
         return patientRepository.findAll().stream()
-                .map(PatientResponse::from)
+                .map(PatientSimpleResponse::from)
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
-    public List<PatientSearchResponse> searchPatientsByName(String name) {
+    public List<PatientSimpleResponse> searchPatientsByName(String name) {
         return patientRepository.findByNameContaining(name).stream()
-                .map(PatientSearchResponse::from)
+                .map(PatientSimpleResponse::from)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public PatientDetailResponse findPatientById(int patientId) {
+        Patient patient = patientRepository.findById(patientId)
+                .orElseThrow(() -> new CustomException(ErrorCode.PATIENT_NOT_FOUND));
+
+        return PatientDetailResponse.from(patient);
     }
 }

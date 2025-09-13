@@ -2,7 +2,6 @@ package com.believer.licar.prescription.dto;
 
 import com.believer.licar.prescription.entity.Drug;
 import com.believer.licar.prescription.entity.Prescription;
-import com.believer.licar.prescription.entity.PrescriptionDrugId;
 import lombok.Builder;
 import lombok.Getter;
 

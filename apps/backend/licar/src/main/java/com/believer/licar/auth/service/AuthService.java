@@ -1,7 +1,9 @@
 package com.believer.licar.auth.service;
 
 import com.believer.licar.auth.dto.NurseLoginRequest;
+import com.believer.licar.auth.dto.NurseLoginResponse;
 import com.believer.licar.auth.dto.PharmacistLoginRequest;
+import com.believer.licar.auth.dto.PharmacistLoginResponse;
 import com.believer.licar.global.exception.CustomException;
 import com.believer.licar.global.exception.ErrorCode;
 import com.believer.licar.user.entity.Nurse;
@@ -20,13 +22,17 @@ public class AuthService {
     private final NurseRepository nurseRepository;
     private final PharmacistRepository pharmacistRepository;
 
-    public Nurse loginNurse(NurseLoginRequest request) {
-        return nurseRepository.findByNurseIdAndName(request.getNurse_id(), request.getName())
+    public NurseLoginResponse loginNurse(NurseLoginRequest request) {
+        Nurse nurse = nurseRepository.findByNurseIdAndName(request.getNurse_id(), request.getName())
                 .orElseThrow(() -> new CustomException(ErrorCode.NURSE_AUTHENTICATION_FAILED));
+
+        return NurseLoginResponse.from(nurse);
     }
 
-    public Pharmacist loginPharmacist(PharmacistLoginRequest request) {
-        return pharmacistRepository.findByPharmacistIdAndName((request.getPharmacist_id()), request.getName())
+    public PharmacistLoginResponse loginPharmacist(PharmacistLoginRequest request) {
+        Pharmacist pharmacist = pharmacistRepository.findByPharmacistIdAndName((request.getPharmacist_id()), request.getName())
                 .orElseThrow(() -> new CustomException(ErrorCode.PHARMACIST_AUTHENTICATION_FAILED));
+
+        return PharmacistLoginResponse.from(pharmacist);
     }
 }

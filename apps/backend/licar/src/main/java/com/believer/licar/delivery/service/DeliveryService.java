@@ -3,9 +3,12 @@ package com.believer.licar.delivery.service;
 import com.believer.licar.delivery.dto.DeliveryCreateRequest;
 import com.believer.licar.delivery.dto.DeliveryResponse;
 import com.believer.licar.delivery.entity.Delivery;
+import com.believer.licar.delivery.enums.DeliveryStatus;
 import com.believer.licar.delivery.repository.DeliveryRepository;
 import com.believer.licar.global.exception.CustomException;
 import com.believer.licar.global.exception.ErrorCode;
+import com.believer.licar.notification.dto.NotificationResponse;
+import com.believer.licar.notification.service.NotificationService;
 import com.believer.licar.patient.entity.Patient;
 import com.believer.licar.patient.repository.PatientRepository;
 import com.believer.licar.prescription.dto.DrugResponse;
@@ -28,6 +31,7 @@ public class DeliveryService {
 
     private final DeliveryRepository deliveryRepository;
     private final PatientRepository patientRepository;
+    private final NotificationService notificationService;
     private final NurseRepository nurseRepository;
     private final PharmacistRepository pharmacistRepository;
     private final PrescriptionService prescriptionService;
@@ -45,6 +49,8 @@ public class DeliveryService {
         Delivery savedDelivery = deliveryRepository.save(delivery);
 
         // SSE
+        NotificationResponse notification = NotificationResponse.from(savedDelivery);
+        notificationService.send(savedDelivery.getPharmacist().getPharmacistId(), notification);
 
         return DeliveryResponse.from(savedDelivery);
     }
@@ -52,19 +58,30 @@ public class DeliveryService {
     @Transactional
     public DeliveryResponse startDelivery(int deliveryId) {
         Delivery delivery = findDeliveryEntityById(deliveryId);
+
+        if (delivery.getStatus() != DeliveryStatus.requested) {
+            throw new CustomException(ErrorCode.INVALID_INPUT_VALUE);
+        }
         delivery.startTransit();
+
         return DeliveryResponse.from(delivery);
     }
 
     @Transactional
     public DeliveryResponse completeDelivery(int deliveryId) {
         Delivery delivery = findDeliveryEntityById(deliveryId);
+
+        if (delivery.getStatus() != DeliveryStatus.in_transit) {
+            throw new CustomException(ErrorCode.INVALID_INPUT_VALUE);
+        }
         delivery.completeDelivery();
+
         return DeliveryResponse.from(delivery);
     }
 
     @Transactional(readOnly = true)
     public DeliveryResponse findDeliveryById(int deliveryId) {
+
         return DeliveryResponse.from(findDeliveryEntityById(deliveryId));
     }
 

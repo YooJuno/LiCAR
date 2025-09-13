@@ -8,21 +8,23 @@ import java.time.LocalDate;
 
 @Getter
 @Builder
-public class PatientResponse {
+public class PatientDetailResponse {
 
     private final int patientId;
     private final String name;
     private final LocalDate birthday;
     private final LocalDate admissionDate;
+    private final LocalDate dischargeDate;
     private final Integer roomNumber;
     private final String nurseName;
 
-    public static PatientResponse from(Patient patient) {
-        return PatientResponse.builder()
+    public static PatientDetailResponse from(Patient patient) {
+        return PatientDetailResponse.builder()
                 .patientId(patient.getPatientId())
                 .name(patient.getName())
                 .birthday(patient.getBirthday())
                 .admissionDate(patient.getAdmissionDate())
+                .dischargeDate(patient.getDischargeDate())
                 .roomNumber(patient.getRoomNumber())
                 .nurseName(patient.getNurse().getName())
                 .build();
