@@ -9,9 +9,10 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./jenkins_home:/var/jenkins_home
-      - ../.env:/app/backend/.env
+      - ../.env:/var/licar/.env:ro
     environment:
       - JENKINS_OPTS=--prefix=/jenkins
+      - TZ=Asia/Seoul
     group_add:
       - ${DOCKER_GID}
     networks:
