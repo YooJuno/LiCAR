@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "C0cuhfbCJ7k=",
+  "success": true,
+  "projectFilePath": "C:\\MY\\SSAFY_2\\S13P21C206\\apps\\frontend\\licar_wpf\\licar_wpf.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\SSAFY\\.nuget\\packages\\communitytoolkit.mvvm\\8.4.0\\communitytoolkit.mvvm.8.4.0.nupkg.sha512"
+  ],
+  "logs": []
+}
