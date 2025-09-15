@@ -7,7 +7,7 @@ Gazebo 환경에서 AWS Hospital 맵을 불러와 Nav2를 수행하는 시나리
 - ROS2 Humble
 
 ## 1. ROS2 Installation
-[Reference Link](https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debs.html#id4)
+<b> [Reference Link](https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debs. html#id4) </b>
 ```bash
 locale  # check for UTF-8
 
@@ -37,7 +37,7 @@ sudo apt install ros-humble-desktop
 
 
 ## 2. AWS Hospital Map installation
-[Reference Link](https://github.com/aws-robotics/aws-robomaker-hospital-world/tree/ros2)
+<b> [Reference Link](https://github.com/aws-robotics/aws-robomaker-hospital-world/tree/ros2) </b>
 ```bash
 cd ~
 git clone https://github.com/aws-robotics/aws-robomaker-hospital-world.git -b ros2
@@ -70,20 +70,34 @@ rosdep install --from-paths src --ignore-src -r -y
 colcon build --symlink-install && source install/local_setup.bash
 ```
 
-## 4. Cartographer
+<b> 라이다 센서 최대 범위 수정 </b>
 ```bash
+code $HOME/turtle_ws/src/turtlebot3_simulations/turtlebot3_gazebo/models/turtlebot3_burger/model.sdf
 
+# 156번줄 <max>200.0</max> 으로 수정
 
+cd ~/turtle_ws
+colcon build --symlink-install
+turtlebot
 ```
 
-## 5. Nav2 Installation
+## 4. Cartographer
+- 맵 생성
 ```bash
-sudo apt install ros-humble-navigation2
-sudo apt install ros-humble-nav2-bringup
-sudo apt install ros-humble-turtlebot3-gazebo
+ros2 launch turtlebot3_cartographer cartographer.launch.py use_sim_time:=True
+```
+- 터틀봇 조작
+```bash
+ros2 run turtlebot3_teleop teleop_keyboard
+```
+- 맵 저장
+```bash
+ros2 run nav2_map_server map_saver_cli -f $HOME/S13P21C206/apps/simulator/maps/MMDD_HHMM/map
+```
 
-# example
-ros2 launch nav2_bringup tb3_simulation_launch.py headless:=False
+## 5. 자율 주행
+```bash
+ros2 launch turtlebot3_navigation2 navigation2.launch.py use_sim_time:=True map:=$HOME/S13P21C206/apps/simulator/maps/MMDD_HHMM/map.yaml
 ```
 
 ## bashrc

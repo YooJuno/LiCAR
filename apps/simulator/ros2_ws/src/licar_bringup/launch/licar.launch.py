@@ -2,59 +2,93 @@ import os
 
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import IncludeLaunchDescription, DeclareLaunchArgument
+from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
 
 
 def generate_launch_description():
-    launch_file_dir = os.path.join(get_package_share_directory('turtlebot3_gazebo'), 'launch')
+
+    # ----------------------------
+    # 런치 인자 정의
+    # ----------------------------
+    use_sim_time_arg = DeclareLaunchArgument(
+        'use_sim_time',
+        default_value='True'
+    )
+
+    # map 경로 절대경로, 존재 여부 체크
+    default_map_path = os.path.expanduser('~/S13P21C206/apps/simulator/maps/0912_1130/map.yaml')
+    if not os.path.isfile(default_map_path):
+        raise FileNotFoundError(f"Map file not found: {default_map_path}")
+
+    map_arg = DeclareLaunchArgument(
+        'map',
+        default_value=default_map_path
+    )
+
+    x_pose_arg = DeclareLaunchArgument(
+        'x_pose',
+        default_value='-2.0'
+    )
+
+    y_pose_arg = DeclareLaunchArgument(
+        'y_pose',
+        default_value='-0.5'
+    )
+
+    # ----------------------------
+    # 경로 설정
+    # ----------------------------
+    HOME_DIR = os.environ['HOME']
+
+    turtlebot3_gazebo_dir = os.path.join(get_package_share_directory('turtlebot3_gazebo'), 'launch')
     pkg_gazebo_ros = get_package_share_directory('gazebo_ros')
 
-    use_sim_time = LaunchConfiguration('use_sim_time', default='true')
-    x_pose = LaunchConfiguration('x_pose', default='-2.0')
-    y_pose = LaunchConfiguration('y_pose', default='-0.5')
+    world_file = os.path.expanduser('~/aws-robomaker-hospital-world/worlds/hospital.world')
+    if not os.path.isfile(world_file):
+        raise FileNotFoundError(f"Gazebo world file not found: {world_file}")
 
-    world_hospital = '/home/juno/aws-robomaker-hospital-world/worlds/hospital.world'
-    world_hospital_second = '/home/juno/aws-robomaker-hospital-world/worlds/hospital_two_floors.world'
-    world_hospital_third = '/home/juno/aws-robomaker-hospital-world/worlds/hospital_three_floors.world'
-
-    gzserver_cmd = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            os.path.join(pkg_gazebo_ros, 'launch', 'gzserver.launch.py')
-        ),
-        launch_arguments={'world': world_hospital}.items()
+    # ----------------------------
+    # Gazebo 서버/클라이언트 런치
+    # ----------------------------
+    launch_gzserver = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(os.path.join(pkg_gazebo_ros, 'launch', 'gzserver.launch.py')),
+        launch_arguments={'world': world_file}.items()
     )
 
-    gzclient_cmd = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            os.path.join(pkg_gazebo_ros, 'launch', 'gzclient.launch.py')
-        )
+    launch_gzclient = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(os.path.join(pkg_gazebo_ros, 'launch', 'gzclient.launch.py'))
     )
 
-    robot_state_publisher_cmd = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            os.path.join(launch_file_dir, 'robot_state_publisher.launch.py')
-        ),
-        launch_arguments={'use_sim_time': use_sim_time}.items()
+    # ----------------------------
+    # Robot State Publisher
+    # ----------------------------
+    launch_robot_state_publisher = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(os.path.join(turtlebot3_gazebo_dir, 'robot_state_publisher.launch.py')),
+        launch_arguments={'use_sim_time': LaunchConfiguration('use_sim_time')}.items()
     )
 
-    spawn_turtlebot_cmd = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            os.path.join(launch_file_dir, 'spawn_turtlebot3.launch.py')
-        ),
+    # ----------------------------
+    # TurtleBot3 스폰
+    # ----------------------------
+    launch_spawn_turtlebot = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(os.path.join(turtlebot3_gazebo_dir, 'spawn_turtlebot3.launch.py')),
         launch_arguments={
-            'x_pose': x_pose,
-            'y_pose': y_pose
+            'x_pose': LaunchConfiguration('x_pose'),
+            'y_pose': LaunchConfiguration('y_pose')
         }.items()
     )
 
     ld = LaunchDescription()
+    
+    ld.add_action(use_sim_time_arg)
+    ld.add_action(x_pose_arg)
+    ld.add_action(y_pose_arg)
 
-    # Add the commands to the launch description
-    ld.add_action(gzserver_cmd)
-    ld.add_action(gzclient_cmd)
-    ld.add_action(robot_state_publisher_cmd)
-    ld.add_action(spawn_turtlebot_cmd)
+    ld.add_action(launch_gzserver)
+    ld.add_action(launch_gzclient)
+    ld.add_action(launch_robot_state_publisher)
+    ld.add_action(launch_spawn_turtlebot)
 
     return ld
