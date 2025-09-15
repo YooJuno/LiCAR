@@ -20,8 +20,8 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'spawner_node = elevater_pkg.spawner:main',
-            'mover_node = elevater_pkg.mover:main'
+            'spawner_node = elevator_pkg.spawner:main',
+            'mover_node = elevator_pkg.mover:main'
         ],
     },
 )

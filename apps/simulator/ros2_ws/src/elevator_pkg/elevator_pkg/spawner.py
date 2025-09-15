@@ -8,14 +8,11 @@ import os
 
 BASE = os.path.expanduser('~/aws-robomaker-hospital-world/models')
 MODEL_PATHS = {
-    'portal': os.path.join(BASE, 'aws_robomaker_hospital_elevator_01_portal', 'model.sdf'),
     'car'   : os.path.join(BASE, 'aws_robomaker_hospital_elevator_01_car', 'model.sdf'),
     'door'  : os.path.join(BASE, 'aws_robomaker_hospital_elevator_01_door', 'model.sdf'),
 }
 
 ENTITIES = [
-    ('portal_1', 'portal', (-1.50654, 19.4813, 0.19)),
-    ('portal_2', 'portal', (1.51134, 19.4870, 0.19)),
     ('car_1',    'car',    (-1.49587, 19.35,   0.19)),
     ('car_2',    'car',    (1.5407,   19.35,   0.19)),
     ('door_1',   'door',   (-1.51,    19.35,   0.19)),
@@ -35,24 +32,29 @@ class ElevatorSpawnerNode(Node):
             self.get_logger().info('waiting /delete_entity...')
 
         self.create_service(Trigger, 'spawn_all', self.handle_spawn_all)
-        self.create_service(Trigger, 'despawn_all', self.handle_despawn_all)
 
-    def read_model(self, path):
+    def read_model(self, path, model_key):
         with open(path, 'r') as f:
             xml = f.read()
-        xml = xml.replace('<static>1</static>', '<static>0</static>')
-        xml = xml.replace('<static>true</static>', '<static>false</static>')
+            
+        if model_key in ['car', 'door']:
+            xml = xml.replace('<static>1</static>', '<static>0</static>')
+    
         return xml
 
+
     def spawn_entity(self, name, model_key, pos):
-        xml = self.read_model(MODEL_PATHS[model_key])
+        xml = self.read_model(MODEL_PATHS[model_key], model_key)
         req = SpawnEntity.Request()
         req.name = name
         req.xml = xml
         req.robot_namespace = ''
         x, y, z = pos
-        req.initial_pose = Pose(position=Point(x=x, y=y, z=z),
-                                orientation=Quaternion(x=0, y=0, z=0, w=1))
+        req.initial_pose = Pose(
+            position=Point(x=float(x), y=float(y), z=float(z)),
+            orientation=Quaternion(x=0.0, y=0.0, z=0.0, w=1.0)
+        )
+
         req.reference_frame = 'world'
         fut = self.spawn_cli.call_async(req)
         rclpy.spin_until_future_complete(self, fut)
@@ -69,12 +71,6 @@ class ElevatorSpawnerNode(Node):
         ok = all(self.spawn_entity(n, k, p) for n, k, p in ENTITIES)
         res.success = ok
         res.message = 'spawned all' if ok else 'some failed'
-        return res
-
-    def handle_despawn_all(self, req, res):
-        ok = all(self.delete_entity(n) for n, _, _ in ENTITIES)
-        res.success = ok
-        res.message = 'deleted all' if ok else 'some failed'
         return res
 
 def main(args=None):

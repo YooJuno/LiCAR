@@ -26,7 +26,7 @@ def generate_launch_description():
         PythonLaunchDescriptionSource(
             os.path.join(pkg_gazebo_ros, 'launch', 'gzserver.launch.py')
         ),
-        launch_arguments={'world': world_hospital}.items()
+        launch_arguments={'world': world_hospital_third}.items()
     )
 
     gzclient_cmd = IncludeLaunchDescription(
@@ -50,13 +50,6 @@ def generate_launch_description():
             'x_pose': x_pose,
             'y_pose': y_pose
         }.items()
-    )
-    
-    cartographer_cmd = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            os.path.join(pkg_cartographer, 'launch', 'cartographer.launch.py')
-        ),
-        launch_arguments={'use_sim_time': use_sim_time}.items()
     )
 
     ld = LaunchDescription()
