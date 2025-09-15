@@ -7,7 +7,8 @@ import com.believer.licar.delivery.enums.DeliveryStatus;
 import com.believer.licar.delivery.repository.DeliveryRepository;
 import com.believer.licar.global.exception.CustomException;
 import com.believer.licar.global.exception.ErrorCode;
-import com.believer.licar.notification.dto.NotificationResponse;
+import com.believer.licar.notification.dto.NotificationCompleteResponse;
+import com.believer.licar.notification.dto.NotificationRequestResponse;
 import com.believer.licar.notification.service.NotificationService;
 import com.believer.licar.patient.entity.Patient;
 import com.believer.licar.patient.repository.PatientRepository;
@@ -49,8 +50,8 @@ public class DeliveryService {
         Delivery savedDelivery = deliveryRepository.save(delivery);
 
         // SSE
-        NotificationResponse notification = NotificationResponse.from(savedDelivery);
-        notificationService.send(savedDelivery.getPharmacist().getPharmacistId(), notification);
+        NotificationRequestResponse notification = NotificationRequestResponse.from(savedDelivery);
+        notificationService.sendToPharmacist(savedDelivery.getPharmacist().getPharmacistId(), notification);
 
         return DeliveryResponse.from(savedDelivery);
     }
@@ -75,6 +76,10 @@ public class DeliveryService {
             throw new CustomException(ErrorCode.INVALID_INPUT_VALUE);
         }
         delivery.completeDelivery();
+
+        // SSE
+        NotificationCompleteResponse notification = NotificationCompleteResponse.from(delivery);
+        notificationService.setToNurse(delivery.getNurse().getNurseId(), notification);
 
         return DeliveryResponse.from(delivery);
     }

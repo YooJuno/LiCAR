@@ -8,15 +8,15 @@ import java.time.LocalDateTime;
 
 @Getter
 @Builder
-public class NotificationResponse {
+public class NotificationRequestResponse {
 
     private final int deliveryId;
     private final LocalDateTime requestTime;
     private final int nurseId;
     private final int pharmacistId;
 
-    public static NotificationResponse from(Delivery delivery) {
-        return NotificationResponse.builder()
+    public static NotificationRequestResponse from(Delivery delivery) {
+        return NotificationRequestResponse.builder()
                 .deliveryId(delivery.getDeliveryId())
                 .requestTime(delivery.getRequestTime())
                 .nurseId(delivery.getNurse().getNurseId())
