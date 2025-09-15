@@ -34,7 +34,7 @@ public class DeliveryController {
         return ResponseEntity.ok(response);
     }
 
-    // GET /deliveries/{id}/complete
+    // PATCH /deliveries/{id}/complete
     @PatchMapping("/{delivery_id}/complete")
     public ResponseEntity<DeliveryResponse> completeDelivery(@PathVariable("delivery_id") int deliveryId) {
         DeliveryResponse response = deliveryService.completeDelivery(deliveryId);
