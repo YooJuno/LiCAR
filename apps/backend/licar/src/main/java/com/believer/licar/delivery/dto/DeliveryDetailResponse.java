@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Builder
-public class DeliveryResponse {
+public class DeliveryDetailResponse {
 
     private final int deliveryId;
     private final LocalDateTime requestTime;
@@ -19,10 +19,11 @@ public class DeliveryResponse {
     private final Integer robotId;
     private final String nurseName;
     private final String pharmacistName;
-    private final String patientName;
+    private final Integer patientId;
 
-    public static DeliveryResponse from(Delivery delivery) {
-        return DeliveryResponse.builder()
+    public static DeliveryDetailResponse from(Delivery delivery)
+    {
+        return DeliveryDetailResponse.builder()
                 .deliveryId(delivery.getDeliveryId())
                 .requestTime(delivery.getRequestTime())
                 .sendTime(delivery.getSendTime())
@@ -31,8 +32,7 @@ public class DeliveryResponse {
                 .robotId(delivery.getRobotId())
                 .nurseName(delivery.getNurse().getName())
                 .pharmacistName(delivery.getPharmacist().getName())
-                .patientName(delivery.getPatient().getName())
+                .patientId(delivery.getPatient().getPatientId())
                 .build();
-
     }
 }
