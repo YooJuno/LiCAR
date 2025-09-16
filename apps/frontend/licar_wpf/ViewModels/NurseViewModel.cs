@@ -32,13 +32,15 @@ namespace licar_wpf.ViewModels
                 _selectedPatient = value;
                 OnPropertyChanged();
                 LoadPatientDetails(value?.PatientId ?? 0);
+
+                RequestDeliveryCommand.RaiseCanExecuteChanged();
             }
         }
 
         public string NurseName => UserSession.CurrentUser?.Name;
 
         public ICommand SearchCommand { get; }
-        public ICommand RequestDeliveryCommand { get; }
+        public RelayCommand RequestDeliveryCommand { get; }
 
         public NurseViewModel(NavigationService navigationService, NurseService nurseService, SseService sseService)
         {

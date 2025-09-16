@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace licar_wpf.ViewModels
@@ -33,10 +34,19 @@ namespace licar_wpf.ViewModels
         public int UserId { get => _userId; set { _userId = value; OnPropertyChanged(); } }
 
         private string _userName;
-        public string UserName { get => _userName; set { _userName = value; OnPropertyChanged(); } }
+        public string UserName
+        {
+            get => _userName;
+            set
+            {
+                _userName = value;
+                OnPropertyChanged();
+                (LoginCommand as RelayCommand)?.RaiseCanExecuteChanged();
+            }
+        }
 
         private string _errorMessage;
-        public string ErroeMessage { get => _errorMessage; set { _errorMessage = value; OnPropertyChanged(); } }
+        public string ErrorMessage { get => _errorMessage; set { _errorMessage = value; OnPropertyChanged(); } }
 
         public bool IsNurseRole { get; set; } = true;
 
@@ -47,12 +57,12 @@ namespace licar_wpf.ViewModels
             _authService = authService;
             _navigationService = navigationService;
             _sseService = sseService;
-            LoginCommand = new RelayCommand(async (p) => await ExecuteLogin(), (p) => !string.IsNullOrEmpty(UserName));
+            LoginCommand = new RelayCommand(async (p) => await ExecuteLogin());
         }
 
         private async Task ExecuteLogin()
         {
-            ErroeMessage = string.Empty;
+            ErrorMessage = string.Empty;
 
             try
             {
@@ -61,7 +71,7 @@ namespace licar_wpf.ViewModels
                     var nurse = await _authService.LoginNurseAsync(UserId, UserName);
                     UserSession.Login(new CurrentUser { Id = nurse.NurseId, Name = nurse.Name, Role = UserRole.Nurse, Department = nurse.Department });
 
-                    _ = _sseService.ConnectAsync(UserRole.Nurse, nurse.NurseId);
+                    Task.Run(() => _sseService.ConnectAsync(UserRole.Nurse, nurse.NurseId));
 
                     _navigationService.NavigateTo(new NurseViewModel(_navigationService, new NurseService(new ApiClient()), _sseService));
                 }
@@ -70,14 +80,33 @@ namespace licar_wpf.ViewModels
                     var pharmacist = await _authService.LoginPharmacistAsync(UserId, UserName);
                     UserSession.Login(new CurrentUser { Id = pharmacist.PharmacistId, Name = pharmacist.Name, Role = UserRole.Pharmacist });
 
-                    _ = _sseService.ConnectAsync(UserRole.Pharmacist, pharmacist.PharmacistId);
+                    Task.Run(() => _sseService.ConnectAsync(UserRole.Pharmacist, pharmacist.PharmacistId));
 
                     _navigationService.NavigateTo(new PharmacistViewModel(_navigationService, new PharmacistService(new ApiClient()), _sseService));
                 }
             }
             catch (Exception ex)
             {
-                ErroeMessage = "인증에 실패하였습니다. 사번과 이름을 확인해주세요.";
+                string actualExceptionType = ex.GetType().FullName;
+
+                // 2. 전체 예외 메시지 확인
+                string exceptionMessage = ex.Message;
+
+                // 3. 내부 예외가 있는지 확인 (내부에 진짜 원인이 있는 경우가 많음)
+                string innerExceptionDetails = ex.InnerException?.ToString();
+
+                // 4. 스택 트레이스 확인 (어느 코드 라인에서 오류가 시작되었는지 추적)
+                string stackTrace = ex.StackTrace;
+
+                // 디버거의 '조사식(Watch)' 창에서 위 변수들의 값을 모두 확인하세요.
+                // 또는 아래 코드로 출력창에 표시할 수 있습니다.
+                System.Diagnostics.Debug.WriteLine($"[ERROR] Type: {actualExceptionType}");
+                System.Diagnostics.Debug.WriteLine($"[ERROR] Message: {exceptionMessage}");
+                System.Diagnostics.Debug.WriteLine($"[ERROR] Inner Exception: {innerExceptionDetails}");
+                System.Diagnostics.Debug.WriteLine($"[ERROR] Stack Trace: {stackTrace}");
+
+
+                ErrorMessage = "인증에 실패하였습니다. 사번과 이름을 확인해주세요.";
             }
         }
     }

@@ -18,12 +18,12 @@ namespace licar_wpf.Services
 
         public async Task<List<Patient>> SearchPatientsAsync(string name)
         {
-            return await _apiClient.GetAsync<List<Patient>>($"/patients?name={name}");
+            return await _apiClient.GetAsync<List<Patient>>($"/api/v1/patients?name={name}");
         }
 
         public async Task<Patient> GetPatientDetailAsync(int patientId)
         {
-            return await _apiClient.GetAsync<Patient>($"/patients/{patientId}");
+            return await _apiClient.GetAsync<Patient>($"/api/v1/patients/{patientId}");
         }
 
         public async Task<Delivery> RequestDeliveryAsync(int robotId, int nurseId, int pharmacistId, int patientId)
@@ -36,7 +36,7 @@ namespace licar_wpf.Services
                 patientId
             };
 
-            return await _apiClient.PostAsync<Delivery>($"/deliveries", requestBody);
+            return await _apiClient.PostAsync<Delivery>($"/api/v1/deliveries", requestBody);
         }
     }
 }

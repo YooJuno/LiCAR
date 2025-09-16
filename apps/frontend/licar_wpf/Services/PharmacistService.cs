@@ -18,24 +18,24 @@ namespace licar_wpf.Services
 
         public async Task<List<Delivery>> GetDeliveriesAsync()
         {
-            return await _apiClient.GetAsync<List<Delivery>>("/deliveries");
+            return await _apiClient.GetAsync<List<Delivery>>("/api/v1/deliveries");
         }
 
         public async Task<Delivery> GetDeliveryDetailASync(int deliveryId)
         {
-            return await _apiClient.GetAsync<Delivery>($"/deliveries/{deliveryId}");
+            return await _apiClient.GetAsync<Delivery>($"/api/v1/deliveries/{deliveryId}");
         }
 
         public async Task<List<Prescription>> GetValidPrescriptionAsync(int patientId, DateTime date)
         {
             string formattedDate = date.ToString("yyyy-mm-dd");
 
-            return await _apiClient.GetAsync<List<Prescription>>($"/prescriptions/valid?patient_id={patientId}&date={formattedDate}");
+            return await _apiClient.GetAsync<List<Prescription>>($"/api/v1/prescriptions/valid?patient_id={patientId}&date={formattedDate}");
         }
 
         public async Task<Prescription> GetPrescriptionDetailAsync(int prescriptionId)
         {
-            return await _apiClient.GetAsync<Prescription>($"/prescription/{prescriptionId}");
+            return await _apiClient.GetAsync<Prescription>($"/api/v1/prescription/{prescriptionId}");
         }
     }
 }

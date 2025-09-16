@@ -18,7 +18,7 @@ namespace licar_wpf.Services
             PropertyNameCaseInsensitive = true
         };
 
-        public ApiClient(string baseUrl = "http://localhost:8080/api/v1")
+        public ApiClient(string baseUrl = "http://localhost:8080")
         {
             _httpClient = new HttpClient
             {
