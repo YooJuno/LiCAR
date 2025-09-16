@@ -1,63 +1,50 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using licar_wpf.Models;
+﻿using licar_wpf.Models;
 using licar_wpf.Services;
-using licar_wpf.ViewModels.Base;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace licar_wpf.ViewModels
 {
-    public partial class MainViewModel : ViewModelBase
+    public class MainViewModel : ViewModelBase
     {
-        private readonly INavigationService _navigationService;
-        private readonly ISseService _sseService;
-
-        [ObservableProperty]
-        private User _currentUser;
-
-        [ObservableProperty]
-        private ViewModelBase _currentView;
-
-        public ObservableCollection<NotificationViewModel> Notifications { get; } = new();
-
-        public MainViewModel(User user, INavigationService navigationService, ISseService sseService)
+        private readonly NavigationService _navigationService;
+        
+        private ViewModelBase _currentViewModel;
+        public ViewModelBase CurrentViewModel
         {
-            _currentUser = user;
+            get => _currentViewModel;
+            set
+            {
+                _currentViewModel = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public ICommand LogoutCommand { get; }
+
+        public MainViewModel(NavigationService navigationService, LoginViewModel loginViewModel)
+        {
             _navigationService = navigationService;
-            _sseService = sseService;
+            _navigationService.CurrentViewModelChanged += (viewModel) => CurrentViewModel = viewModel;
 
-            if (user.Role == UserRole.Nurse)
-            {
-                _currentView = new NurseViewModel(user, new ApiService());
-            }
-            else
-            {
-                _currentView = new PharmacistViewModel(user, new ApiService());
-            }
+            LogoutCommand = new RelayCommand(Logout);
 
-            _sseService.NotificationReceived += OnNotificationReceived;
-            _sseService.ConnectAsync(user.Role, user.Id);
+            _navigationService.NavigateTo(loginViewModel);
         }
 
-        private void OnNotificationReceived(Notification notification)
+        private void Logout(object parameter)
         {
-            App.Current.Dispatcher.Invoke(() =>
-            {
-                Notifications.Add(new NotificationViewModel(notification));
-            });
-        }
+            Models.UserSession.Logout();
 
-        [RelayCommand]
-        private void Logout()
-        {
-            _sseService.Disconnect();
-            _navigationService.ShowLoginView();
-            _navigationService.CloseWindow(this);
+            _navigationService.NavigateTo(new LoginViewModel(
+                new AuthService(new ApiClient()),
+                _navigationService,
+                new SseService()
+                ));
         }
     }
 }

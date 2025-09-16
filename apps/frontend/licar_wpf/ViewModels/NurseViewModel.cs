@@ -1,9 +1,5 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using licar_wpf.Models;
-using licar_wpf.Models.DTOs;
+﻿using licar_wpf.Models;
 using licar_wpf.Services;
-using licar_wpf.ViewModels.Base;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -11,93 +7,95 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 
 namespace licar_wpf.ViewModels
 {
     public partial class NurseViewModel : ViewModelBase
     {
-        private readonly User _currentUser;
-        private readonly IApiService _apiService;
+        private readonly NavigationService _navigationService;
+        private readonly NurseService _nurseService;
+        private readonly SseService _sseService;
 
-        [ObservableProperty]
-        private string? _searchText;
+        private string _searchKeyword;
+        public string SearchKeyword { get => _searchKeyword; set { _searchKeyword = value; OnPropertyChanged(); } }
 
-        [ObservableProperty]
-        private Patient? _selectedPatient;
+        public ObservableCollection<Patient> PatientList { get; } = new ObservableCollection<Patient>();
+        public ObservableCollection<Notification> NotificationList { get; } = new ObservableCollection<Notification>();
 
-        public ObservableCollection<Patient> Patients { get; } = new();
-
-        public NurseViewModel(User currentUser, IApiService apiService)
+        private Patient _selectedPatient;
+        public Patient SelectedPatient
         {
-            _currentUser = currentUser;
-            _apiService = apiService;
-            LoadInitialPatientAsync();
-        }
-
-        private async void LoadInitialPatientAsync()
-        {
-            await SearchPatientAsync();
-        }
-
-        [RelayCommand]
-        private async Task SearchPatientAsync()
-        {
-            var result = await _apiService.GetPatientsAsync(SearchText);
-
-            Patients.Clear();
-
-            if (result != null)
+            get => _selectedPatient;
+            set
             {
-                foreach (var patient in result)
-                {
-                    Patients.Add(patient);
-                }
+                _selectedPatient = value;
+                OnPropertyChanged();
+                LoadPatientDetails(value?.PatientId ?? 0);
             }
         }
 
-        [RelayCommand(CanExecute = nameof(CanRequestDelivery))]
-        private async Task RequestDeliveryAsync()
+        public string NurseName => UserSession.CurrentUser?.Name;
+
+        public ICommand SearchCommand { get; }
+        public ICommand RequestDeliveryCommand { get; }
+
+        public NurseViewModel(NavigationService navigationService, NurseService nurseService, SseService sseService)
         {
-            if (SelectedPatient == null) return;
+            _navigationService = navigationService;
+            _nurseService = nurseService;
+            _sseService = sseService;
 
-            var request = new DeliveryRequest
+            SearchCommand = new RelayCommand(async (p) => await SearchPatients());
+            RequestDeliveryCommand = new RelayCommand(async (p) => await RequestDelivery(), (p) => SelectedPatient != null);
+
+            _sseService.DeliveryCompleted += OnDeliveryCompleted;
+        }
+
+        private async Task SearchPatients()
+        {
+            PatientList.Clear();
+            var patients = await _nurseService.SearchPatientsAsync(SearchKeyword);
+            foreach (var patient in patients)
             {
-                PatientId = SelectedPatient.PatientId,
-                NurseId = _currentUser.Id,
-                PharmacistId = new Random().Next(1, 4),
-                RobotId = 1
-            };
+                PatientList.Add(patient);
+            }
+        }
 
+        private async void LoadPatientDetails(int patientId)
+        {
+            if (patientId == 0) return;
+            var details = await _nurseService.GetPatientDetailAsync(patientId);
+
+            SelectedPatient.Birthday = details.Birthday;
+            SelectedPatient.AdmissionDate = details.AdmissionDate;
+            SelectedPatient.DischargeDate = details.DischargeDate;
+            SelectedPatient.NurseName = details.NurseName;
+            OnPropertyChanged(nameof(SelectedPatient));
+        }
+
+        private async Task RequestDelivery()
+        {
             try
             {
-                var result = await _apiService.RequestDeliveryAsync(request);
-                if (result != null)
-                {
-                    MessageBox.Show(
-                        $"{SelectedPatient.Name}의 약 운반이 성공적으로 요청되었습니다.\n ( 요청 번호 : {result.DeliveryId} )",
-                        "요청 성공",
-                        MessageBoxButton.OK,
-                        MessageBoxImage.Information);
-                }
-                else
-                {
-                    MessageBox.Show("약 운반 요청에 실패하였습니다.", "요청 실패", MessageBoxButton.OK, MessageBoxImage.Exclamation);
-                }
+                var random = new Random();
+                int pharmacistId = random.Next(1, 4);
+
+                var result = await _nurseService.RequestDeliveryAsync(1, UserSession.CurrentUser.Id, pharmacistId, SelectedPatient.PatientId);
+                MessageBox.Show($"성공적으로 요청되었습니다. \n( 요청번호 : {result.DeliveryId})", "성공", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"오류가 발생하였습니다.\n{ex.Message}", "오류", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"요청에 실패했습니다. \n{ex}", "실패", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-
-        private bool CanRequestDelivery()
+        private void OnDeliveryCompleted(string jsonData)
         {
-            return SelectedPatient != null;
-        }
-
-        partial void OnSelectedPatientChanged(Patient? value)
-        {
-            RequestDeliveryCommand.NotifyCanExecuteChanged();
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                // TODO : jsonData 파싱 후 메시지 디자인
+                NotificationList.Add(new Notification($"운반 완료 알림 : {jsonData}"));
+            });
         }
     }
 }

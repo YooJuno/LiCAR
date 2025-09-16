@@ -1,6 +1,4 @@
-﻿using licar_wpf.Services;
-using licar_wpf.ViewModels;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +10,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace licar_wpf.Views
@@ -19,12 +18,11 @@ namespace licar_wpf.Views
     /// <summary>
     /// LoginView.xaml에 대한 상호 작용 논리
     /// </summary>
-    public partial class LoginView : Window
+    public partial class LoginView : UserControl
     {
         public LoginView()
         {
             InitializeComponent();
-            DataContext = new LoginViewModel(new NavigationService(), new ApiService());
         }
     }
 }

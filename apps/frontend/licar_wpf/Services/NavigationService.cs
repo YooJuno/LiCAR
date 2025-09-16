@@ -10,28 +10,13 @@ using System.Windows;
 
 namespace licar_wpf.Services
 {
-    public class NavigationService : INavigationService
+    public class NavigationService
     {
-        public void ShowLoginView()
+        public event Action<ViewModelBase> CurrentViewModelChanged;
+        
+        public void NavigateTo(ViewModelBase viewModel)
         {
-            var loginView = new LoginView();
-
-            loginView.DataContext = new LoginViewModel(this, new ApiService());
-            loginView.Show();
-        }
-
-        public void ShowMainView(User user)
-        {
-            var mainView = new MainView();
-
-            mainView.DataContext = new MainViewModel(user, this, new SseService());
-            mainView.Show();
-        }
-
-        public void CloseWindow(object viewModel)
-        {
-            var window = Application.Current.Windows.OfType<Window>().FirstOrDefault(w => w.DataContext == viewModel);
-            window?.Close();
+            CurrentViewModelChanged?.Invoke(viewModel);
         }
     }
 }

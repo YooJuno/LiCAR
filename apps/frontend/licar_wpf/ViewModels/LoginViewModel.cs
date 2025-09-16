@@ -1,71 +1,83 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using licar_wpf.Models;
-using licar_wpf.Models.DTOs;
+﻿using licar_wpf.Models;
 using licar_wpf.Services;
-using licar_wpf.ViewModels.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace licar_wpf.ViewModels
 {
-    public partial class LoginViewModel : ViewModelBase
+    public class RelayCommand : ICommand
     {
-        private readonly INavigationService _navigationService;
-        private readonly IApiService _apiService;
-
-        [ObservableProperty]
-        private UserRole _selectedRole = UserRole.Nurse;
-
-        [ObservableProperty]
-        private string? _userId;
-
-        [ObservableProperty]
-        private string? _userName;
-
-        [ObservableProperty]
-        private string? _errorMessage;
-
-        public LoginViewModel(INavigationService navigationService, IApiService apiService)
+        private readonly Action<object> _execute;
+        private readonly Predicate<object> _canExecute;
+        public event EventHandler CanExecuteChanged;
+        public RelayCommand(Action<object> execute, Predicate<object> canExecute = null)
         {
+            _execute = execute ?? throw new ArgumentNullException(nameof(execute));
+            _canExecute = canExecute;
+        }
+        public bool CanExecute(object parameter) => _canExecute == null || _canExecute(parameter);
+        public void Execute(object parameter) => _execute(parameter);
+        public void RaiseCanExecuteChanged() => CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+    }
+    public class LoginViewModel : ViewModelBase
+    {
+        private readonly AuthService _authService;
+        private readonly NavigationService _navigationService;
+        private readonly SseService _sseService;
+
+        private int _userId;
+        public int UserId { get => _userId; set { _userId = value; OnPropertyChanged(); } }
+
+        private string _userName;
+        public string UserName { get => _userName; set { _userName = value; OnPropertyChanged(); } }
+
+        private string _errorMessage;
+        public string ErroeMessage { get => _errorMessage; set { _errorMessage = value; OnPropertyChanged(); } }
+
+        public bool IsNurseRole { get; set; } = true;
+
+        public ICommand LoginCommand { get; }
+
+        public LoginViewModel(AuthService authService, NavigationService navigationService, SseService sseService)
+        {
+            _authService = authService;
             _navigationService = navigationService;
-            _apiService = apiService;
+            _sseService = sseService;
+            LoginCommand = new RelayCommand(async (p) => await ExecuteLogin(), (p) => !string.IsNullOrEmpty(UserName));
         }
 
-        [RelayCommand]
-        private async Task LoginAsync()
+        private async Task ExecuteLogin()
         {
-            ErrorMessage = null;
-            if (!int.TryParse(UserId, out int id) || string.IsNullOrWhiteSpace(UserName))
-            {
-                ErrorMessage = "사번과 이름을 올바르게 입력해주세요.";
-                return;
-            }
+            ErroeMessage = string.Empty;
 
-            var request = new AuthRequest { Name = UserName };
-            if (SelectedRole == UserRole.Nurse)
+            try
             {
-                request.NurseId = id;
-            }
-            else
-            {
-                request.PharmacistId = id;
-            }
+                if (IsNurseRole)
+                {
+                    var nurse = await _authService.LoginNurseAsync(UserId, UserName);
+                    UserSession.Login(new CurrentUser { Id = nurse.NurseId, Name = nurse.Name, Role = UserRole.Nurse, Department = nurse.Department });
 
-            var response = await _apiService.LoginAsync(request);
+                    _ = _sseService.ConnectAsync(UserRole.Nurse, nurse.NurseId);
 
-            if (response != null)
-            {
-                var user = new User(response);
-                _navigationService.ShowMainView(user);
-                _navigationService.CloseWindow(this);
+                    _navigationService.NavigateTo(new NurseViewModel(_navigationService, new NurseService(new ApiClient()), _sseService));
+                }
+                else
+                {
+                    var pharmacist = await _authService.LoginPharmacistAsync(UserId, UserName);
+                    UserSession.Login(new CurrentUser { Id = pharmacist.PharmacistId, Name = pharmacist.Name, Role = UserRole.Pharmacist });
+
+                    _ = _sseService.ConnectAsync(UserRole.Pharmacist, pharmacist.PharmacistId);
+
+                    _navigationService.NavigateTo(new PharmacistViewModel(_navigationService, new PharmacistService(new ApiClient()), _sseService));
+                }
             }
-            else
+            catch (Exception ex)
             {
-                ErrorMessage = "인증에 실패하였습니다. 사번과 이름을 확인해주세요.";
+                ErroeMessage = "인증에 실패하였습니다. 사번과 이름을 확인해주세요.";
             }
         }
     }
