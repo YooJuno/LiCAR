@@ -34,6 +34,9 @@ namespace licar_wpf.Models
         public string PharmacistName { get; set; }
 
         [JsonPropertyName("patientName")]
-        public string PatientName { get; set; }
+        public string? PatientName { get; set; }
+
+        [JsonPropertyName("patientId")]
+        public int PatientId { get; set; }
     }
 }

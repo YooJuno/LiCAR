@@ -33,11 +33,11 @@ namespace licar_wpf.ViewModels
 
             if (user.Role == UserRole.Nurse)
             {
-                _currentView = new NurseViewModel(new ApiService());
+                _currentView = new NurseViewModel(user, new ApiService());
             }
             else
             {
-                _currentView = new PharmacistViewModel(new ApiService());
+                _currentView = new PharmacistViewModel(user, new ApiService());
             }
 
             _sseService.NotificationReceived += OnNotificationReceived;

@@ -20,6 +20,8 @@ namespace licar_wpf.Services
 
         Task<Prescription?> GetPrescriptionDetailAsync(int prescriptionId);
 
+        Task<List<ValidPrescription>?> GetValidPrescriptionsAsync(int patientId, DateTime date);
+
         Task<Delivery?> RequestDeliveryAsync(DeliveryRequest deliveryRequest);
     }
 }

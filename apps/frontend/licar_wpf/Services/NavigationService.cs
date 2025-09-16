@@ -16,7 +16,7 @@ namespace licar_wpf.Services
         {
             var loginView = new LoginView();
 
-            loginView.DataContect = new LoginViewModel(this, new ApiService());
+            loginView.DataContext = new LoginViewModel(this, new ApiService());
             loginView.Show();
         }
 

@@ -13,7 +13,7 @@ namespace licar_wpf.Models.DTOs
         public int RobotId { get; set; }
 
         [JsonPropertyName("nurseId")]
-        public int NurseID { get; set; }
+        public int NurseId { get; set; }
 
         [JsonPropertyName("pharmacistId")]
         public int PharmacistId { get; set; }

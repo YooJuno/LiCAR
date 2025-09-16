@@ -76,6 +76,22 @@ namespace licar_wpf.Services
             return await _httpClient.GetFromJsonAsync<Prescription>(url);
         }
 
+        public async Task<List<ValidPrescription>?> GetValidPrescriptionsAsync(int patientId, DateTime date)
+        {
+            var dateString = date.ToString("yyyy-mm-dd");
+            var url = $"{BaseUrl}/prescriptions/valid?patient_id={patientId}&date={dateString}";
+
+            try
+            {
+                return await _httpClient.GetFromJsonAsync<List<ValidPrescription>>(url);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error fetching valid prescriptionn : {ex.Message}");
+                return null;
+            }
+        }
+
         public async Task<Delivery?> RequestDeliveryAsync(DeliveryRequest deliveryRequest)
         {
             var url = $"{BaseUrl}/deliveries";

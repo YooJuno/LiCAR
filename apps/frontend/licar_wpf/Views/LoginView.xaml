@@ -1,14 +1,30 @@
-﻿<Page x:Class="licar_wpf.Views.LoginView"
-      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:licar_wpf.Views"
-      mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
-      Title="LoginView">
-
+﻿<Window x:Class="licar_wpf.Views.LoginView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:licar_wpf.Views"
+        xmlns:models="clr-namespace:licar_wpf.Models"
+        mc:Ignorable="d"
+        Title="로그인" Height="400" Width="350" WindowStartupLocation="CenterScreen">
     <Grid>
-        
+        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Width="250">
+            <TextBlock Text="로그인" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,20"/>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,10">
+                <RadioButton Content="간호사" GroupName="Role" IsChecked="{Binding SelectedRole, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static models:UserRole.Nurse}}"/>
+                <RadioButton Content="약사" GroupName="Role" Margin="20,0,0,0" IsChecked="{Binding SelectedRole, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static models:UserRole.Pharmacist}}"/>
+            </StackPanel>
+
+            <TextBlock Text="사번"/>
+            <TextBox Text="{Binding UserId, UpdateSourceTrigger=PropertyChanged}" Margin="0,5,0,10"/>
+
+            <TextBlock Text="이름"/>
+            <TextBox Text="{Binding UserName, UpdateSourceTrigger=PropertyChanged}" Margin="0,5,0,20"/>
+
+            <Button Content="로그인" Command="{Binding LoginCommand}" Height="35" IsDefault="True"/>
+
+            <TextBlock Text="{Binding ErrorMessage}" Foreground="Red" HorizontalAlignment="Center" Margin="0,10,0,0"/>
+        </StackPanel>
     </Grid>
-</Page>
+</Window>
