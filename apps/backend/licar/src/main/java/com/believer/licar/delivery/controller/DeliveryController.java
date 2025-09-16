@@ -1,7 +1,8 @@
 package com.believer.licar.delivery.controller;
 
 import com.believer.licar.delivery.dto.DeliveryCreateRequest;
-import com.believer.licar.delivery.dto.DeliveryResponse;
+import com.believer.licar.delivery.dto.DeliveryDetailResponse;
+import com.believer.licar.delivery.dto.DeliverySimpleResponse;
 import com.believer.licar.delivery.service.DeliveryService;
 import com.believer.licar.prescription.dto.DrugResponse;
 import lombok.RequiredArgsConstructor;
@@ -20,40 +21,40 @@ public class DeliveryController {
 
     // POST /deliveries
     @PostMapping
-    public ResponseEntity<DeliveryResponse> requestDelivery(@RequestBody DeliveryCreateRequest request) {
-        DeliveryResponse response = deliveryService.requestDelivery(request);
+    public ResponseEntity<DeliveryDetailResponse> requestDelivery(@RequestBody DeliveryCreateRequest request) {
+        DeliveryDetailResponse response = deliveryService.requestDelivery(request);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     // PATCH /deliveries/{delivery_id}/start
     @PatchMapping("/{delivery_id}/start")
-    public ResponseEntity<DeliveryResponse> startDelivery(@PathVariable("delivery_id") int deliveryId) {
-        DeliveryResponse response = deliveryService.startDelivery(deliveryId);
+    public ResponseEntity<DeliverySimpleResponse> startDelivery(@PathVariable("delivery_id") int deliveryId) {
+        DeliverySimpleResponse response = deliveryService.startDelivery(deliveryId);
 
         return ResponseEntity.ok(response);
     }
 
     // PATCH /deliveries/{id}/complete
     @PatchMapping("/{delivery_id}/complete")
-    public ResponseEntity<DeliveryResponse> completeDelivery(@PathVariable("delivery_id") int deliveryId) {
-        DeliveryResponse response = deliveryService.completeDelivery(deliveryId);
+    public ResponseEntity<DeliverySimpleResponse> completeDelivery(@PathVariable("delivery_id") int deliveryId) {
+        DeliverySimpleResponse response = deliveryService.completeDelivery(deliveryId);
 
         return ResponseEntity.ok(response);
     }
 
     // GET /deliveries/{delivery_id}
     @GetMapping("/{delivery_id}")
-    public ResponseEntity<DeliveryResponse> getDelivery(@PathVariable("delivery_id") int deliveryId) {
-        DeliveryResponse response = deliveryService.findDeliveryById(deliveryId);
+    public ResponseEntity<DeliveryDetailResponse> getDelivery(@PathVariable("delivery_id") int deliveryId) {
+        DeliveryDetailResponse response = deliveryService.findDeliveryById(deliveryId);
 
         return ResponseEntity.ok(response);
     }
 
     // GET /deliveries
     @GetMapping
-    public ResponseEntity<List<DeliveryResponse>> getAllDeliveries() {
-        List<DeliveryResponse> response = deliveryService.findAllDeliveries();
+    public ResponseEntity<List<DeliverySimpleResponse>> getAllDeliveries() {
+        List<DeliverySimpleResponse> response = deliveryService.findAllDeliveries();
 
         return ResponseEntity.ok(response);
     }
