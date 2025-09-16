@@ -81,10 +81,14 @@ namespace licar_wpf.ViewModels
             try
             {
                 var random = new Random();
-                int pharmacistId = random.Next(1, 4);
+                //int pharmacistId = random.Next(1, 4);
 
-                var result = await _nurseService.RequestDeliveryAsync(1, UserSession.CurrentUser.Id, pharmacistId, SelectedPatient.PatientId);
-                MessageBox.Show($"성공적으로 요청되었습니다. \n( 요청번호 : {result.DeliveryId})", "성공", MessageBoxButton.OK, MessageBoxImage.Information);
+                var result = await _nurseService.RequestDeliveryAsync(1, UserSession.CurrentUser.Id, 1, SelectedPatient.PatientId);
+
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    MessageBox.Show($"성공적으로 요청되었습니다. \n( 요청번호 : {result.DeliveryId})", "성공", MessageBoxButton.OK, MessageBoxImage.Information);
+                });
             }
             catch (Exception ex)
             {

@@ -28,14 +28,14 @@ namespace licar_wpf.Services
 
         public async Task<List<Prescription>> GetValidPrescriptionAsync(int patientId, DateTime date)
         {
-            string formattedDate = date.ToString("yyyy-mm-dd");
+            string formattedDate = date.ToString("yyyy-MM-dd");
 
             return await _apiClient.GetAsync<List<Prescription>>($"/api/v1/prescriptions/valid?patient_id={patientId}&date={formattedDate}");
         }
 
         public async Task<Prescription> GetPrescriptionDetailAsync(int prescriptionId)
         {
-            return await _apiClient.GetAsync<Prescription>($"/api/v1/prescription/{prescriptionId}");
+            return await _apiClient.GetAsync<Prescription>($"/api/v1/prescriptions/{prescriptionId}");
         }
     }
 }
