@@ -14,6 +14,6 @@ ros2 run rc522_pkg rc522_node
 ```
 
 ## ros2_ws launch 명령어
-'''bash
+```bash
 ros2 launch rc522_pkg main_launch.py
 ```
