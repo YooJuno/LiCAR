@@ -36,7 +36,7 @@ namespace licar_wpf.ViewModels
                 if (UserSession.IsLoggedIn)
                 {
                     string role = UserSession.CurrentUser.Role == UserRole.Nurse ? "간호사" : "약사";
-                    return $"{role} {UserSession.CurrentUser.Name}";
+                    return $"[ {role} ] {UserSession.CurrentUser.Name}";
                 }
                 return string.Empty;
             }

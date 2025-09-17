@@ -19,7 +19,7 @@
                 <DataGrid ItemsSource="{Binding DeliveryList}" SelectedItem="{Binding SelectedDelivery, Mode=TwoWay}"
                           AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False" VerticalScrollBarVisibility="Auto">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="요청" Binding="{Binding DeliveryId}" Width="Auto"/>
+                        <DataGridTextColumn Header="요청 번호" Binding="{Binding DeliveryId}" Width="Auto"/>
                         <DataGridTextColumn Header="상태" Binding="{Binding Status}" Width="*"/>
                         <DataGridTextColumn Header="간호사" Binding="{Binding NurseName}" Width="*"/>
                     </DataGrid.Columns>
@@ -40,9 +40,9 @@
                     <ListView ItemsSource="{Binding PrescriptionList}" SelectedItem="{Binding SelectedPrescription, Mode=TwoWay}" VerticalAlignment="Stretch">
                         <ListView.View>
                             <GridView>
-                                <GridViewColumn Header="처방전 번호" DisplayMemberBinding="{Binding PrescriptionId}" Width="100"/>
-                                <GridViewColumn Header="환자 이름" DisplayMemberBinding="{Binding PatientName}" Width="150"/>
-                                <GridViewColumn Header="처방 날짜" DisplayMemberBinding="{Binding Date}" Width="auto"/>
+                                <GridViewColumn Header="처방전 번호" DisplayMemberBinding="{Binding PrescriptionId}" Width="auto"/>
+                                <GridViewColumn Header="환자 이름" DisplayMemberBinding="{Binding PatientName}" Width="200"/>
+                                <GridViewColumn Header="처방 날짜" DisplayMemberBinding="{Binding Date}" Width="200"/>
                             </GridView>
                         </ListView.View>
                     </ListView>
