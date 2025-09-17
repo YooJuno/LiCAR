@@ -12,6 +12,7 @@ namespace licar_wpf.ViewModels
     public class MainViewModel : ViewModelBase
     {
         private readonly NavigationService _navigationService;
+        private readonly SseService _sseService;
         
         private ViewModelBase _currentViewModel;
         public ViewModelBase CurrentViewModel
@@ -21,14 +22,32 @@ namespace licar_wpf.ViewModels
             {
                 _currentViewModel = value;
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(IsUserLoggedIn));
+                OnPropertyChanged(nameof(CurrentUserNameAndRole));
+            }
+        }
+
+        public bool IsUserLoggedIn => CurrentViewModel is not LoginViewModel;
+
+        public string CurrentUserNameAndRole
+        {
+            get
+            {
+                if (UserSession.IsLoggedIn)
+                {
+                    string role = UserSession.CurrentUser.Role == UserRole.Nurse ? "간호사" : "약사";
+                    return $"{role} {UserSession.CurrentUser.Name}";
+                }
+                return string.Empty;
             }
         }
 
         public ICommand LogoutCommand { get; }
 
-        public MainViewModel(NavigationService navigationService, LoginViewModel loginViewModel)
+        public MainViewModel(NavigationService navigationService, LoginViewModel loginViewModel, SseService sseService)
         {
             _navigationService = navigationService;
+            _sseService = sseService;
             _navigationService.CurrentViewModelChanged += (viewModel) => CurrentViewModel = viewModel;
 
             LogoutCommand = new RelayCommand(Logout);
@@ -38,12 +57,16 @@ namespace licar_wpf.ViewModels
 
         private void Logout(object parameter)
         {
-            Models.UserSession.Logout();
+            _sseService.Disconnect();
+            
+            UserSession.Logout();
 
             _navigationService.NavigateTo(new LoginViewModel(
                 new AuthService(new ApiClient()),
                 _navigationService,
-                new SseService()
+                _sseService,
+                () => new NurseViewModel(_navigationService, new NurseService(new ApiClient()), _sseService),
+                () => new PharmacistViewModel(_navigationService, new PharmacistService(new ApiClient()), _sseService)
                 ));
         }
     }

@@ -24,9 +24,12 @@ namespace licar_wpf
             var pharmacistService = new PharmacistService(apiClient);
 
 
-            var loginViewModel = new LoginViewModel(authService, navigationService, sseService);
+            var loginViewModel = new LoginViewModel(authService, navigationService, sseService,
+                () => new NurseViewModel(navigationService, nurseService, sseService),
+                () => new PharmacistViewModel(navigationService, pharmacistService, sseService)
+                );
 
-            var mainViewModel = new MainViewModel(navigationService, loginViewModel);
+            var mainViewModel = new MainViewModel(navigationService, loginViewModel, sseService);
 
             var mainWindow = new MainWindow
             {

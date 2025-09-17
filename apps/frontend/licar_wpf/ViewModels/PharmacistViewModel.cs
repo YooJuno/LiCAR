@@ -41,7 +41,18 @@ namespace licar_wpf.ViewModels
             {
                 _selectedPrescription = value;
                 OnPropertyChanged();
-                LoadPrescriptionDetails(value);
+                LoadPrescriptionDetail(value);
+            }
+        }
+
+        private Prescription _prescriptionDetail;
+        public Prescription PrescriptionDetail
+        {
+            get => _prescriptionDetail;
+            set
+            {
+                _prescriptionDetail = value;
+                OnPropertyChanged();
             }
         }
 
@@ -75,6 +86,7 @@ namespace licar_wpf.ViewModels
         private async void LoadPrescriptionsForDelivery(Delivery delivery)
         {
             PrescriptionList.Clear();
+            PrescriptionDetail = null;
             if (delivery == null) return;
 
             var prescriptions = await _pharmacistService.GetValidPrescriptionAsync(delivery.PatientId, DateTime.Now);
@@ -84,18 +96,15 @@ namespace licar_wpf.ViewModels
             }
         }
 
-        private async void LoadPrescriptionDetails(Prescription prescription)
+        private async void LoadPrescriptionDetail(Prescription prescription)
         {
             if (prescription == null) return;
 
             if (prescription.Drugs != null && prescription.Drugs.Count > 0) return;
 
-            var details = await _pharmacistService.GetPrescriptionDetailAsync(prescription.PrescriptionId);
+            var detail = await _pharmacistService.GetPrescriptionDetailAsync(prescription.PrescriptionId);
 
-            prescription.Drugs = details.Drugs;
-            prescription.CounsellingNote = details.CounsellingNote;
-
-            OnPropertyChanged(nameof(SelectedPrescription));
+            PrescriptionDetail = detail;
         }
 
         private void OnDeliveryRequested(string jsonDate)

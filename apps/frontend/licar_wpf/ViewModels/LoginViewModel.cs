@@ -30,6 +30,9 @@ namespace licar_wpf.ViewModels
         private readonly NavigationService _navigationService;
         private readonly SseService _sseService;
 
+        private readonly Func<NurseViewModel> _nurseViewModelFactory;
+        private readonly Func<PharmacistViewModel> _pharmacistViewModelFactory;
+
         private int _userId;
         public int UserId { get => _userId; set { _userId = value; OnPropertyChanged(); } }
 
@@ -52,11 +55,13 @@ namespace licar_wpf.ViewModels
 
         public ICommand LoginCommand { get; }
 
-        public LoginViewModel(AuthService authService, NavigationService navigationService, SseService sseService)
+        public LoginViewModel(AuthService authService, NavigationService navigationService, SseService sseService, Func<NurseViewModel> nurseViewModelFactory, Func<PharmacistViewModel> pharmacistViewModelFactory)
         {
             _authService = authService;
             _navigationService = navigationService;
             _sseService = sseService;
+            _nurseViewModelFactory = nurseViewModelFactory;
+            _pharmacistViewModelFactory = pharmacistViewModelFactory;
             LoginCommand = new RelayCommand(async (p) => await ExecuteLogin());
         }
 
@@ -73,7 +78,8 @@ namespace licar_wpf.ViewModels
 
                     Task.Run(() => _sseService.ConnectAsync(UserRole.Nurse, nurse.NurseId));
 
-                    _navigationService.NavigateTo(new NurseViewModel(_navigationService, new NurseService(new ApiClient()), _sseService));
+                    //_navigationService.NavigateTo(new NurseViewModel(_navigationService, new NurseService(new ApiClient()), _sseService));
+                    _navigationService.NavigateTo(_nurseViewModelFactory());
                 }
                 else
                 {
@@ -82,7 +88,8 @@ namespace licar_wpf.ViewModels
 
                     Task.Run(() => _sseService.ConnectAsync(UserRole.Pharmacist, pharmacist.PharmacistId));
 
-                    _navigationService.NavigateTo(new PharmacistViewModel(_navigationService, new PharmacistService(new ApiClient()), _sseService));
+                    //_navigationService.NavigateTo(new PharmacistViewModel(_navigationService, new PharmacistService(new ApiClient()), _sseService));
+                    _navigationService.NavigateTo(_pharmacistViewModelFactory());
                 }
             }
             catch (Exception ex)
