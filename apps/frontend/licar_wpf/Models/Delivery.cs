@@ -13,13 +13,13 @@ namespace licar_wpf.Models
         public int DeliveryId { get; set; }
 
         [JsonPropertyName("requestTime")]
-        public DateTime RequestTime { get; set; }
+        public string RequestTime { get; set; }
 
         [JsonPropertyName("sendTime")]
-        public DateTime? SendTime { get; set; }
+        public string? SendTime { get; set; }
 
         [JsonPropertyName("successTime")]
-        public DateTime? SuccessTime { get; set; }
+        public string? SuccessTime { get; set; }
 
         [JsonPropertyName("status")]
         public string Status { get; set; } // "requested", "in_transit", "completed"
@@ -32,9 +32,6 @@ namespace licar_wpf.Models
 
         [JsonPropertyName("pharmacistName")]
         public string PharmacistName { get; set; }
-
-        [JsonPropertyName("patientName")]
-        public string? PatientName { get; set; }
 
         [JsonPropertyName("patientId")]
         public int PatientId { get; set; }

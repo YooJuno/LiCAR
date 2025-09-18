@@ -1,30 +1,29 @@
-﻿<Window x:Class="licar_wpf.Views.LoginView"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:licar_wpf.Views"
-        xmlns:models="clr-namespace:licar_wpf.Models"
-        mc:Ignorable="d"
-        Title="로그인" Height="400" Width="350" WindowStartupLocation="CenterScreen">
-    <Grid>
-        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Width="250">
-            <TextBlock Text="로그인" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,20"/>
+﻿<UserControl x:Class="licar_wpf.Views.LoginView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800"
+             FontSize="16">
+    <Grid Background="WhiteSmoke">
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Width="300">
+            <TextBlock Text="로그인" FontSize="28" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,30" />
 
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,10">
-                <RadioButton Content="간호사" GroupName="Role" IsChecked="{Binding SelectedRole, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static models:UserRole.Nurse}}"/>
-                <RadioButton Content="약사" GroupName="Role" Margin="20,0,0,0" IsChecked="{Binding SelectedRole, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static models:UserRole.Pharmacist}}"/>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,20">
+                <RadioButton Content="간호사" GroupName="Role" IsChecked="{Binding IsNurseRole, Mode=TwoWay}" Margin="0,0,20,0" />
+                <RadioButton Content="약사" GroupName="Role" />
             </StackPanel>
 
-            <TextBlock Text="사번"/>
-            <TextBox Text="{Binding UserId, UpdateSourceTrigger=PropertyChanged}" Margin="0,5,0,10"/>
+            <TextBlock Text="사번" Margin="0,0,0,5" />
+            <TextBox Text="{Binding UserId, UpdateSourceTrigger=PropertyChanged}" Padding="5" Margin="0,0,0,15" />
 
-            <TextBlock Text="이름"/>
-            <TextBox Text="{Binding UserName, UpdateSourceTrigger=PropertyChanged}" Margin="0,5,0,20"/>
+            <TextBlock Text="이름" Margin="0,0,0,5" />
+            <TextBox Text="{Binding UserName, UpdateSourceTrigger=PropertyChanged}" Padding="5" Margin="0,0,0,25" />
 
-            <Button Content="로그인" Command="{Binding LoginCommand}" Height="35" IsDefault="True"/>
+            <Button Content="로그인" Command="{Binding LoginCommand}" Padding="10" IsDefault="True" Background="DodgerBlue" Foreground="White" FontWeight="Bold" />
 
-            <TextBlock Text="{Binding ErrorMessage}" Foreground="Red" HorizontalAlignment="Center" Margin="0,10,0,0"/>
+            <TextBlock Text="{Binding ErrorMessage}" Foreground="Red" HorizontalAlignment="Center" Margin="0,15,0,0" Visibility="{Binding ErrorMessage, Converter={StaticResource NullToVisibilityConverter}}" />
         </StackPanel>
     </Grid>
-</Window>
+</UserControl>

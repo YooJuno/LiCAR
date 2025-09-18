@@ -10,68 +10,80 @@ using System.Threading.Tasks;
 
 namespace licar_wpf.Services
 {
-    public class SseService : ISseService
+    public class SseService
     {
-        private readonly HttpClient _httpClient;
-        private CancellationTokenSource? _cancellationTokenSource;
-        private const string BaseUrl = "http://localhost:8080/api/v1/notifications/subscribe";
+        private HttpClient _httpClient;
+        private CancellationTokenSource _cancellationTokenSource;
 
-        public event Action<Notification>? NotificationReceived;
+        public event Action<string> DeliveryRequested;
+        public event Action<string> DeliveryCompleted;
 
-        public SseService()
+        public async Task ConnectAsync(UserRole role, int id)
         {
-            _httpClient = new HttpClient { Timeout = Timeout.InfiniteTimeSpan };
-        }
+            if (_cancellationTokenSource != null)
+            {
+                Disconnect();
+            }
 
-        public async Task ConnectAsync(UserRole role, int userId)
-        {
-            Disconnect();
             _cancellationTokenSource = new CancellationTokenSource();
+            _httpClient = new HttpClient { Timeout = Timeout.InfiniteTimeSpan };
 
             var rolePath = role == UserRole.Nurse ? "nurse" : "pharmacist";
-            var url = $"{BaseUrl}/{rolePath}/{userId}";
+            var requestUrl = $"http://localhost:8080/api/v1/notifications/subscribe/{rolePath}/{id}";
 
             try
             {
-                var request = new HttpRequestMessage(HttpMethod.Get, url);
-                request.Headers.Accept.Add(new("text/event-stream"));
-
-                var response = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, _cancellationTokenSource.Token);
+                var response = await _httpClient.GetAsync(requestUrl, HttpCompletionOption.ResponseHeadersRead, _cancellationTokenSource.Token);
                 response.EnsureSuccessStatusCode();
 
-                using var stream = await response.Content.ReadAsStreamAsync();
-                using var reader = new StreamReader(stream);
-
-                while (!_cancellationTokenSource.Token.IsCancellationRequested && !reader.EndOfStream)
+                using (var stream = await response.Content.ReadAsStreamAsync())
+                using (var reader = new StreamReader(stream))
                 {
-                    var line = await reader.ReadLineAsync();
-
-                    if (string.IsNullOrWhiteSpace(line) || !line.StartsWith("data:")) continue;
-
-                    var jsonData = line.Substring("data:".Length).Trim();
-                    var notifiaction = JsonSerializer.Deserialize<Notification>(jsonData);
-
-                    if (notifiaction != null)
+                    while (!reader.EndOfStream && !_cancellationTokenSource.IsCancellationRequested)
                     {
-                        NotificationReceived?.Invoke(notifiaction);
+                        var line = await reader.ReadLineAsync();
+                        if (string.IsNullOrWhiteSpace(line)) continue;
+
+                        if (line.StartsWith("event:"))
+                        {
+                            var eventType = line.Substring("event:".Length).Trim();
+                            var dataLine = await reader.ReadLineAsync();
+                            var data = dataLine.Substring("data:".Length).Trim();
+
+                            if (eventType == "deliveryRequest")
+                            {
+                                DeliveryRequested?.Invoke(data);
+                            }
+                            else if (eventType == "deliveryComplete")
+                            {
+                                DeliveryCompleted?.Invoke(data);
+                            }
+                        }
                     }
                 }
             }
             catch (TaskCanceledException)
             {
-
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"SSE Connection error : {ex.Message}");
+                Console.WriteLine(ex.ToString());
             }
         }
-
+        
         public void Disconnect()
         {
-            _cancellationTokenSource?.Cancel();
-            _cancellationTokenSource?.Dispose();
-            _cancellationTokenSource = null;
+            if (_cancellationTokenSource != null)
+            {
+                _cancellationTokenSource?.Cancel();
+                _cancellationTokenSource?.Dispose();
+                _cancellationTokenSource = null;
+            }
+            if (_httpClient != null)
+            {
+                _httpClient.Dispose();
+                _httpClient = null;
+            }
         }
     }
 }

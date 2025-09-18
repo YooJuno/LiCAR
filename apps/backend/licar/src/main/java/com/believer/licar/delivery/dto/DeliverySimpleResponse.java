@@ -5,8 +5,6 @@ import com.believer.licar.delivery.enums.DeliveryStatus;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.time.LocalDateTime;
-
 @Getter
 @Builder
 public class DeliverySimpleResponse {
@@ -15,6 +13,7 @@ public class DeliverySimpleResponse {
     private final DeliveryStatus status;
     private final Integer robotId;
     private final String nurseName;
+    private final Integer patientId;
 
     public static DeliverySimpleResponse from(Delivery delivery) {
         return DeliverySimpleResponse.builder()
@@ -22,6 +21,7 @@ public class DeliverySimpleResponse {
                 .status(delivery.getStatus())
                 .robotId(delivery.getRobotId())
                 .nurseName(delivery.getNurse().getName())
+                .patientId(delivery.getPatient().getPatientId())
                 .build();
     }
 }

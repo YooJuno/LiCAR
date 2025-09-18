@@ -66,4 +66,11 @@ public class DeliveryController {
 
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/requested-drugs")
+    public ResponseEntity<List<DrugResponse>> getRequestedDrugsForLatestDelivery() {
+        List<DrugResponse> response = deliveryService.findRequestedDrugsForLatestDelivery();
+
+        return ResponseEntity.ok(response);
+    }
 }
