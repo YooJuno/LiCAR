@@ -26,5 +26,21 @@ namespace licar_wpf.Models
 
         [JsonPropertyName("drugs")]
         public List<Drug> Drugs { get; set; }
+
+        [JsonIgnore]
+        public string FormattedPeriodAndDateRange
+        {
+            get
+            {
+                if (DateTime.TryParse(Date, out DateTime startDate))
+                {
+                    DateTime endDate = startDate.AddDays(Period - 1);
+
+                    return $"{Period} 일 ( {startDate:yyyy-MM-dd} ~ {endDate:yyyy-MM-dd} ) ";
+                }
+
+                return $"{Period} 일 ";
+            }
+        }
     }
 }
