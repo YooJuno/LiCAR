@@ -10,10 +10,8 @@
     <UserControl.Resources>
         <converters:NullToBooleanConverter x:Key="NullToBooleanConverter" />
     </UserControl.Resources>
-    
     <Grid Margin="20">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="2*"/>
             <ColumnDefinition Width="3*"/>
             <ColumnDefinition Width="2*"/>
         </Grid.ColumnDefinitions>
@@ -34,8 +32,8 @@
                 <ListView ItemsSource="{Binding PatientList}" SelectedItem="{Binding SelectedPatient, Mode=TwoWay}" Margin="0,10,0,0">
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Header="환자 번호" DisplayMemberBinding="{Binding PatientId}" Width="auto"/>
-                            <GridViewColumn Header="환자 이름" DisplayMemberBinding="{Binding Name}" Width="100"/>
+                            <GridViewColumn Header="환자 번호" DisplayMemberBinding="{Binding PatientID}" Width="100"/>
+                            <GridViewColumn Header="환자 이름" DisplayMemberBinding="{Binding Name}" Width="150"/>
                             <GridViewColumn Header="병동 호실" DisplayMemberBinding="{Binding RoomNumber}" Width="100"/>
                         </GridView>
                     </ListView.View>
@@ -48,46 +46,24 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <Border Grid.Row="0" Background="White" CornerRadius="5" Padding="15" DataContext="{Binding PatientDetails}">
-                <StackPanel>
+            <Border Grid.Row="0" Background="White" CornerRadius="5" Padding="15">
+                <StackPanel DataContext="{Binding SelectedPatient}">
                     <TextBlock Text="환자 상세 정보" FontSize="20" FontWeight="SemiBold" Margin="0,0,0,15"/>
-                    <TextBlock Text="{Binding PatientId, StringFormat='환자 번호: {0}'}" Margin="0,5"/>
                     <TextBlock Text="{Binding Name, StringFormat='이름: {0}'}" Margin="0,5"/>
+                    <TextBlock Text="{Binding PatientID, StringFormat='환자 번호: {0}'}" Margin="0,5"/>
                     <TextBlock Text="{Binding Birthday, StringFormat='생년월일: {0}'}" Margin="0,5"/>
                     <TextBlock Text="{Binding AdmissionDate, StringFormat='입원 날짜: {0}'}" Margin="0,5"/>
-                    <TextBlock Text="{Binding DischargeDate, StringFormat='퇴원 날짜: {0}'}" Margin="0,5"/>
                     <TextBlock Text="{Binding NurseName, StringFormat='담당 간호사: {0}'}" Margin="0,5"/>
-                    
                     <Button Content="약 운반 요청" Command="{Binding DataContext.RequestDeliveryCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                             Padding="10" Margin="0,20,0,0" IsEnabled="{Binding DataContext.SelectedPatient, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource NullToBooleanConverter}}"/>
                 </StackPanel>
             </Border>
             <Border Grid.Row="1" Background="White" CornerRadius="5" Padding="15" Margin="0,20,0,0">
                 <DockPanel>
-                    <TextBlock DockPanel.Dock="Top" Text="처방전 목록" FontSize="18" FontWeight="SemiBold" Margin="5" />
-                    <ListView ItemsSource="{Binding ValidPrescriptionList}" SelectedItem="{Binding SelectedPrescription, Mode=TwoWay}" >
-                        <ListView.View>
-                            <GridView>
-                                <GridViewColumn Header="처방전 번호" DisplayMemberBinding="{Binding PrescriptionId}" Width="100" />
-                                <GridViewColumn Header="처방 날짜" DisplayMemberBinding="{Binding Date}" Width="100" />
-                            </GridView>
-                        </ListView.View>
-                    </ListView>                    
+                    <TextBlock DockPanel.Dock="Top" Text="알림 목록" FontSize="18" FontWeight="SemiBold" Margin="5" />
+                    <ListView ItemsSource="{Binding NotificationList}" />
                 </DockPanel>
             </Border>
         </Grid>
-
-        <Border Grid.Column="2" Margin="20,0,0,0" Background="White" CornerRadius="5" Padding="15" >            
-            <DockPanel>
-                <TextBlock DockPanel.Dock="Top" Text="처방 약 목록" FontSize="20" FontWeight="SemiBold" Margin="0,0,0,10" />
-                <DataGrid ItemsSource="{Binding DrugList}" AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False" >
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="이름" Binding="{Binding Name}" Width="*" />
-                        <DataGridTextColumn Header="용량" Binding="{Binding Dosage}" Width="Auto" />
-                        <DataGridTextColumn Header="단위" Binding="{Binding Unit}" Width="Auto" />
-                    </DataGrid.Columns>
-                </DataGrid>
-            </DockPanel>
-        </Border>
     </Grid>
 </UserControl>

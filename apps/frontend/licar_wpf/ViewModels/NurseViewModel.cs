@@ -1,6 +1,5 @@
 ﻿using licar_wpf.Models;
 using licar_wpf.Services;
-using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -23,10 +22,7 @@ namespace licar_wpf.ViewModels
         public string SearchKeyword { get => _searchKeyword; set { _searchKeyword = value; OnPropertyChanged(); } }
 
         public ObservableCollection<Patient> PatientList { get; } = new ObservableCollection<Patient>();
-        // 알림 목록을 활용할까 말까
         public ObservableCollection<Notification> NotificationList { get; } = new ObservableCollection<Notification>();
-        public ObservableCollection<Prescription> ValidPrescriptionList { get; } = new ObservableCollection<Prescription>();
-        public ObservableCollection<Drug> DrugList { get; } = new ObservableCollection<Drug>();
 
         private Patient _selectedPatient;
         public Patient SelectedPatient
@@ -36,33 +32,9 @@ namespace licar_wpf.ViewModels
             {
                 _selectedPatient = value;
                 OnPropertyChanged();
-                LoadPatientDetails(value);
-                LoadValidPrescriptionsAsync(value);
+                LoadPatientDetails(value?.PatientId ?? 0);
 
                 RequestDeliveryCommand.RaiseCanExecuteChanged();
-            }
-        }
-
-        private Patient _patientDetails;
-        public Patient PatientDetails
-        {
-            get => _patientDetails;
-            private set
-            {
-                _patientDetails = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private Prescription _selectedPrescription;
-        public Prescription SelectedPrescription
-        {
-            get => _selectedPrescription;
-            set
-            {
-                _selectedPrescription = value;
-                OnPropertyChanged();
-                LoadValidDrugsAsync(SelectedPatient);
             }
         }
 
@@ -94,50 +66,18 @@ namespace licar_wpf.ViewModels
             }
         }
 
-        //private async void LoadPatientDetails(int patientId)
-        private async void LoadPatientDetails(Patient patient)
+        private async void LoadPatientDetails(int patientId)
         {
-            //if (patientId == 0) return;
-            if (patient == null)
-            {
-                PatientDetails = null;
-                return;
-            }
-            var details = await _nurseService.GetPatientDetailAsync(patient.PatientId);
+            if (patientId == 0) return;
+            var details = await _nurseService.GetPatientDetailAsync(patientId);
 
-            //SelectedPatient.Birthday = details.Birthday;
-            //SelectedPatient.AdmissionDate = details.AdmissionDate;
-            //SelectedPatient.DischargeDate = details.DischargeDate;
-            //SelectedPatient.NurseName = details.NurseName;
-            //OnPropertyChanged(nameof(SelectedPatient));
-
-            PatientDetails = details;
+            SelectedPatient.Birthday = details.Birthday;
+            SelectedPatient.AdmissionDate = details.AdmissionDate;
+            SelectedPatient.DischargeDate = details.DischargeDate;
+            SelectedPatient.NurseName = details.NurseName;
+            OnPropertyChanged(nameof(SelectedPatient));
         }
 
-        private async void LoadValidPrescriptionsAsync(Patient patient)
-        {
-            ValidPrescriptionList.Clear();
-            DrugList.Clear();
-            if (patient == null) return;
-
-            var prescriptions = await _nurseService.GetValidPrescriptionsAsync(patient.PatientId, DateTime.Now);
-            foreach (var prescription in prescriptions)
-            {
-                ValidPrescriptionList.Add(prescription);
-            }
-        }
-
-        private async void LoadValidDrugsAsync(Patient patient)
-        {
-            DrugList.Clear();
-            if (patient == null) return;
-
-            var drugs = await _nurseService.GetValidDrugsAsync(patient.PatientId, DateTime.Now);
-            foreach (var drug in drugs)
-            {
-                DrugList.Add(drug);
-            }
-        }
         private async Task RequestDelivery()
         {
             try
@@ -160,7 +100,7 @@ namespace licar_wpf.ViewModels
         private void OnDeliveryCompleted(string jsonData)
         {
             // TODO : jsonData 파싱 후 메시지 디자인
-            _toastService.Show($"[{DateTime.Now}]약 운반 완료!");
+            _toastService.Show("약 운반 완료!!!!!!!!!!!!!");
 
             Application.Current.Dispatcher.Invoke(() =>
             {

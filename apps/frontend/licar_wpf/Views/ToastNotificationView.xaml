@@ -5,9 +5,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:licar_wpf.Views"
              mc:Ignorable="d" 
-             d:DesignHeight="100" d:DesignWidth="500">
+             d:DesignHeight="80" d:DesignWidth="300">
     <Grid>
-        <Border Background="#444" BorderBrush="LawnGreen" BorderThickness="1" CornerRadius="5" Margin="10" MaxWidth="450">
+        <Border Background="#444" BorderBrush="DodgerBlue" BorderThickness="1" CornerRadius="5" Margin="10" MaxWidth="250">
             <Border.Effect>
                 <DropShadowEffect ShadowDepth="2" Opacity="0.5" BlurRadius="10" />
             </Border.Effect>
@@ -16,7 +16,7 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" Text="{Binding Message}" Foreground="White" FontSize="24"
+                <TextBlock Grid.Column="0" Text="{Binding Message}" Foreground="White" FontSize="14"
                            VerticalAlignment="Center" Margin="15,10" TextWrapping="Wrap" />
                 <Button Grid.Column="1" Content="X" Command="{Binding CloseCommand}" FontWeight="Bold"
                         Foreground="White" Background="Transparent" BorderThickness="0" VerticalAlignment="Top"
