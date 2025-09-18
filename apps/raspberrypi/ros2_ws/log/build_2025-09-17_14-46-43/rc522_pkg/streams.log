@@ -1,0 +1,21 @@
+[6.554s] Invoking command in '/home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/src/rc522_pkg': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/build/rc522_pkg/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/rc522_pkg/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/rc522_pkg build --build-base /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/build/rc522_pkg/build install --record /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/build/rc522_pkg/install.log --single-version-externally-managed install_data
+[8.170s] running egg_info
+[8.304s] writing ../../build/rc522_pkg/rc522_pkg.egg-info/PKG-INFO
+[8.311s] writing dependency_links to ../../build/rc522_pkg/rc522_pkg.egg-info/dependency_links.txt
+[8.313s] writing entry points to ../../build/rc522_pkg/rc522_pkg.egg-info/entry_points.txt
+[8.318s] writing requirements to ../../build/rc522_pkg/rc522_pkg.egg-info/requires.txt
+[8.321s] writing top-level names to ../../build/rc522_pkg/rc522_pkg.egg-info/top_level.txt
+[8.535s] reading manifest file '../../build/rc522_pkg/rc522_pkg.egg-info/SOURCES.txt'
+[8.548s] writing manifest file '../../build/rc522_pkg/rc522_pkg.egg-info/SOURCES.txt'
+[8.548s] running build
+[8.558s] running build_py
+[8.559s] running install
+[8.586s] running install_lib
+[8.782s] running install_data
+[8.787s] running install_egg_info
+[9.038s] removing '/home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/rc522_pkg/lib/python3.12/site-packages/rc522_pkg-0.0.0-py3.12.egg-info' (and everything under it)
+[9.044s] Copying ../../build/rc522_pkg/rc522_pkg.egg-info to /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/rc522_pkg/lib/python3.12/site-packages/rc522_pkg-0.0.0-py3.12.egg-info
+[9.078s] running install_scripts
+[10.067s] Installing main_node script to /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/rc522_pkg/lib/rc522_pkg
+[10.077s] writing list of installed files to '/home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/build/rc522_pkg/install.log'
+[10.363s] Invoked command in '/home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/src/rc522_pkg' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/build/rc522_pkg/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/rc522_pkg/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/rc522_pkg build --build-base /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/build/rc522_pkg/build install --record /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/build/rc522_pkg/install.log --single-version-externally-managed install_data

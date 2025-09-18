@@ -10,7 +10,8 @@ import RPi.GPIO as GPIO
 from mfrc522 import SimpleMFRC522
 import time
 import lgpio
-
+import requests # BE 서버에 요청을 보내기 위해 추가
+from picamera2 import Picamera2 # picamera2 라이브러리 사용 예시
 # GPIO 모드 설정
 GPIO.setmode(GPIO.BCM)  # BCM 번호 사용
 GPIO.setwarnings(False)

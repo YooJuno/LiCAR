@@ -26,4 +26,8 @@ setup(
             'main_node = rc522_pkg.main:main'
         ],
     },
+    # 여기 추가
+    package_data={
+        '': ['py.typed'],
+    },
 )

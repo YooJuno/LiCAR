@@ -1,0 +1,554 @@
+[0.000000] (-) TimerEvent: {}
+[0.003564] (my_interfaces) JobQueued: {'identifier': 'my_interfaces', 'dependencies': OrderedDict()}
+[0.005360] (rc522_pkg) JobQueued: {'identifier': 'rc522_pkg', 'dependencies': OrderedDict()}
+[0.006011] (my_interfaces) JobStarted: {'identifier': 'my_interfaces'}
+[0.068937] (rc522_pkg) JobStarted: {'identifier': 'rc522_pkg'}
+[0.095931] (-) TimerEvent: {}
+[0.110021] (my_interfaces) JobProgress: {'identifier': 'my_interfaces', 'progress': 'cmake'}
+[0.121137] (my_interfaces) JobProgress: {'identifier': 'my_interfaces', 'progress': 'build'}
+[0.121456] (my_interfaces) Command: {'cmd': ['/usr/bin/cmake', '--build', '/home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/build/my_interfaces', '--', '-j4', '-l4'], 'cwd': '/home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/build/my_interfaces', 'env': OrderedDict({'LESSOPEN': '| /usr/bin/lesspipe %s', 'MAIL': '/var/mail/ssafy', 'USER': 'ssafy', 'SSH_CLIENT': '192.168.100.76 40794 22', 'GIT_ASKPASS': '/home/ssafy/.vscode-server/cli/servers/Stable-6f17636121051a53c88d3e605c491d22af2ba755/server/extensions/git/dist/askpass.sh', 'SHLVL': '2', 'LD_LIBRARY_PATH': '/opt/ros/jazzy/lib/aarch64-linux-gnu:/opt/ros/jazzy/lib', 'BROWSER': '/home/ssafy/.vscode-server/cli/servers/Stable-6f17636121051a53c88d3e605c491d22af2ba755/server/bin/helpers/browser.sh', 'HOME': '/home/ssafy', 'OLDPWD': '/home/ssafy/git/S13P21C206/apps/raspberrypi', 'TERM_PROGRAM_VERSION': '1.103.2', 'VSCODE_IPC_HOOK_CLI': '/tmp/vscode-ipc-afb28278-0edf-4e18-ae21-cf07f224f67b.sock', 'ROS_PYTHON_VERSION': '3', 'VSCODE_GIT_ASKPASS_MAIN': '/home/ssafy/.vscode-server/cli/servers/Stable-6f17636121051a53c88d3e605c491d22af2ba755/server/extensions/git/dist/askpass-main.js', 'VSCODE_GIT_ASKPASS_NODE': '/home/ssafy/.vscode-server/cli/servers/Stable-6f17636121051a53c88d3e605c491d22af2ba755/server/node', 'SSL_CERT_FILE': '/usr/lib/ssl/cert.pem', 'COLORTERM': 'truecolor', 'DEBUGINFOD_URLS': 'https://debuginfod.ubuntu.com', 'ROS_DISTRO': 'jazzy', 'LOGNAME': 'ssafy', '_': '/usr/bin/colcon', 'ROS_VERSION': '2', 'TERM': 'xterm-256color', 'PATH': '/home/ssafy/.vscode-server/cli/servers/Stable-6f17636121051a53c88d3e605c491d22af2ba755/server/bin/remote-cli:/opt/ros/jazzy/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/snap/bin', 'SSL_CERT_DIR': '/usr/lib/ssl/certs', 'LANG': 'en_US.UTF-8', 'LS_COLORS': 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=00:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.avif=01;35:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:*~=00;90:*#=00;90:*.bak=00;90:*.crdownload=00;90:*.dpkg-dist=00;90:*.dpkg-new=00;90:*.dpkg-old=00;90:*.dpkg-tmp=00;90:*.old=00;90:*.orig=00;90:*.part=00;90:*.rej=00;90:*.rpmnew=00;90:*.rpmorig=00;90:*.rpmsave=00;90:*.swp=00;90:*.tmp=00;90:*.ucf-dist=00;90:*.ucf-new=00;90:*.ucf-old=00;90:', 'VSCODE_GIT_IPC_HANDLE': '/tmp/vscode-git-e2fa2ef003.sock', 'TERM_PROGRAM': 'vscode', 'AMENT_PREFIX_PATH': '/opt/ros/jazzy', 'SHELL': '/bin/bash', 'LESSCLOSE': '/usr/bin/lesspipe %s %s', 'ROS_AUTOMATIC_DISCOVERY_RANGE': 'SUBNET', 'VSCODE_GIT_ASKPASS_EXTRA_ARGS': '', 'PWD': '/home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/build/my_interfaces', 'SSH_CONNECTION': '192.168.100.76 40794 192.168.100.246 22', 'XDG_DATA_DIRS': '/usr/share/gnome:/usr/local/share:/usr/share:/var/lib/snapd/desktop', 'PYTHONPATH': '/opt/ros/jazzy/lib/python3.12/site-packages', 'COLCON': '1', 'CMAKE_PREFIX_PATH': '/opt/ros/jazzy'}), 'shell': False}
+[0.196213] (-) TimerEvent: {}
+[0.300096] (-) TimerEvent: {}
+[0.403547] (-) TimerEvent: {}
+[0.507028] (-) TimerEvent: {}
+[0.609711] (-) TimerEvent: {}
+[0.712360] (-) TimerEvent: {}
+[0.815681] (-) TimerEvent: {}
+[0.917282] (-) TimerEvent: {}
+[0.986018] (my_interfaces) StdoutLine: {'line': b'-- Found ament_cmake: 2.5.4 (/opt/ros/jazzy/share/ament_cmake/cmake)\n'}
+[1.021020] (-) TimerEvent: {}
+[1.127938] (-) TimerEvent: {}
+[1.217822] (my_interfaces) StdoutLine: {'line': b'-- Found Python3: /usr/bin/python3 (found version "3.12.3") found components: Interpreter \n'}
+[1.228409] (-) TimerEvent: {}
+[1.330394] (-) TimerEvent: {}
+[1.435547] (-) TimerEvent: {}
+[1.541921] (-) TimerEvent: {}
+[1.643952] (-) TimerEvent: {}
+[1.745179] (-) TimerEvent: {}
+[1.846279] (-) TimerEvent: {}
+[1.917277] (my_interfaces) StdoutLine: {'line': b'-- Found ament_lint_auto: 0.17.3 (/opt/ros/jazzy/share/ament_lint_auto/cmake)\n'}
+[1.949102] (-) TimerEvent: {}
+[2.050245] (-) TimerEvent: {}
+[2.151139] (-) TimerEvent: {}
+[2.254549] (-) TimerEvent: {}
+[2.357225] (-) TimerEvent: {}
+[2.466458] (-) TimerEvent: {}
+[2.582101] (-) TimerEvent: {}
+[2.684656] (-) TimerEvent: {}
+[2.774434] (my_interfaces) StdoutLine: {'line': b'-- Found rclcpp: 28.1.11 (/opt/ros/jazzy/share/rclcpp/cmake)\n'}
+[2.784720] (-) TimerEvent: {}
+[2.885505] (-) TimerEvent: {}
+[2.986367] (-) TimerEvent: {}
+[3.066121] (my_interfaces) StdoutLine: {'line': b'-- Found rosidl_generator_c: 4.6.6 (/opt/ros/jazzy/share/rosidl_generator_c/cmake)\n'}
+[3.086575] (-) TimerEvent: {}
+[3.132450] (my_interfaces) StdoutLine: {'line': b'-- Found rosidl_generator_cpp: 4.6.6 (/opt/ros/jazzy/share/rosidl_generator_cpp/cmake)\n'}
+[3.186804] (-) TimerEvent: {}
+[3.227912] (my_interfaces) StdoutLine: {'line': b'-- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c\n'}
+[3.286961] (-) TimerEvent: {}
+[3.342110] (my_interfaces) StdoutLine: {'line': b'-- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp\n'}
+[3.389408] (-) TimerEvent: {}
+[3.490193] (-) TimerEvent: {}
+[3.591130] (-) TimerEvent: {}
+[3.691903] (-) TimerEvent: {}
+[3.792827] (-) TimerEvent: {}
+[3.894168] (-) TimerEvent: {}
+[3.982508] (my_interfaces) StdoutLine: {'line': b'-- Found rmw_implementation_cmake: 7.3.2 (/opt/ros/jazzy/share/rmw_implementation_cmake/cmake)\n'}
+[3.994382] (-) TimerEvent: {}
+[4.022606] (my_interfaces) StdoutLine: {'line': b'-- Found rmw_fastrtps_cpp: 8.4.3 (/opt/ros/jazzy/share/rmw_fastrtps_cpp/cmake)\n'}
+[4.094640] (-) TimerEvent: {}
+[4.195720] (-) TimerEvent: {}
+[4.296602] (-) TimerEvent: {}
+[4.397527] (-) TimerEvent: {}
+[4.499032] (-) TimerEvent: {}
+[4.600916] (-) TimerEvent: {}
+[4.702553] (-) TimerEvent: {}
+[4.740384] (my_interfaces) StdoutLine: {'line': b'-- Found OpenSSL: /usr/lib/aarch64-linux-gnu/libcrypto.so (found version "3.0.13")  \n'}
+[4.805926] (-) TimerEvent: {}
+[4.873245] (my_interfaces) StdoutLine: {'line': b'-- Found FastRTPS: /opt/ros/jazzy/include (Required is at least version "2.13") \n'}
+[4.908095] (-) TimerEvent: {}
+[5.010057] (-) TimerEvent: {}
+[5.018039] (my_interfaces) StdoutLine: {'line': b"-- Using RMW implementation 'rmw_fastrtps_cpp' as default\n"}
+[5.110160] (-) TimerEvent: {}
+[5.210934] (-) TimerEvent: {}
+[5.311727] (-) TimerEvent: {}
+[5.412475] (-) TimerEvent: {}
+[5.513339] (-) TimerEvent: {}
+[5.569614] (my_interfaces) StdoutLine: {'line': b'-- Found std_msgs: 5.3.6 (/opt/ros/jazzy/share/std_msgs/cmake)\n'}
+[5.613542] (-) TimerEvent: {}
+[5.665180] (my_interfaces) StdoutLine: {'line': b'-- Found rosidl_default_generators: 1.6.0 (/opt/ros/jazzy/share/rosidl_default_generators/cmake)\n'}
+[5.713715] (-) TimerEvent: {}
+[5.754629] (my_interfaces) StdoutLine: {'line': b'-- Found rosidl_adapter: 4.6.6 (/opt/ros/jazzy/share/rosidl_adapter/cmake)\n'}
+[5.813938] (-) TimerEvent: {}
+[5.914723] (-) TimerEvent: {}
+[6.016522] (-) TimerEvent: {}
+[6.117499] (-) TimerEvent: {}
+[6.218441] (-) TimerEvent: {}
+[6.320068] (-) TimerEvent: {}
+[6.420993] (-) TimerEvent: {}
+[6.522185] (-) TimerEvent: {}
+[6.621263] (rc522_pkg) Command: {'cmd': ['/usr/bin/python3', '-W', 'ignore:setup.py install is deprecated', '-W', 'ignore:easy_install command is deprecated', 'setup.py', 'egg_info', '--egg-base', '../../build/rc522_pkg', 'build', '--build-base', '/home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/build/rc522_pkg/build', 'install', '--record', '/home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/build/rc522_pkg/install.log', '--single-version-externally-managed', 'install_data'], 'cwd': '/home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/src/rc522_pkg', 'env': {'LESSOPEN': '| /usr/bin/lesspipe %s', 'MAIL': '/var/mail/ssafy', 'USER': 'ssafy', 'SSH_CLIENT': '192.168.100.76 40794 22', 'GIT_ASKPASS': '/home/ssafy/.vscode-server/cli/servers/Stable-6f17636121051a53c88d3e605c491d22af2ba755/server/extensions/git/dist/askpass.sh', 'SHLVL': '2', 'LD_LIBRARY_PATH': '/opt/ros/jazzy/lib/aarch64-linux-gnu:/opt/ros/jazzy/lib', 'BROWSER': '/home/ssafy/.vscode-server/cli/servers/Stable-6f17636121051a53c88d3e605c491d22af2ba755/server/bin/helpers/browser.sh', 'HOME': '/home/ssafy', 'OLDPWD': '/home/ssafy/git/S13P21C206/apps/raspberrypi', 'TERM_PROGRAM_VERSION': '1.103.2', 'VSCODE_IPC_HOOK_CLI': '/tmp/vscode-ipc-afb28278-0edf-4e18-ae21-cf07f224f67b.sock', 'ROS_PYTHON_VERSION': '3', 'VSCODE_GIT_ASKPASS_MAIN': '/home/ssafy/.vscode-server/cli/servers/Stable-6f17636121051a53c88d3e605c491d22af2ba755/server/extensions/git/dist/askpass-main.js', 'VSCODE_GIT_ASKPASS_NODE': '/home/ssafy/.vscode-server/cli/servers/Stable-6f17636121051a53c88d3e605c491d22af2ba755/server/node', 'SSL_CERT_FILE': '/usr/lib/ssl/cert.pem', 'COLORTERM': 'truecolor', 'DEBUGINFOD_URLS': 'https://debuginfod.ubuntu.com', 'ROS_DISTRO': 'jazzy', 'LOGNAME': 'ssafy', '_': '/usr/bin/colcon', 'ROS_VERSION': '2', 'TERM': 'xterm-256color', 'PATH': '/home/ssafy/.vscode-server/cli/servers/Stable-6f17636121051a53c88d3e605c491d22af2ba755/server/bin/remote-cli:/opt/ros/jazzy/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/snap/bin', 'SSL_CERT_DIR': '/usr/lib/ssl/certs', 'LANG': 'en_US.UTF-8', 'LS_COLORS': 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=00:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.avif=01;35:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:*~=00;90:*#=00;90:*.bak=00;90:*.crdownload=00;90:*.dpkg-dist=00;90:*.dpkg-new=00;90:*.dpkg-old=00;90:*.dpkg-tmp=00;90:*.old=00;90:*.orig=00;90:*.part=00;90:*.rej=00;90:*.rpmnew=00;90:*.rpmorig=00;90:*.rpmsave=00;90:*.swp=00;90:*.tmp=00;90:*.ucf-dist=00;90:*.ucf-new=00;90:*.ucf-old=00;90:', 'VSCODE_GIT_IPC_HANDLE': '/tmp/vscode-git-e2fa2ef003.sock', 'TERM_PROGRAM': 'vscode', 'AMENT_PREFIX_PATH': '/opt/ros/jazzy', 'SHELL': '/bin/bash', 'LESSCLOSE': '/usr/bin/lesspipe %s %s', 'ROS_AUTOMATIC_DISCOVERY_RANGE': 'SUBNET', 'VSCODE_GIT_ASKPASS_EXTRA_ARGS': '', 'PWD': '/home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/build/rc522_pkg', 'SSH_CONNECTION': '192.168.100.76 40794 192.168.100.246 22', 'XDG_DATA_DIRS': '/usr/share/gnome:/usr/local/share:/usr/share:/var/lib/snapd/desktop', 'PYTHONPATH': '/home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/build/rc522_pkg/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/rc522_pkg/lib/python3.12/site-packages:/opt/ros/jazzy/lib/python3.12/site-packages', 'COLCON': '1'}, 'shell': False}
+[6.625560] (-) TimerEvent: {}
+[6.647927] (my_interfaces) StdoutLine: {'line': b'-- Found ament_cmake_ros: 0.12.0 (/opt/ros/jazzy/share/ament_cmake_ros/cmake)\n'}
+[6.725849] (-) TimerEvent: {}
+[6.826603] (-) TimerEvent: {}
+[6.928941] (-) TimerEvent: {}
+[7.029905] (-) TimerEvent: {}
+[7.131169] (-) TimerEvent: {}
+[7.231963] (-) TimerEvent: {}
+[7.334525] (-) TimerEvent: {}
+[7.416725] (my_interfaces) StdoutLine: {'line': b'-- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c\n'}
+[7.434707] (-) TimerEvent: {}
+[7.535689] (-) TimerEvent: {}
+[7.636916] (-) TimerEvent: {}
+[7.680443] (my_interfaces) StdoutLine: {'line': b'-- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp\n'}
+[7.688442] (my_interfaces) StdoutLine: {'line': b'-- Found python_cmake_module: 0.11.1 (/opt/ros/jazzy/share/python_cmake_module/cmake)\n'}
+[7.737102] (-) TimerEvent: {}
+[7.837893] (-) TimerEvent: {}
+[7.939318] (-) TimerEvent: {}
+[8.041077] (-) TimerEvent: {}
+[8.141813] (-) TimerEvent: {}
+[8.240306] (rc522_pkg) StdoutLine: {'line': b'running egg_info\n'}
+[8.242883] (-) TimerEvent: {}
+[8.347632] (-) TimerEvent: {}
+[8.374173] (rc522_pkg) StdoutLine: {'line': b'writing ../../build/rc522_pkg/rc522_pkg.egg-info/PKG-INFO\n'}
+[8.380662] (rc522_pkg) StdoutLine: {'line': b'writing dependency_links to ../../build/rc522_pkg/rc522_pkg.egg-info/dependency_links.txt\n'}
+[8.382454] (rc522_pkg) StdoutLine: {'line': b'writing entry points to ../../build/rc522_pkg/rc522_pkg.egg-info/entry_points.txt\n'}
+[8.388009] (rc522_pkg) StdoutLine: {'line': b'writing requirements to ../../build/rc522_pkg/rc522_pkg.egg-info/requires.txt\n'}
+[8.390528] (rc522_pkg) StdoutLine: {'line': b'writing top-level names to ../../build/rc522_pkg/rc522_pkg.egg-info/top_level.txt\n'}
+[8.445445] (-) TimerEvent: {}
+[8.546229] (-) TimerEvent: {}
+[8.604680] (rc522_pkg) StdoutLine: {'line': b"reading manifest file '../../build/rc522_pkg/rc522_pkg.egg-info/SOURCES.txt'\n"}
+[8.617125] (rc522_pkg) StdoutLine: {'line': b"writing manifest file '../../build/rc522_pkg/rc522_pkg.egg-info/SOURCES.txt'\n"}
+[8.618625] (rc522_pkg) StdoutLine: {'line': b'running build\n'}
+[8.619480] (rc522_pkg) StdoutLine: {'line': b'running build_py\n'}
+[8.629336] (rc522_pkg) StdoutLine: {'line': b'running install\n'}
+[8.646596] (-) TimerEvent: {}
+[8.655918] (rc522_pkg) StdoutLine: {'line': b'running install_lib\n'}
+[8.747945] (-) TimerEvent: {}
+[8.850652] (-) TimerEvent: {}
+[8.852296] (rc522_pkg) StdoutLine: {'line': b'running install_data\n'}
+[8.855746] (rc522_pkg) StdoutLine: {'line': b'running install_egg_info\n'}
+[8.951551] (-) TimerEvent: {}
+[9.052654] (-) TimerEvent: {}
+[9.107992] (rc522_pkg) StdoutLine: {'line': b"removing '/home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/rc522_pkg/lib/python3.12/site-packages/rc522_pkg-0.0.0-py3.12.egg-info' (and everything under it)\n"}
+[9.113989] (rc522_pkg) StdoutLine: {'line': b'Copying ../../build/rc522_pkg/rc522_pkg.egg-info to /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/rc522_pkg/lib/python3.12/site-packages/rc522_pkg-0.0.0-py3.12.egg-info\n'}
+[9.147231] (rc522_pkg) StdoutLine: {'line': b'running install_scripts\n'}
+[9.154991] (-) TimerEvent: {}
+[9.256100] (-) TimerEvent: {}
+[9.357304] (-) TimerEvent: {}
+[9.462082] (-) TimerEvent: {}
+[9.565273] (-) TimerEvent: {}
+[9.666532] (-) TimerEvent: {}
+[9.767432] (-) TimerEvent: {}
+[9.869020] (-) TimerEvent: {}
+[9.911450] (my_interfaces) StdoutLine: {'line': b'-- Found Python3: /usr/bin/python3 (found version "3.12.3") found components: Interpreter Development NumPy Development.Module Development.Embed \n'}
+[9.969212] (-) TimerEvent: {}
+[10.010841] (my_interfaces) StdoutLine: {'line': b"-- Added test 'lint_cmake' to check CMake code style\n"}
+[10.027631] (my_interfaces) StdoutLine: {'line': b"-- Added test 'xmllint' to check XML markup files\n"}
+[10.071606] (-) TimerEvent: {}
+[10.137029] (rc522_pkg) StdoutLine: {'line': b'Installing main_node script to /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/rc522_pkg/lib/rc522_pkg\n'}
+[10.146507] (rc522_pkg) StdoutLine: {'line': b"writing list of installed files to '/home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/build/rc522_pkg/install.log'\n"}
+[10.148895] (my_interfaces) StdoutLine: {'line': b'-- Configuring done (9.3s)\n'}
+[10.173387] (-) TimerEvent: {}
+[10.276588] (-) TimerEvent: {}
+[10.385354] (-) TimerEvent: {}
+[10.432487] (rc522_pkg) CommandEnded: {'returncode': 0}
+[10.485539] (-) TimerEvent: {}
+[10.568201] (rc522_pkg) JobEnded: {'identifier': 'rc522_pkg', 'rc': 0}
+[10.585752] (-) TimerEvent: {}
+[10.686440] (-) TimerEvent: {}
+[10.743491] (my_interfaces) StdoutLine: {'line': b'-- Generating done (0.4s)\n'}
+[10.786628] (-) TimerEvent: {}
+[10.820007] (my_interfaces) StdoutLine: {'line': b'-- Build files have been written to: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/build/my_interfaces\n'}
+[10.886924] (-) TimerEvent: {}
+[10.989992] (-) TimerEvent: {}
+[11.091019] (-) TimerEvent: {}
+[11.109577] (my_interfaces) StdoutLine: {'line': b'[  2%] \x1b[34m\x1b[1mGenerating type hashes for ROS interfaces\x1b[0m\n'}
+[11.182570] (my_interfaces) StdoutLine: {'line': b'[  2%] Built target ament_cmake_python_copy_my_interfaces\n'}
+[11.191196] (-) TimerEvent: {}
+[11.293036] (-) TimerEvent: {}
+[11.397707] (-) TimerEvent: {}
+[11.498581] (-) TimerEvent: {}
+[11.609819] (-) TimerEvent: {}
+[11.710892] (-) TimerEvent: {}
+[11.811680] (-) TimerEvent: {}
+[11.915230] (-) TimerEvent: {}
+[12.016008] (-) TimerEvent: {}
+[12.117953] (-) TimerEvent: {}
+[12.220856] (-) TimerEvent: {}
+[12.323233] (-) TimerEvent: {}
+[12.400609] (my_interfaces) StdoutLine: {'line': b'[  2%] Built target my_interfaces__rosidl_generator_type_description\n'}
+[12.427013] (-) TimerEvent: {}
+[12.500615] (my_interfaces) StdoutLine: {'line': b'[  5%] \x1b[34m\x1b[1mGenerating C code for ROS interfaces\x1b[0m\n'}
+[12.531935] (-) TimerEvent: {}
+[12.597725] (my_interfaces) StdoutLine: {'line': b'[  8%] \x1b[34m\x1b[1mGenerating C++ code for ROS interfaces\x1b[0m\n'}
+[12.632561] (-) TimerEvent: {}
+[12.705394] (my_interfaces) StdoutLine: {'line': b'running egg_info\n'}
+[12.732796] (-) TimerEvent: {}
+[12.833623] (-) TimerEvent: {}
+[12.866112] (my_interfaces) StdoutLine: {'line': b'writing my_interfaces.egg-info/PKG-INFO\n'}
+[12.870181] (my_interfaces) StdoutLine: {'line': b'writing dependency_links to my_interfaces.egg-info/dependency_links.txt\n'}
+[12.873340] (my_interfaces) StdoutLine: {'line': b'writing top-level names to my_interfaces.egg-info/top_level.txt\n'}
+[12.933904] (-) TimerEvent: {}
+[13.035940] (-) TimerEvent: {}
+[13.137964] (-) TimerEvent: {}
+[13.240368] (-) TimerEvent: {}
+[13.318628] (my_interfaces) StdoutLine: {'line': b"reading manifest file 'my_interfaces.egg-info/SOURCES.txt'\n"}
+[13.326645] (my_interfaces) StdoutLine: {'line': b"writing manifest file 'my_interfaces.egg-info/SOURCES.txt'\n"}
+[13.341970] (-) TimerEvent: {}
+[13.445115] (-) TimerEvent: {}
+[13.547077] (-) TimerEvent: {}
+[13.553337] (my_interfaces) StdoutLine: {'line': b'[  8%] Built target ament_cmake_python_build_my_interfaces_egg\n'}
+[13.647211] (-) TimerEvent: {}
+[13.747912] (-) TimerEvent: {}
+[13.848753] (-) TimerEvent: {}
+[13.952140] (-) TimerEvent: {}
+[14.055998] (-) TimerEvent: {}
+[14.117142] (my_interfaces) StdoutLine: {'line': b'[  8%] Built target my_interfaces__cpp\n'}
+[14.156206] (-) TimerEvent: {}
+[14.256999] (-) TimerEvent: {}
+[14.307751] (my_interfaces) StdoutLine: {'line': b'[ 11%] \x1b[32mBuilding C object CMakeFiles/my_interfaces__rosidl_generator_c.dir/rosidl_generator_c/my_interfaces/msg/detail/start_signal__description.c.o\x1b[0m\n'}
+[14.314863] (my_interfaces) StdoutLine: {'line': b'[ 14%] \x1b[32mBuilding C object CMakeFiles/my_interfaces__rosidl_generator_c.dir/rosidl_generator_c/my_interfaces/msg/detail/start_signal__functions.c.o\x1b[0m\n'}
+[14.318114] (my_interfaces) StdoutLine: {'line': b'[ 17%] \x1b[32mBuilding C object CMakeFiles/my_interfaces__rosidl_generator_c.dir/rosidl_generator_c/my_interfaces/msg/detail/start_signal__type_support.c.o\x1b[0m\n'}
+[14.357260] (-) TimerEvent: {}
+[14.459706] (-) TimerEvent: {}
+[14.563279] (-) TimerEvent: {}
+[14.666736] (-) TimerEvent: {}
+[14.771099] (-) TimerEvent: {}
+[14.872277] (-) TimerEvent: {}
+[14.974754] (-) TimerEvent: {}
+[15.079094] (-) TimerEvent: {}
+[15.180469] (-) TimerEvent: {}
+[15.283414] (-) TimerEvent: {}
+[15.385287] (-) TimerEvent: {}
+[15.486205] (-) TimerEvent: {}
+[15.588104] (-) TimerEvent: {}
+[15.609955] (my_interfaces) StdoutLine: {'line': b'[ 20%] \x1b[32m\x1b[1mLinking C shared library libmy_interfaces__rosidl_generator_c.so\x1b[0m\n'}
+[15.688323] (-) TimerEvent: {}
+[15.789260] (-) TimerEvent: {}
+[15.890319] (-) TimerEvent: {}
+[15.931549] (my_interfaces) StdoutLine: {'line': b'[ 20%] Built target my_interfaces__rosidl_generator_c\n'}
+[15.991519] (-) TimerEvent: {}
+[16.000578] (my_interfaces) StdoutLine: {'line': b'[ 23%] \x1b[34m\x1b[1mGenerating C++ type support for eProsima Fast-RTPS\x1b[0m\n'}
+[16.005376] (my_interfaces) StdoutLine: {'line': b'[ 26%] \x1b[34m\x1b[1mGenerating C type support for eProsima Fast-RTPS\x1b[0m\n'}
+[16.009955] (my_interfaces) StdoutLine: {'line': b'[ 29%] \x1b[34m\x1b[1mGenerating C type support dispatch for ROS interfaces\x1b[0m\n'}
+[16.014893] (my_interfaces) StdoutLine: {'line': b'[ 32%] \x1b[34m\x1b[1mGenerating C introspection for ROS interfaces\x1b[0m\n'}
+[16.098337] (-) TimerEvent: {}
+[16.207577] (-) TimerEvent: {}
+[16.320243] (-) TimerEvent: {}
+[16.422561] (-) TimerEvent: {}
+[16.530226] (-) TimerEvent: {}
+[16.631939] (-) TimerEvent: {}
+[16.736287] (-) TimerEvent: {}
+[16.837699] (-) TimerEvent: {}
+[16.941754] (-) TimerEvent: {}
+[17.047940] (-) TimerEvent: {}
+[17.156949] (-) TimerEvent: {}
+[17.260973] (-) TimerEvent: {}
+[17.369149] (-) TimerEvent: {}
+[17.478086] (-) TimerEvent: {}
+[17.583947] (-) TimerEvent: {}
+[17.685325] (-) TimerEvent: {}
+[17.802178] (-) TimerEvent: {}
+[17.908932] (-) TimerEvent: {}
+[18.028123] (-) TimerEvent: {}
+[18.134575] (-) TimerEvent: {}
+[18.240090] (-) TimerEvent: {}
+[18.351577] (-) TimerEvent: {}
+[18.453358] (-) TimerEvent: {}
+[18.463260] (my_interfaces) StdoutLine: {'line': b'[ 35%] \x1b[32mBuilding CXX object CMakeFiles/my_interfaces__rosidl_typesupport_fastrtps_c.dir/rosidl_typesupport_fastrtps_c/my_interfaces/msg/detail/start_signal__type_support_c.cpp.o\x1b[0m\n'}
+[18.519368] (my_interfaces) StdoutLine: {'line': b'[ 38%] \x1b[32mBuilding CXX object CMakeFiles/my_interfaces__rosidl_typesupport_c.dir/rosidl_typesupport_c/my_interfaces/msg/start_signal__type_support.cpp.o\x1b[0m\n'}
+[18.560968] (-) TimerEvent: {}
+[18.666097] (-) TimerEvent: {}
+[18.733640] (my_interfaces) StdoutLine: {'line': b'[ 41%] \x1b[32mBuilding CXX object CMakeFiles/my_interfaces__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/my_interfaces/msg/detail/dds_fastrtps/start_signal__type_support.cpp.o\x1b[0m\n'}
+[18.768547] (-) TimerEvent: {}
+[18.878166] (-) TimerEvent: {}
+[18.979478] (-) TimerEvent: {}
+[18.988586] (my_interfaces) StdoutLine: {'line': b'[ 44%] \x1b[32mBuilding C object CMakeFiles/my_interfaces__rosidl_typesupport_introspection_c.dir/rosidl_typesupport_introspection_c/my_interfaces/msg/detail/start_signal__type_support.c.o\x1b[0m\n'}
+[19.080103] (-) TimerEvent: {}
+[19.183342] (-) TimerEvent: {}
+[19.268328] (my_interfaces) StdoutLine: {'line': b'[ 47%] \x1b[32m\x1b[1mLinking C shared library libmy_interfaces__rosidl_typesupport_introspection_c.so\x1b[0m\n'}
+[19.283592] (-) TimerEvent: {}
+[19.385191] (-) TimerEvent: {}
+[19.477687] (my_interfaces) StdoutLine: {'line': b'[ 47%] Built target my_interfaces__rosidl_typesupport_introspection_c\n'}
+[19.485908] (-) TimerEvent: {}
+[19.545813] (my_interfaces) StdoutLine: {'line': b'[ 50%] \x1b[34m\x1b[1mGenerating C++ introspection for ROS interfaces\x1b[0m\n'}
+[19.592186] (-) TimerEvent: {}
+[19.609961] (my_interfaces) StdoutLine: {'line': b'[ 52%] \x1b[32m\x1b[1mLinking CXX shared library libmy_interfaces__rosidl_typesupport_c.so\x1b[0m\n'}
+[19.693937] (-) TimerEvent: {}
+[19.794876] (-) TimerEvent: {}
+[19.898661] (-) TimerEvent: {}
+[19.968622] (my_interfaces) StdoutLine: {'line': b'[ 52%] Built target my_interfaces__rosidl_typesupport_c\n'}
+[20.001227] (-) TimerEvent: {}
+[20.058422] (my_interfaces) StdoutLine: {'line': b'[ 55%] \x1b[34m\x1b[1mGenerating C++ type support dispatch for ROS interfaces\x1b[0m\n'}
+[20.103961] (-) TimerEvent: {}
+[20.204969] (-) TimerEvent: {}
+[20.308951] (-) TimerEvent: {}
+[20.409965] (-) TimerEvent: {}
+[20.512727] (-) TimerEvent: {}
+[20.616825] (-) TimerEvent: {}
+[20.719735] (-) TimerEvent: {}
+[20.822936] (-) TimerEvent: {}
+[20.923919] (-) TimerEvent: {}
+[21.026991] (-) TimerEvent: {}
+[21.127944] (-) TimerEvent: {}
+[21.230993] (-) TimerEvent: {}
+[21.334044] (-) TimerEvent: {}
+[21.436507] (-) TimerEvent: {}
+[21.501837] (my_interfaces) StdoutLine: {'line': b'[ 58%] \x1b[32mBuilding CXX object CMakeFiles/my_interfaces__rosidl_typesupport_introspection_cpp.dir/rosidl_typesupport_introspection_cpp/my_interfaces/msg/detail/start_signal__type_support.cpp.o\x1b[0m\n'}
+[21.536913] (-) TimerEvent: {}
+[21.639990] (-) TimerEvent: {}
+[21.742969] (-) TimerEvent: {}
+[21.846015] (-) TimerEvent: {}
+[21.893130] (my_interfaces) StdoutLine: {'line': b'[ 61%] \x1b[32mBuilding CXX object CMakeFiles/my_interfaces__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/my_interfaces/msg/start_signal__type_support.cpp.o\x1b[0m\n'}
+[21.947964] (-) TimerEvent: {}
+[22.050437] (-) TimerEvent: {}
+[22.154494] (-) TimerEvent: {}
+[22.257982] (-) TimerEvent: {}
+[22.359045] (-) TimerEvent: {}
+[22.462355] (-) TimerEvent: {}
+[22.566989] (-) TimerEvent: {}
+[22.668170] (-) TimerEvent: {}
+[22.770689] (-) TimerEvent: {}
+[22.876039] (-) TimerEvent: {}
+[22.977248] (-) TimerEvent: {}
+[23.080418] (-) TimerEvent: {}
+[23.130477] (my_interfaces) StdoutLine: {'line': b'[ 64%] \x1b[32m\x1b[1mLinking CXX shared library libmy_interfaces__rosidl_typesupport_fastrtps_c.so\x1b[0m\n'}
+[23.186236] (-) TimerEvent: {}
+[23.296588] (-) TimerEvent: {}
+[23.422709] (-) TimerEvent: {}
+[23.512110] (my_interfaces) StdoutLine: {'line': b'[ 67%] \x1b[32m\x1b[1mLinking CXX shared library libmy_interfaces__rosidl_typesupport_fastrtps_cpp.so\x1b[0m\n'}
+[23.525396] (-) TimerEvent: {}
+[23.646025] (-) TimerEvent: {}
+[23.752310] (-) TimerEvent: {}
+[23.863995] (-) TimerEvent: {}
+[23.977388] (-) TimerEvent: {}
+[24.008568] (my_interfaces) StdoutLine: {'line': b'[ 67%] Built target my_interfaces__rosidl_typesupport_fastrtps_c\n'}
+[24.083245] (-) TimerEvent: {}
+[24.184995] (-) TimerEvent: {}
+[24.276852] (my_interfaces) StdoutLine: {'line': b'[ 67%] Built target my_interfaces__rosidl_typesupport_fastrtps_cpp\n'}
+[24.290205] (-) TimerEvent: {}
+[24.396237] (-) TimerEvent: {}
+[24.498586] (-) TimerEvent: {}
+[24.600175] (-) TimerEvent: {}
+[24.701231] (-) TimerEvent: {}
+[24.802477] (-) TimerEvent: {}
+[24.893233] (my_interfaces) StdoutLine: {'line': b'[ 70%] \x1b[32m\x1b[1mLinking CXX shared library libmy_interfaces__rosidl_typesupport_introspection_cpp.so\x1b[0m\n'}
+[24.904372] (-) TimerEvent: {}
+[25.008897] (-) TimerEvent: {}
+[25.110252] (-) TimerEvent: {}
+[25.216584] (-) TimerEvent: {}
+[25.256133] (my_interfaces) StdoutLine: {'line': b'[ 70%] Built target my_interfaces__rosidl_typesupport_introspection_cpp\n'}
+[25.316808] (-) TimerEvent: {}
+[25.339795] (my_interfaces) StdoutLine: {'line': b'[ 73%] \x1b[32m\x1b[1mLinking CXX shared library libmy_interfaces__rosidl_typesupport_cpp.so\x1b[0m\n'}
+[25.417031] (-) TimerEvent: {}
+[25.517982] (-) TimerEvent: {}
+[25.621330] (-) TimerEvent: {}
+[25.722989] (-) TimerEvent: {}
+[25.744238] (my_interfaces) StdoutLine: {'line': b'[ 73%] Built target my_interfaces__rosidl_typesupport_cpp\n'}
+[25.823636] (-) TimerEvent: {}
+[25.927162] (-) TimerEvent: {}
+[25.982219] (my_interfaces) StdoutLine: {'line': b'[ 73%] Built target my_interfaces\n'}
+[26.027373] (-) TimerEvent: {}
+[26.130019] (-) TimerEvent: {}
+[26.137375] (my_interfaces) StdoutLine: {'line': b'[ 76%] \x1b[34m\x1b[1mGenerating Python code for ROS interfaces\x1b[0m\n'}
+[26.230360] (-) TimerEvent: {}
+[26.332925] (-) TimerEvent: {}
+[26.434616] (-) TimerEvent: {}
+[26.540319] (-) TimerEvent: {}
+[26.641590] (-) TimerEvent: {}
+[26.743520] (-) TimerEvent: {}
+[26.844335] (-) TimerEvent: {}
+[26.945101] (-) TimerEvent: {}
+[27.045886] (-) TimerEvent: {}
+[27.146570] (-) TimerEvent: {}
+[27.247931] (-) TimerEvent: {}
+[27.348677] (-) TimerEvent: {}
+[27.449374] (-) TimerEvent: {}
+[27.550138] (-) TimerEvent: {}
+[27.650902] (-) TimerEvent: {}
+[27.695257] (my_interfaces) StdoutLine: {'line': b'[ 76%] Built target my_interfaces__py\n'}
+[27.751110] (-) TimerEvent: {}
+[27.851945] (-) TimerEvent: {}
+[27.858975] (my_interfaces) StdoutLine: {'line': b'[ 79%] \x1b[32mBuilding C object CMakeFiles/my_interfaces__rosidl_generator_py.dir/rosidl_generator_py/my_interfaces/msg/_start_signal_s.c.o\x1b[0m\n'}
+[27.952165] (-) TimerEvent: {}
+[28.053122] (-) TimerEvent: {}
+[28.154537] (-) TimerEvent: {}
+[28.255366] (-) TimerEvent: {}
+[28.356171] (-) TimerEvent: {}
+[28.456952] (-) TimerEvent: {}
+[28.557887] (-) TimerEvent: {}
+[28.658917] (-) TimerEvent: {}
+[28.672683] (my_interfaces) StdoutLine: {'line': b'[ 82%] \x1b[32m\x1b[1mLinking C shared library libmy_interfaces__rosidl_generator_py.so\x1b[0m\n'}
+[28.758951] (-) TimerEvent: {}
+[28.860433] (-) TimerEvent: {}
+[28.962519] (-) TimerEvent: {}
+[28.982328] (my_interfaces) StdoutLine: {'line': b'[ 82%] Built target my_interfaces__rosidl_generator_py\n'}
+[29.064327] (-) TimerEvent: {}
+[29.146268] (my_interfaces) StdoutLine: {'line': b'[ 85%] \x1b[32mBuilding C object CMakeFiles/my_interfaces_s__rosidl_typesupport_introspection_c.dir/rosidl_generator_py/my_interfaces/_my_interfaces_s.ep.rosidl_typesupport_introspection_c.c.o\x1b[0m\n'}
+[29.152177] (my_interfaces) StdoutLine: {'line': b'[ 91%] \x1b[32mBuilding C object CMakeFiles/my_interfaces_s__rosidl_typesupport_fastrtps_c.dir/rosidl_generator_py/my_interfaces/_my_interfaces_s.ep.rosidl_typesupport_fastrtps_c.c.o\x1b[0m\n'}
+[29.152994] (my_interfaces) StdoutLine: {'line': b'[ 91%] \x1b[32mBuilding C object CMakeFiles/my_interfaces_s__rosidl_typesupport_c.dir/rosidl_generator_py/my_interfaces/_my_interfaces_s.ep.rosidl_typesupport_c.c.o\x1b[0m\n'}
+[29.164524] (-) TimerEvent: {}
+[29.265965] (-) TimerEvent: {}
+[29.370294] (-) TimerEvent: {}
+[29.471396] (-) TimerEvent: {}
+[29.575629] (-) TimerEvent: {}
+[29.679435] (-) TimerEvent: {}
+[29.780473] (-) TimerEvent: {}
+[29.812273] (my_interfaces) StdoutLine: {'line': b'[ 94%] \x1b[32m\x1b[1mLinking C shared module rosidl_generator_py/my_interfaces/my_interfaces_s__rosidl_typesupport_introspection_c.so\x1b[0m\n'}
+[29.851856] (my_interfaces) StdoutLine: {'line': b'[ 97%] \x1b[32m\x1b[1mLinking C shared module rosidl_generator_py/my_interfaces/my_interfaces_s__rosidl_typesupport_c.so\x1b[0m\n'}
+[29.880687] (-) TimerEvent: {}
+[29.935253] (my_interfaces) StdoutLine: {'line': b'[100%] \x1b[32m\x1b[1mLinking C shared module rosidl_generator_py/my_interfaces/my_interfaces_s__rosidl_typesupport_fastrtps_c.so\x1b[0m\n'}
+[29.983008] (-) TimerEvent: {}
+[30.041452] (my_interfaces) StdoutLine: {'line': b'[100%] Built target my_interfaces_s__rosidl_typesupport_introspection_c\n'}
+[30.060501] (my_interfaces) StdoutLine: {'line': b'[100%] Built target my_interfaces_s__rosidl_typesupport_c\n'}
+[30.083211] (-) TimerEvent: {}
+[30.139018] (my_interfaces) StdoutLine: {'line': b'[100%] Built target my_interfaces_s__rosidl_typesupport_fastrtps_c\n'}
+[30.183467] (-) TimerEvent: {}
+[30.203520] (my_interfaces) CommandEnded: {'returncode': 0}
+[30.206301] (my_interfaces) JobProgress: {'identifier': 'my_interfaces', 'progress': 'install'}
+[30.258137] (my_interfaces) Command: {'cmd': ['/usr/bin/cmake', '--install', '/home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/build/my_interfaces'], 'cwd': '/home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/build/my_interfaces', 'env': OrderedDict({'LESSOPEN': '| /usr/bin/lesspipe %s', 'MAIL': '/var/mail/ssafy', 'USER': 'ssafy', 'SSH_CLIENT': '192.168.100.76 40794 22', 'GIT_ASKPASS': '/home/ssafy/.vscode-server/cli/servers/Stable-6f17636121051a53c88d3e605c491d22af2ba755/server/extensions/git/dist/askpass.sh', 'SHLVL': '2', 'LD_LIBRARY_PATH': '/opt/ros/jazzy/lib/aarch64-linux-gnu:/opt/ros/jazzy/lib', 'BROWSER': '/home/ssafy/.vscode-server/cli/servers/Stable-6f17636121051a53c88d3e605c491d22af2ba755/server/bin/helpers/browser.sh', 'HOME': '/home/ssafy', 'OLDPWD': '/home/ssafy/git/S13P21C206/apps/raspberrypi', 'TERM_PROGRAM_VERSION': '1.103.2', 'VSCODE_IPC_HOOK_CLI': '/tmp/vscode-ipc-afb28278-0edf-4e18-ae21-cf07f224f67b.sock', 'ROS_PYTHON_VERSION': '3', 'VSCODE_GIT_ASKPASS_MAIN': '/home/ssafy/.vscode-server/cli/servers/Stable-6f17636121051a53c88d3e605c491d22af2ba755/server/extensions/git/dist/askpass-main.js', 'VSCODE_GIT_ASKPASS_NODE': '/home/ssafy/.vscode-server/cli/servers/Stable-6f17636121051a53c88d3e605c491d22af2ba755/server/node', 'SSL_CERT_FILE': '/usr/lib/ssl/cert.pem', 'COLORTERM': 'truecolor', 'DEBUGINFOD_URLS': 'https://debuginfod.ubuntu.com', 'ROS_DISTRO': 'jazzy', 'LOGNAME': 'ssafy', '_': '/usr/bin/colcon', 'ROS_VERSION': '2', 'TERM': 'xterm-256color', 'PATH': '/home/ssafy/.vscode-server/cli/servers/Stable-6f17636121051a53c88d3e605c491d22af2ba755/server/bin/remote-cli:/opt/ros/jazzy/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/snap/bin', 'SSL_CERT_DIR': '/usr/lib/ssl/certs', 'LANG': 'en_US.UTF-8', 'LS_COLORS': 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=00:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.avif=01;35:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:*~=00;90:*#=00;90:*.bak=00;90:*.crdownload=00;90:*.dpkg-dist=00;90:*.dpkg-new=00;90:*.dpkg-old=00;90:*.dpkg-tmp=00;90:*.old=00;90:*.orig=00;90:*.part=00;90:*.rej=00;90:*.rpmnew=00;90:*.rpmorig=00;90:*.rpmsave=00;90:*.swp=00;90:*.tmp=00;90:*.ucf-dist=00;90:*.ucf-new=00;90:*.ucf-old=00;90:', 'VSCODE_GIT_IPC_HANDLE': '/tmp/vscode-git-e2fa2ef003.sock', 'TERM_PROGRAM': 'vscode', 'AMENT_PREFIX_PATH': '/opt/ros/jazzy', 'SHELL': '/bin/bash', 'LESSCLOSE': '/usr/bin/lesspipe %s %s', 'ROS_AUTOMATIC_DISCOVERY_RANGE': 'SUBNET', 'VSCODE_GIT_ASKPASS_EXTRA_ARGS': '', 'PWD': '/home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/build/my_interfaces', 'SSH_CONNECTION': '192.168.100.76 40794 192.168.100.246 22', 'XDG_DATA_DIRS': '/usr/share/gnome:/usr/local/share:/usr/share:/var/lib/snapd/desktop', 'PYTHONPATH': '/opt/ros/jazzy/lib/python3.12/site-packages', 'COLCON': '1', 'CMAKE_PREFIX_PATH': '/opt/ros/jazzy'}), 'shell': False}
+[30.283656] (-) TimerEvent: {}
+[30.307265] (my_interfaces) StdoutLine: {'line': b'-- Install configuration: ""\n'}
+[30.308186] (my_interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/share/ament_index/resource_index/rosidl_interfaces/my_interfaces\n'}
+[30.308838] (my_interfaces) StdoutLine: {'line': b'-- Installing: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/share/my_interfaces/msg/StartSignal.json\n'}
+[30.310297] (my_interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/include/my_interfaces/my_interfaces\n'}
+[30.311036] (my_interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/include/my_interfaces/my_interfaces/msg\n'}
+[30.311585] (my_interfaces) StdoutLine: {'line': b'-- Installing: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/include/my_interfaces/my_interfaces/msg/start_signal.h\n'}
+[30.313088] (my_interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/include/my_interfaces/my_interfaces/msg/rosidl_generator_c__visibility_control.h\n'}
+[30.313722] (my_interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/include/my_interfaces/my_interfaces/msg/detail\n'}
+[30.314299] (my_interfaces) StdoutLine: {'line': b'-- Installing: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/include/my_interfaces/my_interfaces/msg/detail/start_signal__type_support.c\n'}
+[30.315750] (my_interfaces) StdoutLine: {'line': b'-- Installing: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/include/my_interfaces/my_interfaces/msg/detail/start_signal__functions.h\n'}
+[30.317460] (my_interfaces) StdoutLine: {'line': b'-- Installing: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/include/my_interfaces/my_interfaces/msg/detail/start_signal__type_support.h\n'}
+[30.319064] (my_interfaces) StdoutLine: {'line': b'-- Installing: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/include/my_interfaces/my_interfaces/msg/detail/start_signal__functions.c\n'}
+[30.320713] (my_interfaces) StdoutLine: {'line': b'-- Installing: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/include/my_interfaces/my_interfaces/msg/detail/start_signal__struct.h\n'}
+[30.322283] (my_interfaces) StdoutLine: {'line': b'-- Installing: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/include/my_interfaces/my_interfaces/msg/detail/start_signal__description.c\n'}
+[30.324153] (my_interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/share/my_interfaces/environment/library_path.sh\n'}
+[30.324856] (my_interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/share/my_interfaces/environment/library_path.dsv\n'}
+[30.328111] (my_interfaces) StdoutLine: {'line': b'-- Installing: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/lib/libmy_interfaces__rosidl_generator_c.so\n'}
+[30.332549] (my_interfaces) StdoutLine: {'line': b'-- Set non-toolchain portion of runtime path of "/home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/lib/libmy_interfaces__rosidl_generator_c.so" to ""\n'}
+[30.333360] (my_interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/include/my_interfaces/my_interfaces\n'}
+[30.335170] (my_interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/include/my_interfaces/my_interfaces/msg\n'}
+[30.336334] (my_interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/include/my_interfaces/my_interfaces/msg/rosidl_typesupport_fastrtps_c__visibility_control.h\n'}
+[30.337142] (my_interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/include/my_interfaces/my_interfaces/msg/detail\n'}
+[30.337896] (my_interfaces) StdoutLine: {'line': b'-- Installing: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/include/my_interfaces/my_interfaces/msg/detail/start_signal__rosidl_typesupport_fastrtps_c.h\n'}
+[30.340975] (my_interfaces) StdoutLine: {'line': b'-- Installing: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/lib/libmy_interfaces__rosidl_typesupport_fastrtps_c.so\n'}
+[30.344892] (my_interfaces) StdoutLine: {'line': b'-- Set non-toolchain portion of runtime path of "/home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/lib/libmy_interfaces__rosidl_typesupport_fastrtps_c.so" to ""\n'}
+[30.345605] (my_interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/include/my_interfaces/my_interfaces\n'}
+[30.346217] (my_interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/include/my_interfaces/my_interfaces/msg\n'}
+[30.346805] (my_interfaces) StdoutLine: {'line': b'-- Installing: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/include/my_interfaces/my_interfaces/msg/rosidl_generator_cpp__visibility_control.hpp\n'}
+[30.348255] (my_interfaces) StdoutLine: {'line': b'-- Installing: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/include/my_interfaces/my_interfaces/msg/start_signal.hpp\n'}
+[30.349779] (my_interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/include/my_interfaces/my_interfaces/msg/detail\n'}
+[30.350429] (my_interfaces) StdoutLine: {'line': b'-- Installing: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/include/my_interfaces/my_interfaces/msg/detail/start_signal__struct.hpp\n'}
+[30.355098] (my_interfaces) StdoutLine: {'line': b'-- Installing: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/include/my_interfaces/my_interfaces/msg/detail/start_signal__builder.hpp\n'}
+[30.355960] (my_interfaces) StdoutLine: {'line': b'-- Installing: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/include/my_interfaces/my_interfaces/msg/detail/start_signal__traits.hpp\n'}
+[30.356723] (my_interfaces) StdoutLine: {'line': b'-- Installing: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/include/my_interfaces/my_interfaces/msg/detail/start_signal__type_support.hpp\n'}
+[30.357830] (my_interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/include/my_interfaces/my_interfaces\n'}
+[30.359860] (my_interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/include/my_interfaces/my_interfaces/msg\n'}
+[30.361075] (my_interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/include/my_interfaces/my_interfaces/msg/rosidl_typesupport_fastrtps_cpp__visibility_control.h\n'}
+[30.361980] (my_interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/include/my_interfaces/my_interfaces/msg/detail\n'}
+[30.362715] (my_interfaces) StdoutLine: {'line': b'-- Installing: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/include/my_interfaces/my_interfaces/msg/detail/start_signal__rosidl_typesupport_fastrtps_cpp.hpp\n'}
+[30.363277] (my_interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/include/my_interfaces/my_interfaces/msg/detail/dds_fastrtps\n'}
+[30.366518] (my_interfaces) StdoutLine: {'line': b'-- Installing: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/lib/libmy_interfaces__rosidl_typesupport_fastrtps_cpp.so\n'}
+[30.370902] (my_interfaces) StdoutLine: {'line': b'-- Set non-toolchain portion of runtime path of "/home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/lib/libmy_interfaces__rosidl_typesupport_fastrtps_cpp.so" to ""\n'}
+[30.371648] (my_interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/include/my_interfaces/my_interfaces\n'}
+[30.372264] (my_interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/include/my_interfaces/my_interfaces/msg\n'}
+[30.372862] (my_interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/include/my_interfaces/my_interfaces/msg/rosidl_typesupport_introspection_c__visibility_control.h\n'}
+[30.373492] (my_interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/include/my_interfaces/my_interfaces/msg/detail\n'}
+[30.374015] (my_interfaces) StdoutLine: {'line': b'-- Installing: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/include/my_interfaces/my_interfaces/msg/detail/start_signal__type_support.c\n'}
+[30.375291] (my_interfaces) StdoutLine: {'line': b'-- Installing: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/include/my_interfaces/my_interfaces/msg/detail/start_signal__rosidl_typesupport_introspection_c.h\n'}
+[30.382328] (my_interfaces) StdoutLine: {'line': b'-- Installing: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/lib/libmy_interfaces__rosidl_typesupport_introspection_c.so\n'}
+[30.383859] (-) TimerEvent: {}
+[30.384626] (my_interfaces) StdoutLine: {'line': b'-- Set non-toolchain portion of runtime path of "/home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/lib/libmy_interfaces__rosidl_typesupport_introspection_c.so" to ""\n'}
+[30.387811] (my_interfaces) StdoutLine: {'line': b'-- Installing: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/lib/libmy_interfaces__rosidl_typesupport_c.so\n'}
+[30.391687] (my_interfaces) StdoutLine: {'line': b'-- Set non-toolchain portion of runtime path of "/home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/lib/libmy_interfaces__rosidl_typesupport_c.so" to ""\n'}
+[30.392705] (my_interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/include/my_interfaces/my_interfaces\n'}
+[30.393388] (my_interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/include/my_interfaces/my_interfaces/msg\n'}
+[30.394011] (my_interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/include/my_interfaces/my_interfaces/msg/detail\n'}
+[30.394614] (my_interfaces) StdoutLine: {'line': b'-- Installing: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/include/my_interfaces/my_interfaces/msg/detail/start_signal__type_support.cpp\n'}
+[30.395889] (my_interfaces) StdoutLine: {'line': b'-- Installing: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/include/my_interfaces/my_interfaces/msg/detail/start_signal__rosidl_typesupport_introspection_cpp.hpp\n'}
+[30.400570] (my_interfaces) StdoutLine: {'line': b'-- Installing: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/lib/libmy_interfaces__rosidl_typesupport_introspection_cpp.so\n'}
+[30.404364] (my_interfaces) StdoutLine: {'line': b'-- Set non-toolchain portion of runtime path of "/home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/lib/libmy_interfaces__rosidl_typesupport_introspection_cpp.so" to ""\n'}
+[30.407606] (my_interfaces) StdoutLine: {'line': b'-- Installing: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/lib/libmy_interfaces__rosidl_typesupport_cpp.so\n'}
+[30.411411] (my_interfaces) StdoutLine: {'line': b'-- Set non-toolchain portion of runtime path of "/home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/lib/libmy_interfaces__rosidl_typesupport_cpp.so" to ""\n'}
+[30.412459] (my_interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/share/my_interfaces/environment/pythonpath.sh\n'}
+[30.413394] (my_interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/share/my_interfaces/environment/pythonpath.dsv\n'}
+[30.414236] (my_interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/lib/python3.12/site-packages/my_interfaces-0.0.0-py3.12.egg-info\n'}
+[30.414695] (my_interfaces) StdoutLine: {'line': b'-- Installing: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/lib/python3.12/site-packages/my_interfaces-0.0.0-py3.12.egg-info/dependency_links.txt\n'}
+[30.415644] (my_interfaces) StdoutLine: {'line': b'-- Installing: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/lib/python3.12/site-packages/my_interfaces-0.0.0-py3.12.egg-info/top_level.txt\n'}
+[30.417341] (my_interfaces) StdoutLine: {'line': b'-- Installing: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/lib/python3.12/site-packages/my_interfaces-0.0.0-py3.12.egg-info/SOURCES.txt\n'}
+[30.418969] (my_interfaces) StdoutLine: {'line': b'-- Installing: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/lib/python3.12/site-packages/my_interfaces-0.0.0-py3.12.egg-info/PKG-INFO\n'}
+[30.420787] (my_interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/lib/python3.12/site-packages/my_interfaces\n'}
+[30.421466] (my_interfaces) StdoutLine: {'line': b'-- Installing: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/lib/python3.12/site-packages/my_interfaces/_my_interfaces_s.ep.rosidl_typesupport_fastrtps_c.c\n'}
+[30.423295] (my_interfaces) StdoutLine: {'line': b'-- Installing: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/lib/python3.12/site-packages/my_interfaces/_my_interfaces_s.ep.rosidl_typesupport_c.c\n'}
+[30.424979] (my_interfaces) StdoutLine: {'line': b'-- Installing: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/lib/python3.12/site-packages/my_interfaces/my_interfaces_s__rosidl_typesupport_c.so\n'}
+[30.427304] (my_interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/lib/python3.12/site-packages/my_interfaces/msg\n'}
+[30.428020] (my_interfaces) StdoutLine: {'line': b'-- Installing: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/lib/python3.12/site-packages/my_interfaces/msg/_start_signal_s.c\n'}
+[30.429571] (my_interfaces) StdoutLine: {'line': b'-- Installing: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/lib/python3.12/site-packages/my_interfaces/msg/__init__.py\n'}
+[30.431173] (my_interfaces) StdoutLine: {'line': b'-- Installing: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/lib/python3.12/site-packages/my_interfaces/msg/_start_signal.py\n'}
+[30.432818] (my_interfaces) StdoutLine: {'line': b'-- Installing: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/lib/python3.12/site-packages/my_interfaces/my_interfaces_s__rosidl_typesupport_fastrtps_c.so\n'}
+[30.436197] (my_interfaces) StdoutLine: {'line': b'-- Installing: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/lib/python3.12/site-packages/my_interfaces/__init__.py\n'}
+[30.437358] (my_interfaces) StdoutLine: {'line': b'-- Installing: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/lib/python3.12/site-packages/my_interfaces/_my_interfaces_s.ep.rosidl_typesupport_introspection_c.c\n'}
+[30.438871] (my_interfaces) StdoutLine: {'line': b'-- Installing: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/lib/python3.12/site-packages/my_interfaces/my_interfaces_s__rosidl_typesupport_introspection_c.so\n'}
+[30.484956] (-) TimerEvent: {}
+[30.585854] (-) TimerEvent: {}
+[30.659871] (my_interfaces) StdoutLine: {'line': b"Listing '/home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/lib/python3.12/site-packages/my_interfaces'...\n"}
+[30.662325] (my_interfaces) StdoutLine: {'line': b"Compiling '/home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/lib/python3.12/site-packages/my_interfaces/__init__.py'...\n"}
+[30.664121] (my_interfaces) StdoutLine: {'line': b"Listing '/home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/lib/python3.12/site-packages/my_interfaces/msg'...\n"}
+[30.666314] (my_interfaces) StdoutLine: {'line': b"Compiling '/home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/lib/python3.12/site-packages/my_interfaces/msg/__init__.py'...\n"}
+[30.667948] (my_interfaces) StdoutLine: {'line': b"Compiling '/home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/lib/python3.12/site-packages/my_interfaces/msg/_start_signal.py'...\n"}
+[30.686226] (-) TimerEvent: {}
+[30.705631] (my_interfaces) StdoutLine: {'line': b'-- Installing: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/lib/python3.12/site-packages/my_interfaces/my_interfaces_s__rosidl_typesupport_fastrtps_c.so\n'}
+[30.709481] (my_interfaces) StdoutLine: {'line': b'-- Set non-toolchain portion of runtime path of "/home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/lib/python3.12/site-packages/my_interfaces/my_interfaces_s__rosidl_typesupport_fastrtps_c.so" to ""\n'}
+[30.711562] (my_interfaces) StdoutLine: {'line': b'-- Installing: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/lib/python3.12/site-packages/my_interfaces/my_interfaces_s__rosidl_typesupport_introspection_c.so\n'}
+[30.716069] (my_interfaces) StdoutLine: {'line': b'-- Set non-toolchain portion of runtime path of "/home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/lib/python3.12/site-packages/my_interfaces/my_interfaces_s__rosidl_typesupport_introspection_c.so" to ""\n'}
+[30.718215] (my_interfaces) StdoutLine: {'line': b'-- Installing: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/lib/python3.12/site-packages/my_interfaces/my_interfaces_s__rosidl_typesupport_c.so\n'}
+[30.722705] (my_interfaces) StdoutLine: {'line': b'-- Set non-toolchain portion of runtime path of "/home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/lib/python3.12/site-packages/my_interfaces/my_interfaces_s__rosidl_typesupport_c.so" to ""\n'}
+[30.726223] (my_interfaces) StdoutLine: {'line': b'-- Installing: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/lib/libmy_interfaces__rosidl_generator_py.so\n'}
+[30.730108] (my_interfaces) StdoutLine: {'line': b'-- Set non-toolchain portion of runtime path of "/home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/lib/libmy_interfaces__rosidl_generator_py.so" to ""\n'}
+[30.730993] (my_interfaces) StdoutLine: {'line': b'-- Installing: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/share/my_interfaces/msg/StartSignal.idl\n'}
+[30.732433] (my_interfaces) StdoutLine: {'line': b'-- Installing: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/share/my_interfaces/msg/StartSignal.msg\n'}
+[30.734296] (my_interfaces) StdoutLine: {'line': b'-- Installing: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/share/ament_index/resource_index/package_run_dependencies/my_interfaces\n'}
+[30.736425] (my_interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/share/ament_index/resource_index/parent_prefix_path/my_interfaces\n'}
+[30.737664] (my_interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/share/my_interfaces/environment/ament_prefix_path.sh\n'}
+[30.739200] (my_interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/share/my_interfaces/environment/ament_prefix_path.dsv\n'}
+[30.740331] (my_interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/share/my_interfaces/environment/path.sh\n'}
+[30.741205] (my_interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/share/my_interfaces/environment/path.dsv\n'}
+[30.741887] (my_interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/share/my_interfaces/local_setup.bash\n'}
+[30.742506] (my_interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/share/my_interfaces/local_setup.sh\n'}
+[30.743056] (my_interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/share/my_interfaces/local_setup.zsh\n'}
+[30.743525] (my_interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/share/my_interfaces/local_setup.dsv\n'}
+[30.744140] (my_interfaces) StdoutLine: {'line': b'-- Installing: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/share/my_interfaces/package.dsv\n'}
+[30.744635] (my_interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/share/ament_index/resource_index/packages/my_interfaces\n'}
+[30.745707] (my_interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/share/my_interfaces/cmake/export_my_interfaces__rosidl_generator_cExport.cmake\n'}
+[30.746440] (my_interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/share/my_interfaces/cmake/export_my_interfaces__rosidl_generator_cExport-noconfig.cmake\n'}
+[30.750709] (my_interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/share/my_interfaces/cmake/export_my_interfaces__rosidl_typesupport_fastrtps_cExport.cmake\n'}
+[30.751450] (my_interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/share/my_interfaces/cmake/export_my_interfaces__rosidl_typesupport_fastrtps_cExport-noconfig.cmake\n'}
+[30.753095] (my_interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/share/my_interfaces/cmake/export_my_interfaces__rosidl_generator_cppExport.cmake\n'}
+[30.754813] (my_interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/share/my_interfaces/cmake/export_my_interfaces__rosidl_typesupport_fastrtps_cppExport.cmake\n'}
+[30.755596] (my_interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/share/my_interfaces/cmake/export_my_interfaces__rosidl_typesupport_fastrtps_cppExport-noconfig.cmake\n'}
+[30.757276] (my_interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/share/my_interfaces/cmake/my_interfaces__rosidl_typesupport_introspection_cExport.cmake\n'}
+[30.758043] (my_interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/share/my_interfaces/cmake/my_interfaces__rosidl_typesupport_introspection_cExport-noconfig.cmake\n'}
+[30.759665] (my_interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/share/my_interfaces/cmake/my_interfaces__rosidl_typesupport_cExport.cmake\n'}
+[30.760428] (my_interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/share/my_interfaces/cmake/my_interfaces__rosidl_typesupport_cExport-noconfig.cmake\n'}
+[30.762117] (my_interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/share/my_interfaces/cmake/my_interfaces__rosidl_typesupport_introspection_cppExport.cmake\n'}
+[30.762934] (my_interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/share/my_interfaces/cmake/my_interfaces__rosidl_typesupport_introspection_cppExport-noconfig.cmake\n'}
+[30.764538] (my_interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/share/my_interfaces/cmake/my_interfaces__rosidl_typesupport_cppExport.cmake\n'}
+[30.765214] (my_interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/share/my_interfaces/cmake/my_interfaces__rosidl_typesupport_cppExport-noconfig.cmake\n'}
+[30.766729] (my_interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/share/my_interfaces/cmake/export_my_interfaces__rosidl_generator_pyExport.cmake\n'}
+[30.767462] (my_interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/share/my_interfaces/cmake/export_my_interfaces__rosidl_generator_pyExport-noconfig.cmake\n'}
+[30.768076] (my_interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/share/my_interfaces/cmake/rosidl_cmake-extras.cmake\n'}
+[30.768699] (my_interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/share/my_interfaces/cmake/ament_cmake_export_include_directories-extras.cmake\n'}
+[30.769968] (my_interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/share/my_interfaces/cmake/ament_cmake_export_libraries-extras.cmake\n'}
+[30.770810] (my_interfaces) StdoutLine: {'line': b'-- Installing: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/share/my_interfaces/cmake/ament_cmake_export_targets-extras.cmake\n'}
+[30.772168] (my_interfaces) StdoutLine: {'line': b'-- Installing: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/share/my_interfaces/cmake/rosidl_cmake_export_typesupport_targets-extras.cmake\n'}
+[30.774274] (my_interfaces) StdoutLine: {'line': b'-- Installing: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/share/my_interfaces/cmake/ament_cmake_export_dependencies-extras.cmake\n'}
+[30.776340] (my_interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/share/my_interfaces/cmake/rosidl_cmake_export_typesupport_libraries-extras.cmake\n'}
+[30.777076] (my_interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/share/my_interfaces/cmake/my_interfacesConfig.cmake\n'}
+[30.777657] (my_interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/share/my_interfaces/cmake/my_interfacesConfig-version.cmake\n'}
+[30.778298] (my_interfaces) StdoutLine: {'line': b'-- Installing: /home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/my_interfaces/share/my_interfaces/package.xml\n'}
+[30.786559] (-) TimerEvent: {}
+[30.788949] (my_interfaces) CommandEnded: {'returncode': 0}
+[30.890122] (-) TimerEvent: {}
+[30.923162] (my_interfaces) JobEnded: {'identifier': 'my_interfaces', 'rc': 0}
+[30.928265] (-) EventReactorShutdown: {}

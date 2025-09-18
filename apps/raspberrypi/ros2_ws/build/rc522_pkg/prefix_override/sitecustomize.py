@@ -1,4 +1,4 @@
 import sys
 if sys.prefix == '/usr':
     sys.real_prefix = sys.prefix
-    sys.prefix = sys.exec_prefix = '/home/ssafy/S13P21C206/apps/raspberrypi/ros2_ws/install/rc522_pkg'
+    sys.prefix = sys.exec_prefix = '/home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/rc522_pkg'
