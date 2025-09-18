@@ -23,6 +23,8 @@ namespace licar_wpf.ViewModels
 
         public ObservableCollection<Patient> PatientList { get; } = new ObservableCollection<Patient>();
         public ObservableCollection<Notification> NotificationList { get; } = new ObservableCollection<Notification>();
+        public ObservableCollection<Prescription> ValidPrescriptionList { get; } = new ObservableCollection<Prescription>();
+        public ObservableCollection<Drug> DrugList { get; } = new ObservableCollection<Drug>();
 
         private Patient _selectedPatient;
         public Patient SelectedPatient
@@ -32,9 +34,34 @@ namespace licar_wpf.ViewModels
             {
                 _selectedPatient = value;
                 OnPropertyChanged();
-                LoadPatientDetails(value?.PatientId ?? 0);
+                LoadPatientDetails(value);
+                LoadValidPrescriptionsAsync(value);
 
                 RequestDeliveryCommand.RaiseCanExecuteChanged();
+            }
+        }
+
+        private Patient _patientDetails;
+        public Patient PatientDetails
+        {
+            get => _patientDetails;
+            set
+            {
+                _patientDetails = value;
+                OnPropertyChanged();                
+            }
+        }
+
+        private Patient _selectedPrescription;
+        public Patient SelectedPrescription
+        {
+            get => _selectedPrescription;
+            set
+            {
+                _selectedPrescription = value;
+                OnPropertyChanged();
+
+                LoadValidDrugsAsync(value);
             }
         }
 
@@ -66,16 +93,42 @@ namespace licar_wpf.ViewModels
             }
         }
 
-        private async void LoadPatientDetails(int patientId)
+        private async void LoadPatientDetails(Patient patient)
         {
-            if (patientId == 0) return;
-            var details = await _nurseService.GetPatientDetailAsync(patientId);
+            if (patient == null)
+            {
+                PatientDetails = null;
+                return;
+            }
+            var details = await _nurseService.GetPatientDetailAsync(patient.PatientId);
 
-            SelectedPatient.Birthday = details.Birthday;
-            SelectedPatient.AdmissionDate = details.AdmissionDate;
-            SelectedPatient.DischargeDate = details.DischargeDate;
-            SelectedPatient.NurseName = details.NurseName;
-            OnPropertyChanged(nameof(SelectedPatient));
+            PatientDetails = details;
+        }
+
+        private async void LoadValidPrescriptionsAsync(Patient patient)
+        {
+            ValidPrescriptionList.Clear();
+            DrugList.Clear();
+
+            if (patient == null) return;
+
+            var prescriptions = await _nurseService.GetValidPrescriptionsAsync(patient.PatientId, DateTime.Now);
+            foreach (var prescription in prescriptions)
+            {
+                ValidPrescriptionList.Add(prescription);
+            }
+        }
+
+        private async void LoadValidDrugsAsync(Patient patient)
+        {
+            DrugList.Clear();
+            if (patient == null) return;
+
+            var drugs = await _nurseService.GetValidDrugsAsync(patient.PatientId, DateTime.Now);
+            foreach (var drug  in drugs)
+            {
+                DrugList.Add(drug);
+            }
         }
 
         private async Task RequestDelivery()
