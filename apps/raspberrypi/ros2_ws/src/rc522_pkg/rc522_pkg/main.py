@@ -1,6 +1,6 @@
+#!sudo /home/ssafy/git/S13P21C206/apps/raspberrypi/.venv/bin python
 #런치 코드: ros2 launch rc522_pkg main_launch.py
 
-#!/usr/bin/env python
 
 import rclpy
 from rclpy.node import Node
@@ -77,6 +77,7 @@ def main():
                     time.sleep(1)
                     flag_nfc = True
                     print("모터 동작 완료\n", flush=True)
+                    flag_yolo=yolo
 
                     if flag_yolo:
                         lgpio.gpio_write(h, LED1_PIN, 1)

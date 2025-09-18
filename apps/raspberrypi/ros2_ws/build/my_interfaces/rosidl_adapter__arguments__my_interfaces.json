@@ -1,6 +1,0 @@
-{
-  "package_name": "my_interfaces",
-  "non_idl_tuples": [
-    "/home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/src/my_interfaces:msg/StartSignal.msg"
-  ]
-}
