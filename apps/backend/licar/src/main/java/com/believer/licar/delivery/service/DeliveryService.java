@@ -120,4 +120,18 @@ public class DeliveryService {
         return deliveryRepository.findById(deliveryId)
                 .orElseThrow(() -> new CustomException(ErrorCode.DELIVERY_NOT_FOUND));
     }
+
+    @Transactional(readOnly = true)
+    public List<DrugResponse> findRequestedDrugsForLatestDelivery() {
+        Delivery latestDelivery = deliveryRepository.findFirstByOrderByDeliveryIdDesc()
+                .orElseThrow(() -> new CustomException(ErrorCode.DELIVERY_NOT_FOUND));
+
+        if (latestDelivery.getStatus() != DeliveryStatus.requested) {
+            throw new CustomException(ErrorCode.DELIVERY_NOT_FOUND);
+        }
+
+        int patientId = latestDelivery.getPatient().getPatientId();
+
+        return prescriptionService.findValidDrugsForPatient(patientId, LocalDate.now());
+    }
 }
