@@ -1,0 +1,13 @@
+cases:
+  1:
+    action: move      # Nav2 이동
+    x: 1.6
+    y: 19.0
+  2:
+    action: despawn   # 스폰된 로봇 제거
+  3:
+    action: spawn     # 새로운 위치로 스폰
+    x: 1.6
+    y: 19.0
+    z: 7.0
+    yaw: 0.0

@@ -1,0 +1,125 @@
+import os
+
+from ament_index_python.packages import get_package_share_directory
+from launch import LaunchDescription
+from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
+from launch.launch_description_sources import PythonLaunchDescriptionSource
+from launch.substitutions import LaunchConfiguration
+from launch_ros.actions import Node 
+
+
+
+def generate_launch_description():
+
+    # ----------------------------
+    # 런치 인자 정의
+    # ----------------------------
+    use_sim_time_arg = DeclareLaunchArgument(
+        'use_sim_time',
+        default_value='True'
+    )
+
+    # map 경로 절대경로, 존재 여부 체크
+    default_map_path = os.path.expanduser('~/S13P21C206/apps/simulator/maps/0915_1714/map.yaml')
+    if not os.path.isfile(default_map_path):
+        raise FileNotFoundError(f"Map file not found: {default_map_path}")
+
+    map_arg = DeclareLaunchArgument(
+        'map',
+        default_value=default_map_path
+    )
+
+    x_pose_arg = DeclareLaunchArgument(
+        'x_pose',
+        default_value='-5.0'
+    )
+
+    y_pose_arg = DeclareLaunchArgument(
+        'y_pose',
+        default_value='-2.0'
+    )
+    
+    z_pose_arg = DeclareLaunchArgument(
+        'z_pose',
+        default_value='0.1'
+    )
+
+    # ----------------------------
+    # 경로 설정
+    # ----------------------------
+    HOME_DIR = os.environ['HOME']
+
+    turtlebot3_gazebo_dir = os.path.join(get_package_share_directory('turtlebot3_gazebo'), 'launch')
+    pkg_gazebo_ros = get_package_share_directory('gazebo_ros')
+
+    world_file = os.path.expanduser('~/aws-robomaker-hospital-world/worlds/hospital_three_floors.world')
+    if not os.path.isfile(world_file):
+        raise FileNotFoundError(f"Gazebo world file not found: {world_file}")
+
+    # ----------------------------
+    # Gazebo 서버/클라이언트 런치
+    # ----------------------------
+    launch_gzserver = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(os.path.join(pkg_gazebo_ros, 'launch', 'gzserver.launch.py')),
+        launch_arguments={'world': world_file}.items()
+    )
+
+    launch_gzclient = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(os.path.join(pkg_gazebo_ros, 'launch', 'gzclient.launch.py'))
+    )
+
+    # ----------------------------
+    # Robot State Publisher
+    # ----------------------------
+    launch_robot_state_publisher = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(os.path.join(turtlebot3_gazebo_dir, 'robot_state_publisher.launch.py')),
+        launch_arguments={'use_sim_time': LaunchConfiguration('use_sim_time')}.items()
+    )
+
+    # ----------------------------
+    # TurtleBot3 스폰
+    # ----------------------------
+    launch_spawn_turtlebot = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(os.path.join(turtlebot3_gazebo_dir, 'spawn_turtlebot3.launch.py')),
+        launch_arguments={
+            'x_pose': LaunchConfiguration('x_pose'),
+            'y_pose': LaunchConfiguration('y_pose'),
+            'z_pose': LaunchConfiguration('z_pose')
+        }.items()
+    )
+
+    # ----------------------------
+    # Mover & Spawner 노드
+    # ----------------------------
+    turtlebot_mover_node = Node(
+        package='turtlebot',
+        executable='turtlebot_mover_node',
+        name='turtlebot_mover_node',
+        output='screen',
+        parameters=[{'use_sim_time': True}]
+    )
+
+    turtlebot_spawner_node = Node(
+        package='turtlebot',
+        executable='turtlebot_spawner_node',
+        name='turtlebot_spawner_node',
+        output='screen',
+        parameters=[{'use_sim_time': True}]
+    )
+
+
+    ld = LaunchDescription()
+    
+    ld.add_action(use_sim_time_arg)
+    ld.add_action(x_pose_arg)
+    ld.add_action(y_pose_arg)
+    ld.add_action(z_pose_arg)
+
+    ld.add_action(launch_gzserver)
+    ld.add_action(launch_gzclient)
+    ld.add_action(launch_robot_state_publisher)
+    ld.add_action(launch_spawn_turtlebot)
+    ld.add_action(turtlebot_mover_node)
+    ld.add_action(turtlebot_spawner_node)
+
+    return ld
