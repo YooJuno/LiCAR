@@ -1,7 +1,9 @@
 ﻿using licar_wpf.Models;
 using licar_wpf.Services;
+using licar_wpf.Views;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,6 +15,9 @@ namespace licar_wpf.ViewModels
     {
         private readonly NavigationService _navigationService;
         private readonly SseService _sseService;
+        private readonly ToastNotificationService _toastService;
+
+        public ObservableCollection<ToastNotificationViewModel> Notifications => _toastService.Notifications;
         
         private ViewModelBase _currentViewModel;
         public ViewModelBase CurrentViewModel
@@ -44,10 +49,11 @@ namespace licar_wpf.ViewModels
 
         public ICommand LogoutCommand { get; }
 
-        public MainViewModel(NavigationService navigationService, LoginViewModel loginViewModel, SseService sseService)
+        public MainViewModel(NavigationService navigationService, LoginViewModel loginViewModel, SseService sseService, ToastNotificationService toastService)
         {
             _navigationService = navigationService;
             _sseService = sseService;
+            _toastService = toastService;
             _navigationService.CurrentViewModelChanged += (viewModel) => CurrentViewModel = viewModel;
 
             LogoutCommand = new RelayCommand(Logout);
@@ -65,8 +71,8 @@ namespace licar_wpf.ViewModels
                 new AuthService(new ApiClient()),
                 _navigationService,
                 _sseService,
-                () => new NurseViewModel(_navigationService, new NurseService(new ApiClient()), _sseService),
-                () => new PharmacistViewModel(_navigationService, new PharmacistService(new ApiClient()), _sseService)
+                () => new NurseViewModel(_navigationService, new NurseService(new ApiClient()), _sseService, _toastService),
+                () => new PharmacistViewModel(_navigationService, new PharmacistService(new ApiClient()), _sseService, _toastService)
                 ));
         }
     }

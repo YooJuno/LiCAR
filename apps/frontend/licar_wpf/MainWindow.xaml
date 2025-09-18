@@ -18,6 +18,9 @@
         <DataTemplate DataType="{x:Type vm:PharmacistViewModel}">
             <v:PharmacistView/>
         </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:ToastNotificationViewModel}">
+            <v:ToastNotificationView/>
+        </DataTemplate>
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -51,5 +54,14 @@
         </Border>
         
         <ContentControl Grid.Row="1" Content="{Binding CurrentViewModel}" />
+
+        <ItemsControl Grid.Row="1" ItemsSource="{Binding Notifications}"
+                      HorizontalAlignment="Right" VerticalAlignment="Bottom" Panel.ZIndex="99">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Vertical" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+        </ItemsControl>
     </Grid>
 </Window>

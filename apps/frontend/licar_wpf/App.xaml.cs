@@ -18,18 +18,18 @@ namespace licar_wpf
             var apiClient = new ApiClient("http://localhost:8080");
             var navigationService = new NavigationService();
             var sseService = new SseService();
+            var toastNotifiactionService = new ToastNotificationService();
 
             var authService = new AuthService(apiClient);
             var nurseService = new NurseService(apiClient);
             var pharmacistService = new PharmacistService(apiClient);
 
-
             var loginViewModel = new LoginViewModel(authService, navigationService, sseService,
-                () => new NurseViewModel(navigationService, nurseService, sseService),
-                () => new PharmacistViewModel(navigationService, pharmacistService, sseService)
+                () => new NurseViewModel(navigationService, nurseService, sseService, toastNotifiactionService),
+                () => new PharmacistViewModel(navigationService, pharmacistService, sseService, toastNotifiactionService)
                 );
 
-            var mainViewModel = new MainViewModel(navigationService, loginViewModel, sseService);
+            var mainViewModel = new MainViewModel(navigationService, loginViewModel, sseService, toastNotifiactionService);
 
             var mainWindow = new MainWindow
             {
