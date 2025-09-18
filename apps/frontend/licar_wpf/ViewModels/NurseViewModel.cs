@@ -16,6 +16,7 @@ namespace licar_wpf.ViewModels
         private readonly NavigationService _navigationService;
         private readonly NurseService _nurseService;
         private readonly SseService _sseService;
+        private readonly ToastNotificationService _toastService;
 
         private string _searchKeyword;
         public string SearchKeyword { get => _searchKeyword; set { _searchKeyword = value; OnPropertyChanged(); } }
@@ -42,11 +43,12 @@ namespace licar_wpf.ViewModels
         public ICommand SearchCommand { get; }
         public RelayCommand RequestDeliveryCommand { get; }
 
-        public NurseViewModel(NavigationService navigationService, NurseService nurseService, SseService sseService)
+        public NurseViewModel(NavigationService navigationService, NurseService nurseService, SseService sseService, ToastNotificationService toastService)
         {
             _navigationService = navigationService;
             _nurseService = nurseService;
             _sseService = sseService;
+            _toastService = toastService;
 
             SearchCommand = new RelayCommand(async (p) => await SearchPatients());
             RequestDeliveryCommand = new RelayCommand(async (p) => await RequestDelivery(), (p) => SelectedPatient != null);
@@ -97,9 +99,11 @@ namespace licar_wpf.ViewModels
         }
         private void OnDeliveryCompleted(string jsonData)
         {
+            // TODO : jsonData 파싱 후 메시지 디자인
+            _toastService.Show("약 운반 완료!!!!!!!!!!!!!");
+
             Application.Current.Dispatcher.Invoke(() =>
             {
-                // TODO : jsonData 파싱 후 메시지 디자인
                 NotificationList.Add(new Notification($"운반 완료 알림 : {jsonData}"));
             });
         }

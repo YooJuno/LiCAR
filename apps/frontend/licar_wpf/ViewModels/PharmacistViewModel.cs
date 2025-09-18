@@ -16,6 +16,7 @@ namespace licar_wpf.ViewModels
         private readonly NavigationService _navigationService;
         private readonly PharmacistService _pharmacistService;
         private readonly SseService _sseService;
+        private readonly ToastNotificationService _toastService;
 
         public ObservableCollection<Delivery> DeliveryList { get; } = new ObservableCollection<Delivery>();
         public ObservableCollection<Prescription> PrescriptionList { get; } = new ObservableCollection<Prescription>();
@@ -41,7 +42,18 @@ namespace licar_wpf.ViewModels
             {
                 _selectedPrescription = value;
                 OnPropertyChanged();
-                LoadPrescriptionDetails(value);
+                LoadPrescriptionDetail(value);
+            }
+        }
+
+        private Prescription _prescriptionDetail;
+        public Prescription PrescriptionDetail
+        {
+            get => _prescriptionDetail;
+            set
+            {
+                _prescriptionDetail = value;
+                OnPropertyChanged();
             }
         }
 
@@ -49,11 +61,12 @@ namespace licar_wpf.ViewModels
 
         public ICommand LoadDeliveriesCommand { get; }
 
-        public PharmacistViewModel(NavigationService navigationService, PharmacistService pharmacistService, SseService sseService)
+        public PharmacistViewModel(NavigationService navigationService, PharmacistService pharmacistService, SseService sseService, ToastNotificationService toastService)
         {
             _navigationService = navigationService;
             _pharmacistService = pharmacistService;
             _sseService = sseService;
+            _toastService = toastService;
 
             LoadDeliveriesCommand = new RelayCommand(async (p) => await LoadDeliveries());
 
@@ -75,6 +88,7 @@ namespace licar_wpf.ViewModels
         private async void LoadPrescriptionsForDelivery(Delivery delivery)
         {
             PrescriptionList.Clear();
+            PrescriptionDetail = null;
             if (delivery == null) return;
 
             var prescriptions = await _pharmacistService.GetValidPrescriptionAsync(delivery.PatientId, DateTime.Now);
@@ -84,22 +98,22 @@ namespace licar_wpf.ViewModels
             }
         }
 
-        private async void LoadPrescriptionDetails(Prescription prescription)
+        private async void LoadPrescriptionDetail(Prescription prescription)
         {
             if (prescription == null) return;
 
             if (prescription.Drugs != null && prescription.Drugs.Count > 0) return;
 
-            var details = await _pharmacistService.GetPrescriptionDetailAsync(prescription.PrescriptionId);
+            var detail = await _pharmacistService.GetPrescriptionDetailAsync(prescription.PrescriptionId);
 
-            prescription.Drugs = details.Drugs;
-            prescription.CounsellingNote = details.CounsellingNote;
-
-            OnPropertyChanged(nameof(SelectedPrescription));
+            PrescriptionDetail = detail;
         }
 
         private void OnDeliveryRequested(string jsonDate)
         {
+            // TODO : jsonDate 파싱을 하면 좋을 텐데요
+            _toastService.Show("약 요청이 들어왔습니다!!!!!");
+
             Application.Current.Dispatcher.Invoke(() =>
             {
                 NotificationList.Add(new Notification($"요청 알림 : {jsonDate}"));
