@@ -2,8 +2,10 @@
 import os
 import rclpy
 from rclpy.node import Node
+from std_msgs.msg import Empty
 from geometry_msgs.msg import Pose, Point, Quaternion
-from gazebo_msgs.srv import SpawnEntity
+from gazebo_msgs.srv import SpawnEntity, DeleteEntity
+
 
 class ElevatorSpawner(Node):
     def __init__(self):
@@ -33,25 +35,26 @@ class ElevatorSpawner(Node):
         self.qw          = float(self.get_parameter('qw').value)
         self.reference_frame = self.get_parameter('reference_frame').get_parameter_value().string_value
 
-        self.cli = self.create_client(SpawnEntity, '/spawn_entity')
-        self.get_logger().info('waiting for /spawn_entity ...')
-        self.cli.wait_for_service()
+        # Spawn/Delete 서비스 클라이언트 준비
+        self.spawn_cli = self.create_client(SpawnEntity, '/spawn_entity')
+        self.delete_cli = self.create_client(DeleteEntity, '/delete_entity')
+        self.get_logger().info('waiting for /spawn_entity and /delete_entity services...')
+        self.spawn_cli.wait_for_service()
+        self.delete_cli.wait_for_service()
 
-        self.timer = self.create_timer(0.1, self._once)
+        # elevatorSpawn, elevatorDespawn 토픽 구독
+        self.create_subscription(Empty, 'elevatorSpawn', self.spawn_callback, 10)
+        self.create_subscription(Empty, 'elevatorDespawn', self.delete_callback, 10)
 
-    def _once(self):
-        self.timer.cancel()
+    def spawn_callback(self, msg):
         if not os.path.isfile(self.file_path):
             self.get_logger().error(f'file not found: {self.file_path}')
             return
-
         with open(self.file_path, 'r') as f:
             xml = f.read().strip()
-
         if not xml:
             self.get_logger().error('model.sdf is empty (read 0 bytes)')
             return
-
         if '<model' not in xml:
             self.get_logger().error('model.sdf does not contain <model> element')
             return
@@ -66,25 +69,37 @@ class ElevatorSpawner(Node):
         req.initial_pose = p
         req.reference_frame = self.reference_frame
 
-        self.get_logger().info(
-            f"Spawning '{self.entity_name}' from file at "
-            f"({self.x:.3f},{self.y:.3f},{self.z:.3f})"
-        )
-        fut = self.cli.call_async(req)
+        self.get_logger().info(f"Spawning '{self.entity_name}' ...")
+        fut = self.spawn_cli.call_async(req)
         rclpy.spin_until_future_complete(self, fut, timeout_sec=15.0)
-        if not fut.done() or fut.result() is None:
-            self.get_logger().error('spawn service timeout (file path)')
-            return
+        if fut.done() and fut.result():
+            resp = fut.result()
+            ok = getattr(resp, 'success', True)
+            msg = getattr(resp, 'status_message', '')
+            if ok:
+                self.get_logger().info(f"Spawned '{self.entity_name}' OK. {msg if msg else ''}")
+            else:
+                self.get_logger().error(f"Spawn failed: {msg}")
+        else:
+            self.get_logger().error('spawn service timeout')
 
-        resp = fut.result()
-        # gazebo_ros 하위 버전은 success/status_message 필드가 없을 수도 있어 방어적 처리
-        ok = getattr(resp, 'success', True)
-        msg = getattr(resp, 'status_message', '')
-        if not ok:
-            self.get_logger().error(f"spawn failed: {msg}")
-            return
+    def delete_callback(self, msg):
+        req = DeleteEntity.Request()
+        req.name = self.entity_name
+        self.get_logger().info(f"Deleting '{self.entity_name}' ...")
+        fut = self.delete_cli.call_async(req)
+        rclpy.spin_until_future_complete(self, fut, timeout_sec=15.0)
+        if fut.done() and fut.result():
+            resp = fut.result()
+            ok = getattr(resp, 'success', True)
+            msg = getattr(resp, 'status_message', '')
+            if ok:
+                self.get_logger().info(f"Deleted '{self.entity_name}' OK. {msg if msg else ''}")
+            else:
+                self.get_logger().error(f"Delete failed: {msg}")
+        else:
+            self.get_logger().error('delete service timeout')
 
-        self.get_logger().info(f"Spawned '{self.entity_name}' OK. {msg if msg else ''}")
 
 def main(args=None):
     rclpy.init(args=args)
@@ -94,6 +109,7 @@ def main(args=None):
     finally:
         node.destroy_node()
         rclpy.shutdown()
+
 
 if __name__ == '__main__':
     main()
