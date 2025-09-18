@@ -24,7 +24,6 @@ namespace licar_wpf.ViewModels
         public ObservableCollection<Patient> PatientList { get; } = new ObservableCollection<Patient>();
         public ObservableCollection<Notification> NotificationList { get; } = new ObservableCollection<Notification>();
         public ObservableCollection<Prescription> ValidPrescriptionList { get; } = new ObservableCollection<Prescription>();
-        public ObservableCollection<Drug> DrugList { get; } = new ObservableCollection<Drug>();
 
         private Patient _selectedPatient;
         public Patient SelectedPatient
@@ -37,7 +36,7 @@ namespace licar_wpf.ViewModels
                 LoadPatientDetails(value);
                 LoadValidPrescriptionsAsync(value);
 
-                RequestDeliveryCommand.RaiseCanExecuteChanged();
+                (RequestDeliveryCommand as RelayCommand)?.RaiseCanExecuteChanged();
             }
         }
 
@@ -45,15 +44,15 @@ namespace licar_wpf.ViewModels
         public Patient PatientDetails
         {
             get => _patientDetails;
-            set
+            private set
             {
                 _patientDetails = value;
-                OnPropertyChanged();                
+                OnPropertyChanged();
             }
         }
 
-        private Patient _selectedPrescription;
-        public Patient SelectedPrescription
+        private Prescription _selectedPrescription;
+        public Prescription SelectedPrescription
         {
             get => _selectedPrescription;
             set
@@ -61,7 +60,18 @@ namespace licar_wpf.ViewModels
                 _selectedPrescription = value;
                 OnPropertyChanged();
 
-                LoadValidDrugsAsync(value);
+                LoadPrescriptionDetailsAsync(value);
+            }
+        }
+
+        private Prescription _prescriptionDetails;
+        public Prescription PrescriptionDetails
+        {
+            get => _prescriptionDetails;
+            set
+            {
+                _prescriptionDetails = value;
+                OnPropertyChanged();
             }
         }
 
@@ -108,7 +118,7 @@ namespace licar_wpf.ViewModels
         private async void LoadValidPrescriptionsAsync(Patient patient)
         {
             ValidPrescriptionList.Clear();
-            DrugList.Clear();
+            PrescriptionDetails = null;
 
             if (patient == null) return;
 
@@ -119,15 +129,23 @@ namespace licar_wpf.ViewModels
             }
         }
 
-        private async void LoadValidDrugsAsync(Patient patient)
+        private async void LoadPrescriptionDetailsAsync(Prescription prescription)
         {
-            DrugList.Clear();
-            if (patient == null) return;
-
-            var drugs = await _nurseService.GetValidDrugsAsync(patient.PatientId, DateTime.Now);
-            foreach (var drug  in drugs)
+            if (prescription == null)
             {
-                DrugList.Add(drug);
+                PrescriptionDetails = null;
+                return;
+            }
+
+            try
+            {
+                var prescription_details = await _nurseService.GetPrescriptionDetailsAsync(prescription.PrescriptionId);
+                PrescriptionDetails = prescription_details;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"처방전 상세 정보를 불러오는 데 실패했습니다.\n{ex.Message}");
+                PrescriptionDetails = null;
             }
         }
 

@@ -46,11 +46,9 @@ namespace licar_wpf.Services
             return await _apiClient.GetAsync<List<Prescription>>($"/api/v1/prescriptions/valid?patient_id={patientId}&date={formattedDate}");
         }
 
-        public async Task<List<Drug>> GetValidDrugsAsync(int patientId, DateTime date)
+        public async Task<Prescription> GetPrescriptionDetailsAsync(int prescriptionId)
         {
-            string formattedDate = date.ToString("yyyy-MM-dd");
-
-            return await _apiClient.GetAsync<List<Drug>>($"/api/v1/prescriptions/valid-drugs?patient_id={patientId}&date={formattedDate}");
+            return await _apiClient.GetAsync<Prescription>($"/api/v1/prescriptions/{prescriptionId}");
         }
     }
 }
