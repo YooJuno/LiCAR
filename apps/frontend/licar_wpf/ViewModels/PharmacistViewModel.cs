@@ -112,7 +112,7 @@ namespace licar_wpf.ViewModels
         private void OnDeliveryRequested(string jsonDate)
         {
             // TODO : jsonDate 파싱을 하면 좋을 텐데요
-            _toastService.Show("약 요청이 들어왔습니다!!!!!");
+            _toastService.Show($"[{DateTime.Now}]약 요청이 들어왔습니다!!!");
 
             Application.Current.Dispatcher.Invoke(() =>
             {
