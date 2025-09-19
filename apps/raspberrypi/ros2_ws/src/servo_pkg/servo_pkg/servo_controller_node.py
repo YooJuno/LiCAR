@@ -11,17 +11,15 @@ class ServoControllerNode(Node):
     def __init__(self):
         super().__init__('servo_controller_node')
         
-        self.validation_subscription = self.create_subscription(
-            Bool,
-            'validation_status',
-            self.validation_status_callback,
-            10)
+        # 3개의 명확한 명령 토픽을 구독
+        self.open_subscription = self.create_subscription(
+            Bool, 'open_door', self.open_door_callback, 10)
+        self.complete_subscription = self.create_subscription(
+            Bool, 'validation_complete_signal', self.validation_complete_callback, 10)
+        self.close_subscription = self.create_subscription(
+            Bool, 'close_door', self.close_door_callback, 10)
         
-        # --- 추가된 부분: 문의 현재 상태를 기억하는 변수 ---
-        # True = 열림, False = 닫힘. 초기 상태는 '닫힘'
-        self.is_door_open = False
-        
-        # --- 하드웨어 초기화 (이전과 동일) ---
+        # --- 하드웨어 초기화 ---
         GPIO.setmode(GPIO.BCM)
         self.servo_pin = 13 
         GPIO.setup(self.servo_pin, GPIO.OUT)
@@ -41,35 +39,24 @@ class ServoControllerNode(Node):
         time.sleep(1)
         self.pwm.ChangeDutyCycle(0)
 
-    # --- 수정된 부분: 상태를 확인하는 콜백 함수 로직 ---
-    def validation_status_callback(self, msg):
-        """YOLO 검증 결과에 따라, 문의 현재 상태를 확인하고 필요할 때만 동작합니다."""
-        if msg.data: # True: 검증 성공 (문을 닫아야 함)
-            # 문이 이미 닫혀있으면 아무것도 하지 않음
-            if not self.is_door_open:
-                self.get_logger().info('System is Ready or already Validated. Door remains closed.')
-                return
-            
-            # 문이 열려있을 때만 닫는 동작을 수행
-            self.get_logger().info('Validation SUCCESS received. Closing the door.')
-            lgpio.gpio_write(self.h, self.LED_GREEN_PIN, 1)
-            self.set_angle(90) # 문 닫는 각도
-            self.is_door_open = False # 상태 업데이트: 문이 닫힘
-
-        else: # False: 검증 시작 (문을 열어야 함)
-            # 문이 이미 열려있으면 아무것도 하지 않음
-            if self.is_door_open:
-                self.get_logger().info('Validation already in progress. Door remains open.')
-                return
-
-            # 문이 닫혀있을 때만 여는 동작을 수행
-            self.get_logger().info('Validation START received. Opening the door.')
-            lgpio.gpio_write(self.h, self.LED_GREEN_PIN, 0)
+    def open_door_callback(self, msg):
+        if msg.data:
+            self.get_logger().info('Open command received. Opening the door.')
+            lgpio.gpio_write(self.h, self.LED_GREEN_PIN, 0) # 문 열 때는 LED 끄기
             self.set_angle(0) # 문 여는 각도
-            self.is_door_open = True # 상태 업데이트: 문이 열림
+
+    def validation_complete_callback(self, msg):
+        if msg.data:
+            self.get_logger().info('Validation complete signal received. Turning on green light.')
+            lgpio.gpio_write(self.h, self.LED_GREEN_PIN, 1) # 초록 LED 켜기
+
+    def close_door_callback(self, msg):
+        if msg.data:
+            self.get_logger().info('Close command received. Closing the door.')
+            lgpio.gpio_write(self.h, self.LED_GREEN_PIN, 0) # 문 닫을 땐 LED 끄기
+            self.set_angle(90) # 문 닫는 각도
 
     def destroy_node(self):
-        # ... (이전과 동일)
         self.pwm.stop()
         GPIO.cleanup()
         lgpio.gpio_write(self.h, self.LED_GREEN_PIN, 0)
@@ -77,7 +64,6 @@ class ServoControllerNode(Node):
         super().destroy_node()
 
 def main(args=None):
-    # ... (이전과 동일)
     rclpy.init(args=args)
     servo_controller_node = ServoControllerNode()
     try:
