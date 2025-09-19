@@ -30,9 +30,9 @@ INSERT INTO prescriptions (prescription_date, period, counselling_note, patient_
 
 -- 약 테이블
 INSERT INTO drugs (name, form, dosage, unit) VALUES
-('씨엠지세파클러캡슐', '캡슐', 1, '캡슐'),
+('씨엠지쎄파클러캡슐', '캡슐', 1, '캡슐'),
 ('러키펜정', '정제', 1, '정'),
-('에르도캡슐', '캡슐', 300, 'mg'),
+('에드로캡슐', '캡슐', 300, 'mg'),
 ('타리원정', '정제', 10, 'mg'),
 ('휴티렌정', '정제', 1, '정'),
 ('시네츄라시럽', '시럽', 1, '봉'),
