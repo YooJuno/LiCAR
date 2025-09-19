@@ -21,6 +21,7 @@ setup(
     entry_points={
         'console_scripts': [
             'elevator_controller_node = elevator_pkg.elevator_controller:main',
+            'door_state_converter_node = elevator_pkg.door_state_converter:main',
         ],
     },
 )
