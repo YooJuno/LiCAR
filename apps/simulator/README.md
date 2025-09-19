@@ -39,9 +39,7 @@ sudo apt install ros-humble-desktop
 ## 2. AWS Hospital Map installation
 <b> [Reference Link](https://github.com/aws-robotics/aws-robomaker-hospital-world/tree/ros2) </b>
 ```bash
-cd ~
-git clone https://github.com/aws-robotics/aws-robomaker-hospital-world.git -b ros2
-cd aws-robomaker-hospital-world
+cd ~/S13P21C206/apps/simulator/aws-robomaker-hospital-world
 rosdep install --from-paths . --ignore-src -r -y
 chmod +x setup.sh
 ./setup.sh
@@ -58,10 +56,11 @@ git clone https://github.com/ROBOTIS-GIT/turtlebot3.git -b humble
 git clone https://github.com/ROBOTIS-GIT/turtlebot3_msgs.git -b humble
 git clone https://github.com/ROBOTIS-GIT/turtlebot3_simulations.git -b humble
 
-cd ..
 
 sudo apt install python3-rosdep2
 sudo apt install python3-colcon-common-extensions
+
+cd ~/S13P21C206/apps/simulator/turtle_ws
 
 rosdep init
 rosdep update
