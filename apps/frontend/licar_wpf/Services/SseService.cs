@@ -29,7 +29,7 @@ namespace licar_wpf.Services
             _httpClient = new HttpClient { Timeout = Timeout.InfiniteTimeSpan };
 
             var rolePath = role == UserRole.Nurse ? "nurse" : "pharmacist";
-            var requestUrl = $"{baseUrl}/{rolePath}/{id}";
+            var requestUrl = $"{baseUrl}/api/v1/notifications/subscribe/{rolePath}/{id}";
 
             try
             {
