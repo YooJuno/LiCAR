@@ -9,7 +9,7 @@ import time
 
 class ElevatorMover(Node):
     def __init__(self):
-        super().__init__('elevator_mover')
+        super().__init__('elevator_controller_node')
 
         # JointTrajectory 퍼블리셔
         self.traj_pub = self.create_publisher(JointTrajectory, '/set_joint_trajectory', 10)

@@ -1,8 +1,0 @@
-# Goal
-float64 target_z
----
-# Result
-bool success
----
-# Feedback
-float64 current_z
