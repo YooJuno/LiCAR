@@ -18,9 +18,9 @@ def generate_launch_description():
     x_pose = LaunchConfiguration('x_pose', default='-2.0')
     y_pose = LaunchConfiguration('y_pose', default='-0.5')
 
-    MAP_DIR = os.environ['HOME']
-    world_hospital = '~/S13P21C206/apps/simulator/aws-robomaker-hospital-world/worlds/hospital.world'
-    world_hospital_third = '~/S13P21C206/apps/simulator/aws-robomaker-hospital-world/worlds/hospital_three_floors.world'
+    HOME_PATH = os.environ['HOME']
+    world_hospital = HOME_PATH + '/S13P21C206/apps/simulator/aws-robomaker-hospital-world/worlds/hospital.world'
+    world_hospital_third = HOME_PATH + '/S13P21C206/apps/simulator/aws-robomaker-hospital-world/worlds/hospital_three_floors.world'
 
     gzserver_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
