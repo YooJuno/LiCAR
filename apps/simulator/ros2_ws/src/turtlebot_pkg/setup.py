@@ -1,10 +1,8 @@
 from setuptools import find_packages, setup
-import glob
 import os
+from glob import glob
 
 package_name = 'turtlebot_pkg'
-
-config_files = glob.glob(os.path.join('config', '*'))
 
 setup(
     name=package_name,
@@ -14,14 +12,14 @@ setup(
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
-        ('share/' + package_name + '/config', config_files),
+        (os.path.join('share', package_name, 'launch'), glob('launch/*.launch.py')),
     ],
     install_requires=['setuptools'],
     zip_safe=True,
-    maintainer='dain',
-    maintainer_email='didek5123@naver.com',
-    description='Turtlebot mover package',
-    license='Apache-2.0',
+    maintainer='juno',
+    maintainer_email='juno980220@naver.com',
+    description='TODO: Package description',
+    license='TODO: License declaration',
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
