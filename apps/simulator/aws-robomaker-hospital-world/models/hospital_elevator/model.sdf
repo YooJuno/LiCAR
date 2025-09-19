@@ -1,0 +1,113 @@
+<?xml version="1.0" ?>
+  <sdf version="1.6">
+    <model name="hospital_elevator">
+      <static>false</static>
+
+      <!-- 엘리베이터 샤프트/기둥 -->
+      <link name="shaft">
+        <pose>0 0 0 0 0 0</pose>
+        <inertial>
+          <mass>1000.0</mass>
+
+  <inertia><ixx>100</ixx><iyy>100</iyy><izz>100</izz><ixy>0</ixy><ixz>0</ixz><iyz>0</iyz></inertia>     
+        </inertial>
+
+        <!-- 엘리베이터 샤프트 기둥 -->
+        <visual name="shaft_visual">
+          <geometry><box><size>0.1 0.1 10</size></box></geometry>
+          <material><ambient>0.3 0.3 0.3 1</ambient></material>
+        </visual>
+
+        <collision name="shaft_collision">
+          <geometry><box><size>0.1 0.1 10</size></box></geometry>
+        </collision>
+      </link>
+
+      <!-- 엘리베이터 칸 (움직이는 부분) -->
+      <link name="elevator_car">
+        <pose>0 0 0.2 0 0 0</pose>
+        <inertial>
+          <mass>500.0</mass>
+
+  <inertia><ixx>50</ixx><iyy>50</iyy><izz>50</izz><ixy>0</ixy><ixz>0</ixz><iyz>0</iyz></inertia>        
+        </inertial>
+
+        <!-- 엘리베이터 칸 모양 -->
+        <visual name="car_visual">
+          <geometry><box><size>1.8 1.8 2.2</size></box></geometry>
+          <material><ambient>0.8 0.8 0.9 1</ambient></material>
+        </visual>
+
+        <collision name="car_collision">
+          <geometry><box><size>1.8 1.8 2.2</size></box></geometry>
+        </collision>
+      </link>
+
+      <!-- 엘리베이터 문 -->
+      <link name="door">
+        <pose>0.9 0 1.1 0 0 0</pose>  <!-- 엘리베이터 앞쪽 -->
+        <inertial>
+          <mass>50.0</mass>
+
+  <inertia><ixx>5</ixx><iyy>5</iyy><izz>5</izz><ixy>0</ixy><ixz>0</ixz><iyz>0</iyz></inertia>
+        </inertial>
+
+        <visual name="door_visual">
+          <geometry><box><size>0.05 1.6 2.0</size></box></geometry>
+          <material><ambient>0.7 0.7 0.8 1</ambient></material>
+        </visual>
+
+        <collision name="door_collision">
+          <geometry><box><size>0.05 1.6 2.0</size></box></geometry>
+        </collision>
+      </link>
+
+      <!-- 수직 이동 조인트 (엘리베이터 핵심) -->
+      <joint name="lift_joint" type="prismatic">
+        <parent>shaft</parent>
+        <child>elevator_car</child>
+
+        <axis>
+          <xyz>0 0 1</xyz>  <!-- Z축 수직 이동 -->
+          <limit>
+            <lower>0</lower>      <!-- 1층 -->
+            <upper>7.0</upper>    <!-- 3층까지 -->
+            <effort>10000</effort>
+            <velocity>2.0</velocity>
+          </limit>
+          <dynamics damping="100.0" friction="10.0"/>
+        </axis>
+      </joint>
+
+      <!-- 문 개폐 조인트 -->
+      <joint name="door_joint" type="prismatic">
+        <parent>elevator_car</parent>
+        <child>door</child>
+
+        <axis>
+          <xyz>0 1 0</xyz>  <!-- Y축 좌우 이동 -->
+          <limit>
+            <lower>0</lower>      <!-- 문 닫힘 -->
+            <upper>1.5</upper>    <!-- 문 완전 열림 -->
+            <effort>1000</effort>
+            <velocity>1.0</velocity>
+          </limit>
+          <dynamics damping="50.0" friction="5.0"/>
+        </axis>
+      </joint>
+
+      <!-- 샤프트를 월드에 고정 -->
+      <joint name="shaft_fixed" type="fixed">
+        <parent>world</parent>
+        <child>shaft</child>
+      </joint>
+
+      <!-- 공식 ElevatorPlugin 사용 -->
+      <plugin filename="libElevatorPlugin.so" name="elevator_plugin">
+        <lift_joint>lift_joint</lift_joint>
+        <door_joint>door_joint</door_joint>
+        <floor_height>3.5</floor_height>  <!-- 병원 층간 높이 -->
+        <topic>~/elevator</topic>
+      </plugin>
+    </model>
+  </sdf>
