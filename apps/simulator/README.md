@@ -103,14 +103,15 @@ ros2 launch turtlebot3_navigation2 navigation2.launch.py use_sim_time:=True map:
 ## bashrc
 
 ```bash
-# 환경 변수
 export ROS2_WS_PATH=$HOME/S13P21C206/apps/simulator/ros2_ws
-export AWS_HOSPITAL_WS_PATH=$HOME/aws-robomaker-hospital-world
-export TURTLE_WS_PATH=$HOME/turtle_ws
+export AWS_HOSPITAL_WS_PATH=$HOME/S13P21C206/apps/simulator/aws-robomaker-hospital-world
+export TURTLE_WS_PATH=$HOME/S13P21C206/apps/simulator/turtle_ws
 export TURTLEBOT3_MODEL=burger
 export ROS_DOMAIN_ID=1
 export LIBGL_ALWAYS_SOFTWARE=1
 export QT_QPA_PLATFORM=xcb
+export GAZEBO_PLUGIN_PATH=/opt/ros/humble/lib:$GAZEBO_PLUGIN_PATH
+
 
 # Gazebo
 export GAZEBO_MODEL_PATH=${AWS_HOSPITAL_WS_PATH}/models:${AWS_HOSPITAL_WS_PATH}/fuel_models
@@ -128,5 +129,7 @@ alias cb='cd ${ROS2_WS_PATH} && colcon build --symlink-install && source install
 alias killgazebo="killall gzserver gzclient"
 alias humble="source /opt/ros/humble/setup.bash; echo \"ROS2 Humble is activated.\""
 alias turtlebot="humble; source ${TURTLE_WS_PATH}/install/local_setup.bash; echo \"turtlebot workspace is activated.\""
+
+
 
 ```
