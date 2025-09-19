@@ -38,5 +38,17 @@ namespace licar_wpf.Services
 
             return await _apiClient.PostAsync<Delivery>($"/api/v1/deliveries", requestBody);
         }
+
+        public async Task<List<Prescription>> GetValidPrescriptionsAsync(int patientId, DateTime date)
+        {
+            string formattedDate = date.ToString("yyyy-MM-dd");
+
+            return await _apiClient.GetAsync<List<Prescription>>($"/api/v1/prescriptions/valid?patient_id={patientId}&date={formattedDate}");
+        }
+
+        public async Task<Prescription> GetPrescriptionDetailsAsync(int prescriptionId)
+        {
+            return await _apiClient.GetAsync<Prescription>($"/api/v1/prescriptions/{prescriptionId}");
+        }
     }
 }
