@@ -1,13 +1,48 @@
+# cases:
+#   1:
+#     action: move      # 의국
+#     x: -0.15
+#     y: 2.5
+#   11:
+#     action: move      # 엘리베이터 앞
+#     x: 1.6
+#     y: 19.0
+
+#   12:
+#     action: move      # 엘리베이터 안으로
+#     x: 1.85
+#     y: 21.2
+  
+#   301:
+#     action: move   # 301호
+#     x: -2.2
+#     y: -7.3
+#   302:
+#     action: move   # 302호
+#     x: 9.0
+#     y: -7.3
+
+
 cases:
   1:
-    action: move      # Nav2 이동
-    x: 1.6
-    y: 19.0
-  2:
-    action: despawn   # 스폰된 로봇 제거
-  3:
-    action: spawn     # 새로운 위치로 스폰
-    x: 1.6
-    y: 19.0
-    z: 7.0
-    yaw: 0.0
+    action: move      # 의국
+    x: -0.15
+    y: 2.5
+  11:
+    action: move      # 엘리베이터 앞
+    x: 5.0
+    y: 12.0
+
+  12:
+    action: move      # 엘리베이터 안으로
+    x: 4
+    y: 10
+  
+  301:
+    action: move   # 301호
+    x: -2.2
+    y: -7.3
+  302:
+    action: move   # 302호
+    x: 9.0
+    y: -7.3
