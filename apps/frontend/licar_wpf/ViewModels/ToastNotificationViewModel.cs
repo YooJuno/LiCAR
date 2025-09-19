@@ -12,10 +12,10 @@ namespace licar_wpf.ViewModels
         public string Message { get; }
         public ICommand CloseCommand { get; }
 
-        public ToastNotificationViewModel(string message, Action<ToastNotificationViewModel> cloasAction)
+        public ToastNotificationViewModel(string message, Action<ToastNotificationViewModel> closeAction)
         {
             Message = message;
-            CloseCommand = new RelayCommand(_ => cloasAction(this));
+            CloseCommand = new RelayCommand(_ => closeAction(this));
         }
     }
 }

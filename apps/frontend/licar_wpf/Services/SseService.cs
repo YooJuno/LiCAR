@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace licar_wpf.Services
 {
-    public class SseService
+    public class SseService(string baseUrl)
     {
         private HttpClient _httpClient;
         private CancellationTokenSource _cancellationTokenSource;
@@ -29,7 +29,7 @@ namespace licar_wpf.Services
             _httpClient = new HttpClient { Timeout = Timeout.InfiniteTimeSpan };
 
             var rolePath = role == UserRole.Nurse ? "nurse" : "pharmacist";
-            var requestUrl = $"http://localhost:8080/api/v1/notifications/subscribe/{rolePath}/{id}";
+            var requestUrl = $"{baseUrl}/api/v1/notifications/subscribe/{rolePath}/{id}";
 
             try
             {
