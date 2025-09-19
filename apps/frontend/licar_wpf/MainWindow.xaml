@@ -7,7 +7,7 @@
         xmlns:vm="clr-namespace:licar_wpf.ViewModels"
         xmlns:v="clr-namespace:licar_wpf.Views"
         mc:Ignorable="d"
-        Title="Licar" Height="720" Width="1280">
+        Title="Licar" Height="720" Width="1280" WindowState="Maximized">
     <Window.Resources>
         <DataTemplate DataType="{x:Type vm:LoginViewModel}">
             <v:LoginView/>
