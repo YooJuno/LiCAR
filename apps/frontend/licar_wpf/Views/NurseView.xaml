@@ -52,13 +52,50 @@
             <Border Grid.Row="0" Background="White" CornerRadius="5" Padding="15">
                 <StackPanel DataContext="{Binding PatientDetails}">
                     <TextBlock Text="환자 상세 정보" FontSize="20" FontWeight="SemiBold" Margin="0,0,0,15"/>
-                    <TextBlock Text="{Binding PatientId, StringFormat='환자 번호 : {0}'}" Margin="0,5"/>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="환자 번호 : " HorizontalAlignment="Right" FontWeight="SemiBold" Margin="5"/>
+                        <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding PatientId, StringFormat='{}{0}'}" Margin="5"/>
+
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="이름 : " HorizontalAlignment="Right" FontWeight="SemiBold" Margin="5"/>
+                        <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Name}" Margin="5"/>
+
+                        <TextBlock Grid.Row="2" Grid.Column="0" Text="생년월일 : " HorizontalAlignment="Right" FontWeight="SemiBold" Margin="5" />
+                        <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Birthday}" Margin="5"/>
+
+                        <TextBlock Grid.Row="3" Grid.Column="0" Text="입원일 : " HorizontalAlignment="Right" FontWeight="SemiBold" Margin="5" />
+                        <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding AdmissionDate}" Margin="5"/>
+
+                        <TextBlock Grid.Row="4" Grid.Column="0" Text="퇴원일 : " HorizontalAlignment="Right" FontWeight="SemiBold" Margin="5" />
+                        <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding DischargeDate}" Margin="5"/>
+
+                        <TextBlock Grid.Row="5" Grid.Column="0" Text="병동 호실 : " HorizontalAlignment="Right" FontWeight="SemiBold" Margin="5" />
+                        <TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding RoomNumber}" Margin="5"/>
+
+                        <TextBlock Grid.Row="6" Grid.Column="0" Text="담당 간호사 : " HorizontalAlignment="Right" FontWeight="SemiBold" Margin="5" />
+                        <TextBlock Grid.Row="6" Grid.Column="1" Text="{Binding NurseName}" Margin="5"/>
+                    </Grid>
+                    <!--<TextBlock Text="{Binding PatientId, StringFormat='환자 번호 : {0}'}" Margin="0,5"/>
                     <TextBlock Text="{Binding Name, StringFormat='이름 : {0}'}" Margin="0,5"/>
                     <TextBlock Text="{Binding Birthday, StringFormat='생년월일 : {0}'}" Margin="0,5"/>
                     <TextBlock Text="{Binding AdmissionDate, StringFormat='입원 날짜 : {0}'}" Margin="0,5"/>
                     <TextBlock Text="{Binding DischargeDate, StringFormat='퇴원 날짜 : {0}'}" Margin="0,5"/>
                     <TextBlock Text="{Binding RoomNumber, StringFormat='병동 호실 : {0}'}" Margin="0,5"/>
-                    <TextBlock Text="{Binding NurseName, StringFormat='담당 간호사 : {0}'}" Margin="0,5"/>
+                    <TextBlock Text="{Binding NurseName, StringFormat='담당 간호사 : {0}'}" Margin="0,5"/>-->
                     
                     <Button Content="약 운반 요청" Command="{Binding DataContext.RequestDeliveryCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" 
                             Padding="10" Margin="0,20,0,0" IsEnabled="{Binding DataContext.SelectedPatient, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource NullToBooleanConverter}}" FontSize="16" FontWeight="Bold"/>
