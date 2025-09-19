@@ -15,8 +15,8 @@
       <region>
         <name>region1</name>
         <volume>
-          <min>-2.0 28.5 0.0</min>
-          <max>-1.0 30.0 2.5</max>
+          <min>-2.5 18.8 0.0</min>
+          <max>-0.5 20.8 2.5</max>
         </volume>
       </region>
 
@@ -24,8 +24,8 @@
       <region>
         <name>region2</name>
         <volume>
-          <min>-2.0 28.5 2.5</min>
-          <max>-1.0 30.0 4.8</max>
+          <min>-2.5 18.8 2.5</min>
+          <max>-0.5 20.8 5.5</max>
         </volume>
       </region>
 
@@ -33,8 +33,8 @@
       <region>
         <name>region3</name>
         <volume>
-          <min>-2.0 28.5 4.8</min>
-          <max>-1.0 30.0 8.0</max>
+          <min>-2.5 18.8 5.5</min>
+          <max>-0.5 20.8 8.5</max>
         </volume>
       </region>
 
