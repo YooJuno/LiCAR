@@ -5,14 +5,15 @@ from rclpy.node import Node
 from std_msgs.msg import Int32
 from geometry_msgs.msg import PoseStamped
 from nav2_simple_commander.robot_navigator import BasicNavigator, TaskResult
-
+from ament_index_python.packages import get_package_share_directory
 
 class TurtlebotMover(Node):
     def __init__(self):
         super().__init__('turtlebot_mover_node')
         self.navigator = BasicNavigator()
+        
+        yaml_path = '/home/dain/S13P21C206/apps/simulator/ros2_ws/src/turtlebot_pkg/config/cases.yaml'
 
-        yaml_path = os.path.expanduser('~/ros2_ws/src/turtlebot_pkg/config/cases.yaml')
 
         with open(yaml_path, 'r') as f:
             self.cases = yaml.safe_load(f)['cases']

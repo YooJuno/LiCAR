@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<sdf version="1.7">
+  <model name="simple_elevator">
+
+    <!-- 고정된 기본 링크 -->
+    <link name="base_link">
+      <pose>0 0 0 0 0 0</pose>
+      <inertial>
+        <mass>1000</mass>
+        <inertia>
+          <ixx>1</ixx><iyy>1</iyy><izz>1</izz>
+          <ixy>0</ixy><ixz>0</ixz><iyz>0</iyz>
+        </inertia>
+      </inertial>
+      <visual name="base_visual">
+        <geometry>
+          <box><size>0.1 0.1 0.1</size></box>
+        </geometry>
+        <material>
+          <ambient>1 0 0 1</ambient>
+          <diffuse>1 0 0 1</diffuse>
+        </material>
+      </visual>
+      <collision name="base_collision">
+        <geometry>
+          <box><size>0.1 0.1 0.1</size></box>
+        </geometry>
+      </collision>
+    </link>
+
+    <!-- 움직이는 엘리베이터 캐빈 -->
+    <link name="cabin">
+      <pose>0 0 1 0 0 0</pose>
+      <inertial>
+        <mass>100</mass>
+        <inertia>
+          <ixx>10</ixx><iyy>10</iyy><izz>10</izz>
+          <ixy>0</ixy><ixz>0</ixz><iyz>0</iyz>
+        </inertia>
+      </inertial>
+      <visual name="cabin_visual">
+        <geometry>
+          <box><size>1.2 1.2 2.2</size></box>
+        </geometry>
+        <material>
+          <ambient>0 0 1 1</ambient>
+          <diffuse>0 0 1 1</diffuse>
+        </material>
+      </visual>
+      <collision name="cabin_collision">
+        <geometry>
+          <box><size>1.2 1.2 2.2</size></box>
+        </geometry>
+      </collision>
+    </link>
+
+    <!-- 수직 이동 조인트 -->
+    <joint name="lift_joint" type="prismatic">
+      <parent>base_link</parent>
+      <child>cabin</child>
+      <pose>0 0 0 0 0 0</pose>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>0.0</lower>
+          <upper>4.0</upper>
+          <effort>50000</effort>
+          <velocity>5.0</velocity>
+        </limit>
+        <dynamics>
+          <damping>0.01</damping>
+          <friction>0.01</friction>
+        </dynamics>
+      </axis>
+      <physics>
+        <ode>
+          <provide_feedback>true</provide_feedback>
+        </ode>
+      </physics>
+    </joint>
+
+    <!-- ROS2 Control 플러그인 -->
+    <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">
+      <robot_param>robot_description</robot_param>
+      <robot_param_node>robot_state_publisher</robot_param_node>
+      <parameters>/home/hagyun/S13P21C206/apps/simulator/ros2_ws/install/licar_bringup/share/licar_bringup/config/elevator_ros2_control.yaml</parameters>
+    </plugin>
+
+  </model>
+</sdf>
