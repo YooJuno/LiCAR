@@ -2,7 +2,7 @@
 
 import rclpy
 from rclpy.node import Node
-from std_msgs.msg import Bool, String # String 메시지 타입을 추가
+from std_msgs.msg import Bool
 import RPi.GPIO as GPIO
 import lgpio
 import time
@@ -11,30 +11,23 @@ class ServoControllerNode(Node):
     def __init__(self):
         super().__init__('servo_controller_node')
         
-        # --- 수정된 부분: 구독자 2개로 변경 ---
-        # 1. YOLO 검증 결과를 구독
         self.validation_subscription = self.create_subscription(
             Bool,
             'validation_status',
             self.validation_status_callback,
             10)
-            
-        # 2. NFC 태그 신호 (약품 목록 요청)를 구독
-        self.request_subscription = self.create_subscription(
-            String,
-            'drug_list_request',
-            self.open_door_callback,
-            10)
         
-        # --- 하드웨어 초기화 ---
+        # --- 추가된 부분: 문의 현재 상태를 기억하는 변수 ---
+        # True = 열림, False = 닫힘. 초기 상태는 '닫힘'
+        self.is_door_open = False
+        
+        # --- 하드웨어 초기화 (이전과 동일) ---
         GPIO.setmode(GPIO.BCM)
-        # TODO: 실제 서보모터 핀 번호로 수정
         self.servo_pin = 13 
         GPIO.setup(self.servo_pin, GPIO.OUT)
         self.pwm = GPIO.PWM(self.servo_pin, 50)
         self.pwm.start(0)
 
-        # LED
         self.CHIP = 0
         self.LED_GREEN_PIN = 20
         self.h = lgpio.gpiochip_open(self.CHIP)
@@ -48,29 +41,35 @@ class ServoControllerNode(Node):
         time.sleep(1)
         self.pwm.ChangeDutyCycle(0)
 
-    # --- 추가된 부분: 문 여는 콜백 함수 ---
-    def open_door_callback(self, msg):
-        """NFC 태그 신호를 받으면 문을 엽니다."""
-        # msg.data가 비어있지 않은지 확인 (정상적인 요청인지)
-        if msg.data and msg.data != "[]":
-            self.get_logger().info('NFC tag detected. Opening the door...')
-            # TODO: 실제 문 여는 각도로 수정
-            self.set_angle(0) 
-            # LED를 초기 상태(OFF)로 설정
-            lgpio.gpio_write(self.h, self.LED_GREEN_PIN, 0)
-
+    # --- 수정된 부분: 상태를 확인하는 콜백 함수 로직 ---
     def validation_status_callback(self, msg):
-        """YOLO 검증 결과에 따라 문을 닫거나 피드백을 줍니다."""
-        if msg.data: # True: 성공
+        """YOLO 검증 결과에 따라, 문의 현재 상태를 확인하고 필요할 때만 동작합니다."""
+        if msg.data: # True: 검증 성공 (문을 닫아야 함)
+            # 문이 이미 닫혀있으면 아무것도 하지 않음
+            if not self.is_door_open:
+                self.get_logger().info('System is Ready or already Validated. Door remains closed.')
+                return
+            
+            # 문이 열려있을 때만 닫는 동작을 수행
             self.get_logger().info('Validation SUCCESS received. Closing the door.')
-            lgpio.gpio_write(self.h, self.LED_GREEN_PIN, 1) # 초록 LED ON
-            # TODO: 실제 문 닫는 각도로 수정
-            self.set_angle(90) 
-        else: # False: 실패 (또는 검증 시작 신호)
-            self.get_logger().warn('Validation in progress or failed. Keeping door open.')
-            lgpio.gpio_write(self.h, self.LED_GREEN_PIN, 0) # 초록 LED OFF
+            lgpio.gpio_write(self.h, self.LED_GREEN_PIN, 1)
+            self.set_angle(90) # 문 닫는 각도
+            self.is_door_open = False # 상태 업데이트: 문이 닫힘
+
+        else: # False: 검증 시작 (문을 열어야 함)
+            # 문이 이미 열려있으면 아무것도 하지 않음
+            if self.is_door_open:
+                self.get_logger().info('Validation already in progress. Door remains open.')
+                return
+
+            # 문이 닫혀있을 때만 여는 동작을 수행
+            self.get_logger().info('Validation START received. Opening the door.')
+            lgpio.gpio_write(self.h, self.LED_GREEN_PIN, 0)
+            self.set_angle(0) # 문 여는 각도
+            self.is_door_open = True # 상태 업데이트: 문이 열림
 
     def destroy_node(self):
+        # ... (이전과 동일)
         self.pwm.stop()
         GPIO.cleanup()
         lgpio.gpio_write(self.h, self.LED_GREEN_PIN, 0)
@@ -78,6 +77,7 @@ class ServoControllerNode(Node):
         super().destroy_node()
 
 def main(args=None):
+    # ... (이전과 동일)
     rclpy.init(args=args)
     servo_controller_node = ServoControllerNode()
     try:

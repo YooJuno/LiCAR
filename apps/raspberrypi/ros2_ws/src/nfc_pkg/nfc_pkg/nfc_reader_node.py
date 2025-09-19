@@ -2,83 +2,100 @@
 
 import rclpy
 from rclpy.node import Node
-from std_msgs.msg import String
+from std_msgs.msg import String, Bool
 from mfrc522 import SimpleMFRC522
 import RPi.GPIO as GPIO
-import requests  # API 요청을 위한 라이브러리
-import json      # Python 리스트를 JSON 문자열로 변환하기 위한 라이브러리
+import requests
+import json
 import time
+import threading
 
-# 요청을 보낼 Spring BE 서버의 주소
+# --- 수정된 부분: API 엔드포인트를 원래대로 복원 ---
 API_ENDPOINT = "http://192.168.100.157:8080/api/v1/deliveries/requested-drugs"
+CARD_ID_TO_USE = "673075365188" # 사용할 유일한 카드 ID (여전히 검증용으로 사용)
 
 class NfcReaderNode(Node):
     def __init__(self):
         super().__init__('nfc_reader_node')
         
-        # 발행할 토픽 이름을 '/drug_list_request'로 변경. 약품 목록(JSON 문자열)을 발행.
         self.publisher_ = self.create_publisher(String, 'drug_list_request', 10)
-        
-        # 동일한 카드를 계속해서 읽고 API를 호출하는 것을 방지하기 위한 변수
-        self.last_read_id = None
-        self.read_cooldown = 5.0  # 5초의 쿨다운 시간
-        self.last_read_time = 0
-
         self.reader = SimpleMFRC522()
-        self.timer = self.create_timer(0.5, self.read_nfc_and_fetch_drugs) # 0.5초마다 실행
-        self.get_logger().info('NFC Reader Node has been started. Waiting for card...')
+        
+        self.is_system_busy = True
+        self.lock = threading.Lock()
 
-    def read_nfc_and_fetch_drugs(self):
-        try:
-            # non-blocking read 시도
-            id = self.reader.read_id_no_block()
-            if not id:
-                # 카드가 없으면 아무것도 하지 않음
-                return
+        self.status_subscription = self.create_subscription(
+            Bool, 
+            'validation_status', 
+            self.validation_status_callback, 
+            10)
 
-            current_time = time.time()
-            # 마지막으로 읽은 카드와 같고, 쿨다운 시간이 지나지 않았으면 무시
-            if id == self.last_read_id and (current_time - self.last_read_time) < self.read_cooldown:
-                return
+        self.thread = threading.Thread(target=self.nfc_reading_loop, daemon=True)
+        self.thread.start()
+        
+        self.get_logger().info('NFC Reader Node has been started. Waiting for system to be ready...')
 
-            # 새로운 카드가 인식됨
-            self.get_logger().info(f'Card ID: {id} detected!')
-            self.last_read_id = id
-            self.last_read_time = current_time
+    def validation_status_callback(self, msg):
+        with self.lock:
+            self.is_system_busy = not msg.data 
 
-            # --- API 서버에 GET 요청 보내기 ---
-            try:
-                self.get_logger().info(f"Requesting drug list from: {API_ENDPOINT}")
-                response = requests.get(API_ENDPOINT, timeout=5) # 5초 타임아웃
+        if self.is_system_busy:
+            self.get_logger().info("System is now BUSY (validation in progress). NFC reading is paused.")
+        else:
+            self.get_logger().info("System is now READY. NFC reading is resumed.")
 
-                # 요청이 성공했는지 확인 (HTTP 상태 코드 200)
-                if response.status_code == 200:
-                    drugs_data = response.json() # JSON 응답을 Python 객체(리스트)로 변환
+    def nfc_reading_loop(self):
+        self.get_logger().info("NFC thread started. Initializing reader with a 3-second delay...")
+        time.sleep(3.0)
+
+        while rclpy.ok():
+            if not self.is_system_busy:
+                self.get_logger().info('Ready to read a new card. Waiting for a tag...')
+                try:
+                    id = self.reader.read_id()
                     
-                    # 약품 이름만 추출하여 새로운 리스트 생성
-                    drug_names = [drug['name'] for drug in drugs_data]
-                    self.get_logger().info(f"Received drug list: {drug_names}")
+                    if not id:
+                        continue
+                    
+                    self.get_logger().info(f'Card ID: {id} detected!')
+                    
+                    if str(id) == CARD_ID_TO_USE:
+                        with self.lock:
+                            self.is_system_busy = True
+                        
+                        self.get_logger().info("Valid card detected. System is now BUSY.")
 
-                    # Python 리스트를 JSON 형식의 '문자열'로 변환
-                    # 예: ["아스피린", "타이레놀"] -> '["아스피린", "타이레놀"]'
-                    json_string_payload = json.dumps(drug_names)
+                        try:
+                            # --- 수정된 부분: ID를 포함하지 않는 원래 주소로 요청 ---
+                            self.get_logger().info(f"Requesting drug list from: {API_ENDPOINT}")
+                            response = requests.get(API_ENDPOINT, timeout=5)
 
-                    # ROS 메시지에 담아서 발행
-                    msg = String()
-                    msg.data = json_string_payload
-                    self.publisher_.publish(msg)
-                    self.get_logger().info(f"Published to /drug_list_request: {msg.data}")
+                            if response.status_code == 200:
+                                drugs_data = response.json()
+                                drug_names = [drug['name'] for drug in drugs_data]
+                                self.get_logger().info(f"SUCCESS: Received drug list: {drug_names}")
 
-                else:
-                    self.get_logger().error(
-                        f"Failed to get drug list. Status Code: {response.status_code}, Response: {response.text}")
+                                msg = String()
+                                msg.data = json.dumps(drug_names)
+                                self.publisher_.publish(msg)
+                                self.get_logger().info(f"Published to /drug_list_request.")
 
-            except requests.exceptions.RequestException as e:
-                self.get_logger().error(f"API request failed: {e}")
+                            else:
+                                self.get_logger().error(f"API Error. Status Code: {response.status_code}")
+                                with self.lock:
+                                    self.is_system_busy = False
 
-        except Exception as e:
-            # mfrc522 라이브러리에서 발생할 수 있는 다른 예외 처리
-            self.get_logger().warn(f"An error occurred during NFC read: {e}")
+                        except requests.exceptions.RequestException as e:
+                            self.get_logger().error(f"API request failed: {e}")
+                            with self.lock:
+                                self.is_system_busy = False
+                    else:
+                        self.get_logger().warn(f"Ignored an unauthorized card: {id}")
+
+                except Exception:
+                    pass
+            else:
+                time.sleep(1.0)
 
 
 def main(args=None):
