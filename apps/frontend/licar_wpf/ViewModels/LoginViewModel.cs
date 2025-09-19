@@ -62,6 +62,7 @@ namespace licar_wpf.ViewModels
             _sseService = sseService;
             _nurseViewModelFactory = nurseViewModelFactory;
             _pharmacistViewModelFactory = pharmacistViewModelFactory;
+
             LoginCommand = new RelayCommand(async (p) => await ExecuteLogin());
         }
 

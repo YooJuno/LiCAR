@@ -15,21 +15,24 @@ namespace licar_wpf
         {
             base.OnStartup(e);
 
-            var apiClient = new ApiClient("http://localhost:8080");
+            string apiBaseUrl = "https://j13c206.p.ssafy.io";
+            //string apiBaseUrl = "http://localhost:8080";
+
+            var apiClient = new ApiClient(apiBaseUrl);
             var navigationService = new NavigationService();
-            var sseService = new SseService();
+            var sseService = new SseService(apiBaseUrl);
             var toastNotifiactionService = new ToastNotificationService();
 
             var authService = new AuthService(apiClient);
             var nurseService = new NurseService(apiClient);
             var pharmacistService = new PharmacistService(apiClient);
 
-            var loginViewModel = new LoginViewModel(authService, navigationService, sseService,
-                () => new NurseViewModel(navigationService, nurseService, sseService, toastNotifiactionService),
-                () => new PharmacistViewModel(navigationService, pharmacistService, sseService, toastNotifiactionService)
-                );
+            Func<NurseViewModel> nurseViewModelFactory = () => new NurseViewModel(navigationService, nurseService, sseService, toastNotifiactionService);
+            Func<PharmacistViewModel> pharmacistViewModelFactory = () => new PharmacistViewModel(navigationService, pharmacistService, sseService, toastNotifiactionService);
 
-            var mainViewModel = new MainViewModel(navigationService, loginViewModel, sseService, toastNotifiactionService);
+            Func<LoginViewModel> loginViewModelFactory = () => new LoginViewModel(authService, navigationService, sseService, nurseViewModelFactory, pharmacistViewModelFactory);
+
+            var mainViewModel = new MainViewModel(navigationService, sseService, toastNotifiactionService, loginViewModelFactory);
 
             var mainWindow = new MainWindow
             {

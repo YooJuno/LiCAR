@@ -16,6 +16,7 @@ namespace licar_wpf.ViewModels
         private readonly NavigationService _navigationService;
         private readonly SseService _sseService;
         private readonly ToastNotificationService _toastService;
+        private readonly Func<LoginViewModel> _loginViewModelFactory;
 
         public ObservableCollection<ToastNotificationViewModel> Notifications => _toastService.Notifications;
         
@@ -49,16 +50,18 @@ namespace licar_wpf.ViewModels
 
         public ICommand LogoutCommand { get; }
 
-        public MainViewModel(NavigationService navigationService, LoginViewModel loginViewModel, SseService sseService, ToastNotificationService toastService)
+        public MainViewModel(NavigationService navigationService, SseService sseService, ToastNotificationService toastService, Func<LoginViewModel> loginViewModelFactory) 
         {
             _navigationService = navigationService;
             _sseService = sseService;
             _toastService = toastService;
+            _loginViewModelFactory = loginViewModelFactory;
+
             _navigationService.CurrentViewModelChanged += (viewModel) => CurrentViewModel = viewModel;
 
             LogoutCommand = new RelayCommand(Logout);
 
-            _navigationService.NavigateTo(loginViewModel);
+            _navigationService.NavigateTo(_loginViewModelFactory());
         }
 
         private void Logout(object parameter)
@@ -67,13 +70,7 @@ namespace licar_wpf.ViewModels
             
             UserSession.Logout();
 
-            _navigationService.NavigateTo(new LoginViewModel(
-                new AuthService(new ApiClient()),
-                _navigationService,
-                _sseService,
-                () => new NurseViewModel(_navigationService, new NurseService(new ApiClient()), _sseService, _toastService),
-                () => new PharmacistViewModel(_navigationService, new PharmacistService(new ApiClient()), _sseService, _toastService)
-                ));
+            _navigationService.NavigateTo(_loginViewModelFactory());
         }
     }
 }
