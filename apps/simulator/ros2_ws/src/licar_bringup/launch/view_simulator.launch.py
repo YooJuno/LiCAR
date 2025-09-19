@@ -39,7 +39,7 @@ def generate_launch_description():
     elevator_bridge = Node(
         package='ros_gz_bridge',
         executable='parameter_bridge',
-        arguments=['/elevator@std_msgs/msg/String]/gazebo/world/elevator@gazebo.msgs.GzString'],
+        arguments=['/elevator@std_msgs/msg/String@gazebo.msgs.GzString'],
         name='elevator_bridge',
         output='screen'
     )
