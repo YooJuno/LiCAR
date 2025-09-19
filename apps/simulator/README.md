@@ -41,6 +41,10 @@ sudo apt install ros-humble-desktop
 ```bash
 cd ~/S13P21C206/apps/simulator/aws-robomaker-hospital-world
 rosdep install --from-paths . --ignore-src -r -y
+
+sudo apt install ros-humble-gazebo-ros-pkgs
+sudo apt install ros-humble-ros-gz-bridge
+
 chmod +x setup.sh
 ./setup.sh
 colcon build
