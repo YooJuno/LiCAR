@@ -22,11 +22,6 @@ def generate_launch_description():
     if not os.path.isfile(default_map_path):
         raise FileNotFoundError(f"Map file not found: {default_map_path}")
 
-    map_arg = DeclareLaunchArgument(
-        'map',
-        default_value=default_map_path
-    )
-
     x_pose_arg = DeclareLaunchArgument(
         'x_pose',
         default_value='-2.0'
@@ -45,16 +40,15 @@ def generate_launch_description():
     turtlebot3_gazebo_dir = os.path.join(get_package_share_directory('turtlebot3_gazebo'), 'launch')
     pkg_gazebo_ros = get_package_share_directory('gazebo_ros')
 
-    world_file = os.path.expanduser('~/aws-robomaker-hospital-world/worlds/hospital.world')
-    if not os.path.isfile(world_file):
-        raise FileNotFoundError(f"Gazebo world file not found: {world_file}")
+    world_hospital = '~/S13P21C206/apps/simulator/aws-robomaker-hospital-world/worlds/hospital.world'
+    world_hospital_third = '~/S13P21C206/apps/simulator/aws-robomaker-hospital-world/worlds/hospital_three_floors.world'
 
     # ----------------------------
     # Gazebo 서버/클라이언트 런치
     # ----------------------------
     launch_gzserver = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(os.path.join(pkg_gazebo_ros, 'launch', 'gzserver.launch.py')),
-        launch_arguments={'world': world_file}.items()
+        launch_arguments={'world': world_hospital_third}.items()
     )
 
     launch_gzclient = IncludeLaunchDescription(
