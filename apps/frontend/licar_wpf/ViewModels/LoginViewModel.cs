@@ -97,24 +97,21 @@ namespace licar_wpf.ViewModels
             {
                 string actualExceptionType = ex.GetType().FullName;
 
-                // 2. 전체 예외 메시지 확인
                 string exceptionMessage = ex.Message;
 
-                // 3. 내부 예외가 있는지 확인 (내부에 진짜 원인이 있는 경우가 많음)
                 string innerExceptionDetails = ex.InnerException?.ToString();
 
-                // 4. 스택 트레이스 확인 (어느 코드 라인에서 오류가 시작되었는지 추적)
                 string stackTrace = ex.StackTrace;
 
-                // 디버거의 '조사식(Watch)' 창에서 위 변수들의 값을 모두 확인하세요.
-                // 또는 아래 코드로 출력창에 표시할 수 있습니다.
                 System.Diagnostics.Debug.WriteLine($"[ERROR] Type: {actualExceptionType}");
                 System.Diagnostics.Debug.WriteLine($"[ERROR] Message: {exceptionMessage}");
                 System.Diagnostics.Debug.WriteLine($"[ERROR] Inner Exception: {innerExceptionDetails}");
                 System.Diagnostics.Debug.WriteLine($"[ERROR] Stack Trace: {stackTrace}");
 
 
-                ErrorMessage = "인증에 실패하였습니다. 사번과 이름을 확인해주세요.";
+                ErrorMessage = "사번과 이름을 확인해주세요.";
+
+                MessageBox.Show(ErrorMessage.ToString(), "실패", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }

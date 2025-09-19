@@ -10,20 +10,25 @@
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Width="300">
             <TextBlock Text="로그인" FontSize="28" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,30" />
 
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,20">
-                <RadioButton Content="간호사" GroupName="Role" IsChecked="{Binding IsNurseRole, Mode=TwoWay}" Margin="0,0,20,0" />
-                <RadioButton Content="약사" GroupName="Role" />
+            <StackPanel Margin="0,0,0,20">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <RadioButton Grid.Column="0" Content="간호사" GroupName="Role" HorizontalAlignment="Center" IsChecked="{Binding IsNurseRole, Mode=TwoWay}" Margin="0,0,20,0" />
+                    <RadioButton Grid.Column="1" Content="약  사" GroupName="Role" HorizontalAlignment="Center"/>
+                </Grid>
             </StackPanel>
 
-            <TextBlock Text="사번" Margin="0,0,0,5" />
-            <TextBox Text="{Binding UserId, UpdateSourceTrigger=PropertyChanged}" Padding="5" Margin="0,0,0,15" />
+            <TextBlock Text="사번" TextAlignment="Center" Margin="0,0,0,5" />
+            <TextBox Text="{Binding UserId, UpdateSourceTrigger=PropertyChanged}" TextAlignment="Center" Padding="5" Margin="0,0,0,15" />
 
-            <TextBlock Text="이름" Margin="0,0,0,5" />
-            <TextBox Text="{Binding UserName, UpdateSourceTrigger=PropertyChanged}" Padding="5" Margin="0,0,0,25" />
+            <TextBlock Text="이름" TextAlignment="Center" Margin="0,0,0,5" />
+            <TextBox Text="{Binding UserName, UpdateSourceTrigger=PropertyChanged}" TextAlignment="Center" Padding="5" Margin="0,0,0,25" />
 
             <Button Content="로그인" Command="{Binding LoginCommand}" Padding="10" IsDefault="True" Background="DodgerBlue" Foreground="White" FontWeight="Bold" />
-
-            <TextBlock Text="{Binding ErrorMessage}" Foreground="Red" HorizontalAlignment="Center" Margin="0,15,0,0" Visibility="{Binding ErrorMessage, Converter={StaticResource NullToVisibilityConverter}}" />
         </StackPanel>
     </Grid>
 </UserControl>
