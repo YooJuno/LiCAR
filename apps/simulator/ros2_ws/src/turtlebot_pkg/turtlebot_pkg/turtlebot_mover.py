@@ -11,9 +11,9 @@ class TurtlebotMover(Node):
     def __init__(self):
         super().__init__('turtlebot_mover_node')
         self.navigator = BasicNavigator()
+        
+        yaml_path = '/home/dain/S13P21C206/apps/simulator/ros2_ws/src/turtlebot_pkg/config/cases.yaml'
 
-        pkg_share = get_package_share_directory('turtlebot_pkg')
-        yaml_path = os.path.join(pkg_share, 'config', 'cases.yaml')
 
         with open(yaml_path, 'r') as f:
             self.cases = yaml.safe_load(f)['cases']
