@@ -1,5 +1,5 @@
 -- ENUM 타입 정의
-CREATE TYPE delivery_status AS ENUM ('requested', 'in_transit', 'completed');
+CREATE TYPE transport_status AS ENUM ('requested', 'in_transit', 'completed');
 
 -- 간호사 테이블
 CREATE TABLE nurses (
@@ -32,7 +32,7 @@ CREATE TABLE transports (
     requested_time  TIMESTAMP,
     sended_time     TIMESTAMP,
     arrived_time  TIMESTAMP,
-    status delivery_status DEFAULT 'requested',
+    status transport_status DEFAULT 'requested',
     robot_id        INTEGER     NOT NULL,
     nurse_id        INTEGER     NOT NULL,
     pharmacist_id   INTEGER     NOT NULL,
