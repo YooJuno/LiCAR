@@ -35,13 +35,13 @@ def generate_launch_description():
     # ----------------------------
     # 경로 설정
     # ----------------------------
-    HOME_DIR = os.environ['HOME']
+    HOME_PATH = os.environ['HOME']
 
     turtlebot3_gazebo_dir = os.path.join(get_package_share_directory('turtlebot3_gazebo'), 'launch')
     pkg_gazebo_ros = get_package_share_directory('gazebo_ros')
 
-    world_hospital = '~/S13P21C206/apps/simulator/aws-robomaker-hospital-world/worlds/hospital.world'
-    world_hospital_third = '~/S13P21C206/apps/simulator/aws-robomaker-hospital-world/worlds/hospital_three_floors.world'
+    world_hospital =  HOME_PATH + '/S13P21C206/apps/simulator/aws-robomaker-hospital-world/worlds/hospital.world'
+    world_hospital_third =  HOME_PATH + '/S13P21C206/apps/simulator/aws-robomaker-hospital-world/worlds/hospital_three_floors.world'
 
     # ----------------------------
     # Gazebo 서버/클라이언트 런치
