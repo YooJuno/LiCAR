@@ -31,7 +31,7 @@ CREATE TABLE transports (
     transport_id    SERIAL      PRIMARY KEY,
     requested_time  TIMESTAMP,
     sended_time     TIMESTAMP,
-    arrived_time  TIMESTAMP,
+    arrived_time    TIMESTAMP,
     status transport_status DEFAULT 'requested',
     robot_id        INTEGER     NOT NULL,
     nurse_id        INTEGER     NOT NULL,
