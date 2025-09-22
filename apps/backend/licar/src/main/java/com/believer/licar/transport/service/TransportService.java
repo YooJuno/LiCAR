@@ -3,6 +3,7 @@ package com.believer.licar.transport.service;
 import com.believer.licar.prescription.entity.Prescription;
 import com.believer.licar.prescription.entity.PrescriptionDrug;
 import com.believer.licar.prescription.repository.PrescriptionRepository;
+import com.believer.licar.transport.dto.RobotTransportInfoResponse;
 import com.believer.licar.transport.dto.TransportCreateRequest;
 import com.believer.licar.transport.dto.TransportDetailResponse;
 import com.believer.licar.transport.dto.TransportSimpleResponse;
@@ -155,5 +156,13 @@ public class TransportService {
                 .distinct()
                 .map(DrugResponse::from)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public RobotTransportInfoResponse getLatestTransportDetailsForRobot(int robotId) {
+        Transport latestTransport = transportRepository.findFirstByRobotIdOrderByTransportIdDesc(robotId)
+                .orElseThrow(() -> new CustomException(ErrorCode.TRANSPORT_NOT_FOUND));
+
+        return RobotTransportInfoResponse.from(latestTransport);
     }
 }
