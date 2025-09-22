@@ -16,10 +16,11 @@ INSERT INTO patients (name, birthday, admission_date, room_number, nurse_id) VAL
 ('김부각', '2001-07-22', '2025-09-07', 203, 1);
 
 -- 운송 정보 테이블 (간호사, 약사, 환자 테이블의 ID 참조)
-INSERT INTO deliveries (request_time, send_time, success_time, status, robot_id, nurse_id, pharmacist_id, patient_id) VALUES
+INSERT INTO transports (requested_time, sended_time, arrived_time, status, robot_id, nurse_id, pharmacist_id, patient_id) VALUES
 ('2025-09-06 13:00:00', '2025-09-06 13:10:00', '2025-09-06 13:25:00', 'completed', 1, 3, 1, 1),
 ('2025-09-07 14:50:00', '2025-09-07 15:00:00', NULL, 'in_transit', 2, 1, 2, 3),
-('2025-09-07 15:05:00', NULL, NULL, 'requested', 3, 2, 1, 3);
+('2025-09-07 15:05:00', NULL, NULL, 'requested', 3, 2, 1, 3),
+('2025-09-07 16:05:00', NULL, NULL, 'requested', 1, 3, 1, 1);
 
 -- 처방전 테이블 (환자 테이블의 ID 참조)
 INSERT INTO prescriptions (prescription_date, period, counselling_note, patient_id) VALUES
@@ -39,6 +40,11 @@ INSERT INTO drugs (name, form, dosage, unit) VALUES
 ('아스피린', '정제', 500, 'mg'),
 ('타이레놀', '정제', 250, 'mg'),
 ('항생제A', '캡슐', 1, '캡슐');
+
+INSERT INTO transport_prescriptions (transport_id, prescription_id) VALUES
+(1, 1),
+(2, 3),
+(4, 4);
 
 -- 처방전-약 테이블 (처방전과 약 테이블의 ID 참조)
 INSERT INTO prescription_drugs (prescription_id, drug_id) VALUES

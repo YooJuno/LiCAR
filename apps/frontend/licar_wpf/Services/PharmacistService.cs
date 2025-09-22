@@ -16,14 +16,14 @@ namespace licar_wpf.Services
             _apiClient = apiClient;
         }
 
-        public async Task<List<Delivery>> GetDeliveriesAsync()
+        public async Task<List<Transport>> GetTransportsAsync()
         {
-            return await _apiClient.GetAsync<List<Delivery>>("/api/v1/deliveries");
+            return await _apiClient.GetAsync<List<Transport>>("/api/v1/transports");
         }
 
-        public async Task<Delivery> GetDeliveryDetailASync(int deliveryId)
+        public async Task<Transport> GetTransportDetailAsync(int transportId)
         {
-            return await _apiClient.GetAsync<Delivery>($"/api/v1/deliveries/{deliveryId}");
+            return await _apiClient.GetAsync<Transport>($"/api/v1/transports/{transportId}");
         }
 
         public async Task<List<Prescription>> GetValidPrescriptionAsync(int patientId, DateTime date)

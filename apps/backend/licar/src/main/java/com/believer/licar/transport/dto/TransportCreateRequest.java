@@ -1,11 +1,11 @@
-package com.believer.licar.delivery.dto;
+package com.believer.licar.transport.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class DeliveryCreateRequest {
+public class TransportCreateRequest {
 
     private Integer robotId;
     private int nurseId;

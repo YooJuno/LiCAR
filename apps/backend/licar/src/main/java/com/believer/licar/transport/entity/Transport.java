@@ -1,6 +1,6 @@
-package com.believer.licar.delivery.entity;
+package com.believer.licar.transport.entity;
 
-import com.believer.licar.delivery.enums.DeliveryStatus;
+import com.believer.licar.transport.enums.TransportStatus;
 import com.believer.licar.patient.entity.Patient;
 import com.believer.licar.user.entity.Nurse;
 import com.believer.licar.user.entity.Pharmacist;
@@ -12,30 +12,32 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-@Table(name = "deliveries")
+@Table(name = "transports")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Delivery {
+public class Transport {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "delivery_id")
-    private int deliveryId;
+    @Column(name = "transport_id")
+    private int transportId;
 
-    @Column(name = "request_time")
-    private LocalDateTime requestTime;
+    @Column(name = "requested_time")
+    private LocalDateTime requestedTime;
 
-    @Column(name = "send_time")
-    private LocalDateTime sendTime;
+    @Column(name = "sended_time")
+    private LocalDateTime sendedTime;
 
-    @Column(name = "success_time")
-    private LocalDateTime successTime;
+    @Column(name = "arrived_time")
+    private LocalDateTime arrivedTime;
 
     @JdbcTypeCode(SqlTypes.NAMED_ENUM)
-    @Column(name = "status", columnDefinition = "delivery_status")
-    private DeliveryStatus status;
+    @Column(name = "status", columnDefinition = "transport_status")
+    private TransportStatus status;
 
     @Column(name = "robot_id", nullable = false)
     private Integer robotId;
@@ -52,13 +54,16 @@ public class Delivery {
     @JoinColumn(name = "patient_id", nullable = false)
     private Patient patient;
 
+    @OneToMany(mappedBy = "transport")
+    private List<TransportPrescription> transportPrescriptions = new ArrayList<>();
+
     @PrePersist
     protected void onCreate() {
-        this.requestTime = LocalDateTime.now();
-        this.status = DeliveryStatus.requested;
+        this.requestedTime = LocalDateTime.now();
+        this.status = TransportStatus.requested;
     }
 
-    public Delivery(Integer robotId, Nurse nurse, Pharmacist pharmacist, Patient patient) {
+    public Transport(Integer robotId, Nurse nurse, Pharmacist pharmacist, Patient patient) {
         this.robotId = robotId;
         this.nurse = nurse;
         this.pharmacist = pharmacist;
@@ -66,12 +71,12 @@ public class Delivery {
     }
 
     public void startTransit() {
-        this.status = DeliveryStatus.in_transit;
-        this.sendTime = LocalDateTime.now();
+        this.status = TransportStatus.in_transit;
+        this.sendedTime = LocalDateTime.now();
     }
 
-    public void completeDelivery() {
-        this.status = DeliveryStatus.completed;
-        this.successTime = LocalDateTime.now();
+    public void completeTransport() {
+        this.status = TransportStatus.completed;
+        this.arrivedTime = LocalDateTime.now();
     }
 }

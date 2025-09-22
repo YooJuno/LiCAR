@@ -7,19 +7,19 @@ using System.Threading.Tasks;
 
 namespace licar_wpf.Models
 {
-    public class Delivery
+    public class Transport
     {
-        [JsonPropertyName("deliveryId")]
-        public int DeliveryId { get; set; }
+        [JsonPropertyName("transportId")]
+        public int TransportId { get; set; }
 
-        [JsonPropertyName("requestTime")]
-        public string RequestTime { get; set; }
+        [JsonPropertyName("requestedTime")]
+        public DateTime RequestedTime { get; set; }
 
-        [JsonPropertyName("sendTime")]
-        public string? SendTime { get; set; }
+        [JsonPropertyName("sendedTime")]
+        public DateTime? SendedTime { get; set; }
 
-        [JsonPropertyName("successTime")]
-        public string? SuccessTime { get; set; }
+        [JsonPropertyName("arrivedTime")]
+        public DateTime? ArrivedTime { get; set; }
 
         [JsonPropertyName("status")]
         public string Status { get; set; } // "requested", "in_transit", "completed"
@@ -35,5 +35,8 @@ namespace licar_wpf.Models
 
         [JsonPropertyName("patientId")]
         public int PatientId { get; set; }
+
+        [JsonPropertyName("prescriptions")]
+        public List<Prescription> Prescriptions { get; set; }
     }
 }

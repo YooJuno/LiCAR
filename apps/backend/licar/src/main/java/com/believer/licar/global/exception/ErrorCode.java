@@ -19,7 +19,7 @@ public enum ErrorCode {
     NURSE_NOT_FOUND(HttpStatus.NOT_FOUND, "E004", "해당 간호사를 찾을 수 없습니다."),
     PHARMACIST_NOT_FOUND(HttpStatus.NOT_FOUND, "E005", "해당 약사를 찾을 수 없습니다."),
     PATIENT_NOT_FOUND(HttpStatus.NOT_FOUND, "E006", "해당 환자를 찾을 수 없습니다."),
-    DELIVERY_NOT_FOUND(HttpStatus.NOT_FOUND, "E007", "해당 운송 정보를 찾을 수 없습니다."),
+    TRANSPORT_NOT_FOUND(HttpStatus.NOT_FOUND, "E007", "해당 운송 정보를 찾을 수 없습니다."),
     PRESCRIPTION_NOT_FOUND(HttpStatus.NOT_FOUND, "E008", "해당 처방전을 찾을 수 없습니다."),
     DRUG_NOT_FOUND(HttpStatus.NOT_FOUND, "E009", "해당 약을 찾을 수 없습니다."),
 

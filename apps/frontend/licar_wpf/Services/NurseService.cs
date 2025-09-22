@@ -26,7 +26,7 @@ namespace licar_wpf.Services
             return await _apiClient.GetAsync<Patient>($"/api/v1/patients/{patientId}");
         }
 
-        public async Task<Delivery> RequestDeliveryAsync(int robotId, int nurseId, int pharmacistId, int patientId)
+        public async Task<Transport> RequestTransportAsync(int robotId, int nurseId, int pharmacistId, int patientId)
         {
             var requestBody = new
             {
@@ -36,7 +36,7 @@ namespace licar_wpf.Services
                 patientId
             };
 
-            return await _apiClient.PostAsync<Delivery>($"/api/v1/deliveries", requestBody);
+            return await _apiClient.PostAsync<Transport>($"/api/v1/transports", requestBody);
         }
 
         public async Task<List<Prescription>> GetValidPrescriptionsAsync(int patientId, DateTime date)
