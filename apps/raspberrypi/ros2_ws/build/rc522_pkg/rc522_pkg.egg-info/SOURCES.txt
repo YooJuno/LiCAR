@@ -8,10 +8,13 @@ setup.py
 ../../build/rc522_pkg/rc522_pkg.egg-info/requires.txt
 ../../build/rc522_pkg/rc522_pkg.egg-info/top_level.txt
 ../../build/rc522_pkg/rc522_pkg.egg-info/zip-safe
-launch/main_launch.py
 rc522_pkg/__init__.py
 rc522_pkg/main.py
+rc522_pkg.egg-info/PKG-INFO
+rc522_pkg.egg-info/SOURCES.txt
+rc522_pkg.egg-info/dependency_links.txt
+rc522_pkg.egg-info/entry_points.txt
+rc522_pkg.egg-info/requires.txt
+rc522_pkg.egg-info/top_level.txt
+rc522_pkg.egg-info/zip-safe
 resource/rc522_pkg
-test/test_copyright.py
-test/test_flake8.py
-test/test_pep257.py

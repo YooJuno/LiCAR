@@ -39,10 +39,12 @@ sudo apt install ros-humble-desktop
 ## 2. AWS Hospital Map installation
 <b> [Reference Link](https://github.com/aws-robotics/aws-robomaker-hospital-world/tree/ros2) </b>
 ```bash
-cd ~
-git clone https://github.com/aws-robotics/aws-robomaker-hospital-world.git -b ros2
-cd aws-robomaker-hospital-world
+cd ~/S13P21C206/apps/simulator/aws-robomaker-hospital-world
 rosdep install --from-paths . --ignore-src -r -y
+
+sudo apt install ros-humble-gazebo-ros-pkgs
+sudo apt install ros-humble-ros-gz-bridge
+
 chmod +x setup.sh
 ./setup.sh
 colcon build
@@ -58,10 +60,11 @@ git clone https://github.com/ROBOTIS-GIT/turtlebot3.git -b humble
 git clone https://github.com/ROBOTIS-GIT/turtlebot3_msgs.git -b humble
 git clone https://github.com/ROBOTIS-GIT/turtlebot3_simulations.git -b humble
 
-cd ..
 
 sudo apt install python3-rosdep2
 sudo apt install python3-colcon-common-extensions
+
+cd ~/S13P21C206/apps/simulator/turtle_ws
 
 rosdep init
 rosdep update
@@ -101,16 +104,16 @@ ros2 launch turtlebot3_navigation2 navigation2.launch.py use_sim_time:=True map:
 ```
 
 ## bashrc
-
 ```bash
 # 환경 변수
 export ROS2_WS_PATH=$HOME/S13P21C206/apps/simulator/ros2_ws
-export AWS_HOSPITAL_WS_PATH=$HOME/aws-robomaker-hospital-world
-export TURTLE_WS_PATH=$HOME/turtle_ws
+export AWS_HOSPITAL_WS_PATH=$HOME/S13P21C206/apps/simulator/aws-robomaker-hospital-world
+export TURTLE_WS_PATH=$HOME/S13P21C206/apps/simulator/turtle_ws
 export TURTLEBOT3_MODEL=burger
 export ROS_DOMAIN_ID=1
 export LIBGL_ALWAYS_SOFTWARE=1
 export QT_QPA_PLATFORM=xcb
+export GAZEBO_PLUGIN_PATH=/opt/ros/humble/lib:$GAZEBO_PLUGIN_PATH
 
 # Gazebo
 export GAZEBO_MODEL_PATH=${AWS_HOSPITAL_WS_PATH}/models:${AWS_HOSPITAL_WS_PATH}/fuel_models
@@ -128,5 +131,4 @@ alias cb='cd ${ROS2_WS_PATH} && colcon build --symlink-install && source install
 alias killgazebo="killall gzserver gzclient"
 alias humble="source /opt/ros/humble/setup.bash; echo \"ROS2 Humble is activated.\""
 alias turtlebot="humble; source ${TURTLE_WS_PATH}/install/local_setup.bash; echo \"turtlebot workspace is activated.\""
-
 ```

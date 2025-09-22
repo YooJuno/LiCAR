@@ -20,7 +20,7 @@ namespace licar_wpf.Services
                 var notificationViewModel = new ToastNotificationViewModel(message, Close);
                 Notifications.Add(notificationViewModel);
 
-                await Task.Delay(1000);
+                await Task.Delay(60 * 1000);
                 Close(notificationViewModel);
             });
         }
