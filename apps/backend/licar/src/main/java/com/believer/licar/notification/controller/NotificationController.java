@@ -16,8 +16,13 @@ public class NotificationController {
 
     private final NotificationService notificationService;
 
-    @GetMapping(value = "/subscribe/{pharmacistId}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public SseEmitter subscribe(@PathVariable Integer pharmacistId) {
-        return notificationService.subscribe(pharmacistId);
+    @GetMapping(value = "/subscribe/pharmacist/{pharmacistId}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public SseEmitter subscribePharmacist(@PathVariable Integer pharmacistId) {
+        return notificationService.subscribePharmacist(pharmacistId);
+    }
+
+    @GetMapping(value = "/subscribe/nurse/{nurseId}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public SseEmitter subscribeNurse(@PathVariable Integer nurseId) {
+        return notificationService.subscribeNurse(nurseId);
     }
 }

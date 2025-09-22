@@ -1,0 +1,13 @@
+train: ../train/images
+val: ../valid/images
+test: ../test/images
+
+nc: 4
+names: ['에드로캡슐', '휴티렌정', '러키펜정', '씨엠지쎄파클러캡슐']
+
+roboflow:
+  workspace: jslee
+  project: second-c3hoh
+  version: 1
+  license: Public Domain
+  url: https://universe.roboflow.com/jslee/second-c3hoh/dataset/1

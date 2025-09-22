@@ -1,13 +1,15 @@
 package com.believer.licar.delivery.service;
 
 import com.believer.licar.delivery.dto.DeliveryCreateRequest;
-import com.believer.licar.delivery.dto.DeliveryResponse;
+import com.believer.licar.delivery.dto.DeliveryDetailResponse;
+import com.believer.licar.delivery.dto.DeliverySimpleResponse;
 import com.believer.licar.delivery.entity.Delivery;
 import com.believer.licar.delivery.enums.DeliveryStatus;
 import com.believer.licar.delivery.repository.DeliveryRepository;
 import com.believer.licar.global.exception.CustomException;
 import com.believer.licar.global.exception.ErrorCode;
-import com.believer.licar.notification.dto.NotificationResponse;
+import com.believer.licar.notification.dto.NotificationCompleteResponse;
+import com.believer.licar.notification.dto.NotificationRequestResponse;
 import com.believer.licar.notification.service.NotificationService;
 import com.believer.licar.patient.entity.Patient;
 import com.believer.licar.patient.repository.PatientRepository;
@@ -37,7 +39,7 @@ public class DeliveryService {
     private final PrescriptionService prescriptionService;
 
     @Transactional
-    public DeliveryResponse requestDelivery(DeliveryCreateRequest request) {
+    public DeliveryDetailResponse requestDelivery(DeliveryCreateRequest request) {
         Patient patient = patientRepository.findById(request.getPatientId())
                 .orElseThrow(() -> new CustomException(ErrorCode.PATIENT_NOT_FOUND));
         Nurse nurse = nurseRepository.findById(request.getNurseId())
@@ -49,14 +51,14 @@ public class DeliveryService {
         Delivery savedDelivery = deliveryRepository.save(delivery);
 
         // SSE
-        NotificationResponse notification = NotificationResponse.from(savedDelivery);
-        notificationService.send(savedDelivery.getPharmacist().getPharmacistId(), notification);
+        NotificationRequestResponse notification = NotificationRequestResponse.from(savedDelivery);
+        notificationService.sendToPharmacist(savedDelivery.getPharmacist().getPharmacistId(), notification);
 
-        return DeliveryResponse.from(savedDelivery);
+        return DeliveryDetailResponse.from(savedDelivery);
     }
 
     @Transactional
-    public DeliveryResponse startDelivery(int deliveryId) {
+    public DeliverySimpleResponse startDelivery(int deliveryId) {
         Delivery delivery = findDeliveryEntityById(deliveryId);
 
         if (delivery.getStatus() != DeliveryStatus.requested) {
@@ -64,11 +66,11 @@ public class DeliveryService {
         }
         delivery.startTransit();
 
-        return DeliveryResponse.from(delivery);
+        return DeliverySimpleResponse.from(delivery);
     }
 
     @Transactional
-    public DeliveryResponse completeDelivery(int deliveryId) {
+    public DeliverySimpleResponse completeDelivery(int deliveryId) {
         Delivery delivery = findDeliveryEntityById(deliveryId);
 
         if (delivery.getStatus() != DeliveryStatus.in_transit) {
@@ -76,19 +78,23 @@ public class DeliveryService {
         }
         delivery.completeDelivery();
 
-        return DeliveryResponse.from(delivery);
+        // SSE
+        NotificationCompleteResponse notification = NotificationCompleteResponse.from(delivery);
+        notificationService.setToNurse(delivery.getNurse().getNurseId(), notification);
+
+        return DeliverySimpleResponse.from(delivery);
     }
 
     @Transactional(readOnly = true)
-    public DeliveryResponse findDeliveryById(int deliveryId) {
+    public DeliveryDetailResponse findDeliveryById(int deliveryId) {
 
-        return DeliveryResponse.from(findDeliveryEntityById(deliveryId));
+        return DeliveryDetailResponse.from(findDeliveryEntityById(deliveryId));
     }
 
     @Transactional(readOnly = true)
-    public List<DeliveryResponse> findAllDeliveries() {
+    public List<DeliverySimpleResponse> findAllDeliveries() {
         return deliveryRepository.findAll().stream()
-                .map(DeliveryResponse::from)
+                .map(DeliverySimpleResponse::from)
                 .collect(Collectors.toList());
     }
 
@@ -113,5 +119,19 @@ public class DeliveryService {
     private Delivery findDeliveryEntityById(int deliveryId) {
         return deliveryRepository.findById(deliveryId)
                 .orElseThrow(() -> new CustomException(ErrorCode.DELIVERY_NOT_FOUND));
+    }
+
+    @Transactional(readOnly = true)
+    public List<DrugResponse> findRequestedDrugsForLatestDelivery() {
+        Delivery latestDelivery = deliveryRepository.findFirstByOrderByDeliveryIdDesc()
+                .orElseThrow(() -> new CustomException(ErrorCode.DELIVERY_NOT_FOUND));
+
+        if (latestDelivery.getStatus() != DeliveryStatus.requested) {
+            throw new CustomException(ErrorCode.DELIVERY_NOT_FOUND);
+        }
+
+        int patientId = latestDelivery.getPatient().getPatientId();
+
+        return prescriptionService.findValidDrugsForPatient(patientId, LocalDate.now());
     }
 }
