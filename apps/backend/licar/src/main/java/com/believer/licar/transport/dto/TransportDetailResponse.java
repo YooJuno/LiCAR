@@ -30,12 +30,14 @@ public class TransportDetailResponse {
     @Builder
     public static class PrescriptionInfo {
         private final int prescriptionId;
+        private final String patientName;
         private final LocalDate prescriptionDate;
         private final String counsellingNote;
 
         static PrescriptionInfo from(Prescription prescription) {
             return PrescriptionInfo.builder()
                     .prescriptionId(prescription.getPrescriptionId())
+                    .patientName(prescription.getPatient().getName())
                     .prescriptionDate(prescription.getDate())
                     .counsellingNote(prescription.getCounsellingNote())
                     .build();
