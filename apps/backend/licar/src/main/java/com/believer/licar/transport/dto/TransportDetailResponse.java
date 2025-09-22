@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 @Builder
 public class TransportDetailResponse {
 
-    private final int deliveryId;
+    private final int transportId;
     private final LocalDateTime requestedTime;
     private final LocalDateTime sendedTime;
     private final LocalDateTime arrivedTime;
@@ -50,7 +50,7 @@ public class TransportDetailResponse {
                 .collect(Collectors.toList());
 
         return TransportDetailResponse.builder()
-                .deliveryId(transport.getTransportId())
+                .transportId(transport.getTransportId())
                 .requestedTime(transport.getRequestedTime())
                 .sendedTime(transport.getSendedTime())
                 .arrivedTime(transport.getArrivedTime())

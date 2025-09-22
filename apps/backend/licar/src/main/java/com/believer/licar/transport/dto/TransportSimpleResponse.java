@@ -9,7 +9,7 @@ import lombok.Getter;
 @Builder
 public class TransportSimpleResponse {
 
-    private final int deliveryId;
+    private final int transportId;
     private final TransportStatus status;
     private final Integer robotId;
     private final String nurseName;
@@ -17,7 +17,7 @@ public class TransportSimpleResponse {
 
     public static TransportSimpleResponse from(Transport transport) {
         return TransportSimpleResponse.builder()
-                .deliveryId(transport.getTransportId())
+                .transportId(transport.getTransportId())
                 .status(transport.getStatus())
                 .robotId(transport.getRobotId())
                 .nurseName(transport.getNurse().getName())

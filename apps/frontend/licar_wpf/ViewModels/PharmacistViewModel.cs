@@ -18,19 +18,31 @@ namespace licar_wpf.ViewModels
         private readonly SseService _sseService;
         private readonly ToastNotificationService _toastService;
 
-        public ObservableCollection<Delivery> DeliveryList { get; } = new ObservableCollection<Delivery>();
+        public ObservableCollection<Transport> TransportList { get; } = new ObservableCollection<Transport>();
         public ObservableCollection<Prescription> PrescriptionList { get; } = new ObservableCollection<Prescription>();
         public ObservableCollection<Notification> NotificationList { get; } = new ObservableCollection<Notification>();
 
-        private Delivery _selectedDelivery;
-        public Delivery SelectedDelivery
+        private Transport _selectedTransport;
+        public Transport SelectedTransport
         {
-            get => _selectedDelivery;
+            get => _selectedTransport;
             set
             {
-                _selectedDelivery = value;
+                _selectedTransport = value;
                 OnPropertyChanged();
-                LoadPrescriptionsForDelivery(value);
+                //LoadPrescriptionsForTransport(value);
+                LoadTransportDetails(value);
+            }
+        }
+
+        private Transport _transportDetails;
+        public Transport TransportDetails
+        {
+            get => _transportDetails;
+            set
+            {
+                _transportDetails = value;
+                OnPropertyChanged();
             }
         }
 
@@ -68,24 +80,54 @@ namespace licar_wpf.ViewModels
             _sseService = sseService;
             _toastService = toastService;
 
-            LoadDeliveriesCommand = new RelayCommand(async (p) => await LoadDeliveries());
+            LoadDeliveriesCommand = new RelayCommand(async (p) => await LoadTransports());
 
             _sseService.DeliveryRequested += OnDeliveryRequested;
 
             LoadDeliveriesCommand.Execute(null);
         }
 
-        private async Task LoadDeliveries()
+        private async Task LoadTransports()
         {
-            DeliveryList.Clear();
-            var deliveries = await _pharmacistService.GetDeliveriesAsync();
-            foreach (var deliver in deliveries)
+            TransportList.Clear();
+            var transports = await _pharmacistService.GetTransportsAsync();
+            foreach (var transport in transports)
             {
-                DeliveryList.Add(deliver);
+                TransportList.Add(transport);
             }
         }
 
-        private async void LoadPrescriptionsForDelivery(Delivery delivery)
+        private async void LoadTransportDetails(Transport transport)
+        {
+            if (transport == null)
+            {
+                TransportDetails = null;
+                PrescriptionList.Clear();
+                PrescriptionDetail = null;
+                return;
+            }
+
+            try
+            {
+                var details = await _pharmacistService.GetTransportDetailAsync(transport.TransportId);
+                TransportDetails = details;
+
+                PrescriptionList.Clear();
+                if (details.Prescriptions != null)
+                {
+                    foreach (var prescription in details.Prescriptions)
+                    {
+                        PrescriptionList.Add(prescription);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+        private async void LoadPrescriptionsForTransport(Transport delivery)
         {
             PrescriptionList.Clear();
             PrescriptionDetail = null;
