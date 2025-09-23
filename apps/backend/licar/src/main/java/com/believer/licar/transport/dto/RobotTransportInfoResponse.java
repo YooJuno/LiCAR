@@ -29,7 +29,7 @@ public class RobotTransportInfoResponse {
 
         return RobotTransportInfoResponse.builder()
                 .transportId(transport.getTransportId())
-                .roomNumber(transport.getPatient().getPatientId())
+                .roomNumber(transport.getPatient().getRoomNumber())
                 .drugs(drugList)
                 .build();
     }
