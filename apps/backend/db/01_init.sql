@@ -91,6 +91,6 @@ CREATE TABLE transport_drug_recognitions (
     drug_id         INTEGER NOT NULL,
     is_recognized   BOOLEAN DEFAULT FALSE,
     PRIMARY KEY (transport_id, drug_id),
-    FOREIGN KEY (transport_id) REFERENCES transport (transport_id),
+    FOREIGN KEY (transport_id) REFERENCES transports (transport_id),
     FOREIGN KEY (drug_id) REFERENCES drugs (drug_id)
 );
