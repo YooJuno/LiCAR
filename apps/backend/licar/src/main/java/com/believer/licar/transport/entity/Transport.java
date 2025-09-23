@@ -57,6 +57,9 @@ public class Transport {
     @OneToMany(mappedBy = "transport")
     private List<TransportPrescription> transportPrescriptions = new ArrayList<>();
 
+    @OneToMany(mappedBy = "transport")
+    private List<TransportDrugRecognition> transportDrugRecognitions = new ArrayList<>();
+
     @PrePersist
     protected void onCreate() {
         this.requestedTime = LocalDateTime.now();

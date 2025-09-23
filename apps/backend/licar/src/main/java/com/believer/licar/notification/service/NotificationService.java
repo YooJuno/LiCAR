@@ -1,7 +1,9 @@
 package com.believer.licar.notification.service;
 
+import com.believer.licar.notification.dto.DrugRecognitionNotification;
 import com.believer.licar.notification.dto.NotificationCompleteResponse;
 import com.believer.licar.notification.dto.NotificationRequestResponse;
+import com.believer.licar.prescription.entity.Drug;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -71,6 +73,23 @@ public class NotificationService {
             log.error("SSE connection error : {}", e.getMessage());
 
             emitter.completeWithError(e);
+        }
+    }
+
+    // 사용을 할지 말지 고민 중
+    public void sendDrugRecognitionToNurse(Integer nurseId, DrugRecognitionNotification notification) {
+        SseEmitter emitter = nurseEmitters.get(nurseId);
+
+        if (emitter != null) {
+            sendToClient(emitter, "drugRecognized", notification);
+        }
+    }
+
+    public void sendDrugRecognitionToPharmacist(Integer pharmacistId, DrugRecognitionNotification notification) {
+        SseEmitter emitter = pharmacistEmitters.get(pharmacistId);
+
+        if (emitter != null) {
+            sendToClient(emitter, "drugRecognized", notification);
         }
     }
 }
