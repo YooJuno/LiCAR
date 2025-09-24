@@ -1,2 +1,0 @@
-[console_scripts]
-main_node = rc522_pkg.main:main

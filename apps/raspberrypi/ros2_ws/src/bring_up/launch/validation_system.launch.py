@@ -5,6 +5,9 @@ from launch.actions import ExecuteProcess
 # 모든 환경 설정 경로를 변수로 정의하여 관리
 ROS_SETUP_SCRIPT = "/home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/setup.bash"
 VENV_SITE_PACKAGES = "/home/ssafy/juno/.venv/lib/python3.12/site-packages"
+ROS_DOMAIN_ID = "1"
+RASPBERRY_PI_IP = "192.168.100.246" # <<--- 라즈베리 파이 IP로 수정하세요!
+SIMULATOR_PC_IP = "192.168.100.145"   # <<--- 시뮬레이터 PC IP로 수정하세요!
 
 def generate_launch_description():
     # 실행할 명령어를 생성하는 헬퍼 함수
@@ -12,6 +15,12 @@ def generate_launch_description():
         # bash -c "명령1; 명령2; ..." 형태로 모든 것을 하나의 쉘 세션에서 실행
         # PYTHONPATH 주입 + 노드 이름 재지정(Remapping)을 모두 포함
         command_string = (
+            # 1. ROS 2 네트워크 환경 설정
+            f"export ROS_DOMAIN_ID={ROS_DOMAIN_ID}; "
+            f"export ROS_IP={RASPBERRY_PI_IP}; "
+            f"export ROS_AUTOMATIC_DISCOVERY_RANGE=SUBSCRIBER; "
+            f"export ROS_STATIC_PEERS={SIMULATOR_PC_IP}; "
+            
             f"source {ROS_SETUP_SCRIPT}; "
             f"export PYTHONPATH={VENV_SITE_PACKAGES}:$PYTHONPATH; "
             f"ros2 run {pkg_name} {executable_name} --ros-args -r __node:={node_name}"

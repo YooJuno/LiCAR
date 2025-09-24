@@ -2,7 +2,7 @@
 
 import rclpy
 from rclpy.node import Node
-from std_msgs.msg import Bool
+from std_msgs.msg import Bool, Int32 # Int32 메시지 타입을 추가
 import RPi.GPIO as GPIO
 import lgpio
 import time
@@ -11,15 +11,23 @@ class ServoControllerNode(Node):
     def __init__(self):
         super().__init__('servo_controller_node')
         
-        # 3개의 명확한 명령 토픽을 구독
-        self.open_subscription = self.create_subscription(
-            Bool, 'open_door', self.open_door_callback, 10)
-        self.complete_subscription = self.create_subscription(
-            Bool, 'validation_complete_signal', self.validation_complete_callback, 10)
-        self.close_subscription = self.create_subscription(
-            Bool, 'close_door', self.close_door_callback, 10)
+        # 구독자
+        self.validation_subscription = self.create_subscription(
+            Bool,
+            'validation_status',
+            self.validation_status_callback,
+            10)
         
-        # --- 하드웨어 초기화 ---
+        # --- 추가된 부분: 완료 상태를 발행할 새로운 Publisher ---
+        self.delivery_status_publisher_ = self.create_publisher(
+            Int32, 
+            'delivery_status', # 새로운 토픽 이름
+            10)
+
+        # 문의 현재 상태를 기억하는 변수
+        self.is_door_open = False
+        
+        # --- 하드웨어 초기화 (이전과 동일) ---
         GPIO.setmode(GPIO.BCM)
         self.servo_pin = 13 
         GPIO.setup(self.servo_pin, GPIO.OUT)
@@ -39,22 +47,34 @@ class ServoControllerNode(Node):
         time.sleep(1)
         self.pwm.ChangeDutyCycle(0)
 
-    def open_door_callback(self, msg):
-        if msg.data:
-            self.get_logger().info('Open command received. Opening the door.')
-            lgpio.gpio_write(self.h, self.LED_GREEN_PIN, 0) # 문 열 때는 LED 끄기
-            self.set_angle(0) # 문 여는 각도
+    def validation_status_callback(self, msg):
+        if msg.data: # True 신호 수신
+            if self.is_door_open:
+                # 문이 열려있을 때 True 신호 -> "검증 성공, 최종 태그 대기"
+                self.get_logger().info('Validation SUCCESS. Turn on green light and wait for final tag.')
+                lgpio.gpio_write(self.h, self.LED_GREEN_PIN, 1)
+            else:
+                # 문이 닫혀있을 때 True 신호 -> "두 번째 태그로 인한 최종 닫힘 명령"
+                self.get_logger().info('Final confirmation received. Closing the door.')
+                lgpio.gpio_write(self.h, self.LED_GREEN_PIN, 0)
+                self.set_angle(90) # 문 닫는 각도
+                self.is_door_open = False
+                
+                # --- 추가된 부분: 문을 닫은 후, 완료 코드 발행 ---
+                status_code_msg = Int32()
+                # 나중에는 이 값을 BE 서버로부터 받아온 변수로 채우게 됩니다.
+                status_code_msg.data = 301 
+                self.delivery_status_publisher_.publish(status_code_msg)
+                self.get_logger().info(f'Published delivery status code: {status_code_msg.data}')
 
-    def validation_complete_callback(self, msg):
-        if msg.data:
-            self.get_logger().info('Validation complete signal received. Turning on green light.')
-            lgpio.gpio_write(self.h, self.LED_GREEN_PIN, 1) # 초록 LED 켜기
-
-    def close_door_callback(self, msg):
-        if msg.data:
-            self.get_logger().info('Close command received. Closing the door.')
-            lgpio.gpio_write(self.h, self.LED_GREEN_PIN, 0) # 문 닫을 땐 LED 끄기
-            self.set_angle(90) # 문 닫는 각도
+        else: # False 신호 수신 (검증 시작)
+            if not self.is_door_open:
+                self.get_logger().info('Validation START received. Opening the door.')
+                lgpio.gpio_write(self.h, self.LED_GREEN_PIN, 0)
+                self.set_angle(0) # 문 여는 각도
+                self.is_door_open = True
+            else:
+                pass
 
     def destroy_node(self):
         self.pwm.stop()
@@ -68,8 +88,7 @@ def main(args=None):
     servo_controller_node = ServoControllerNode()
     try:
         rclpy.spin(servo_controller_node)
-    except KeyboardInterrupt:
-        pass
+    except KeyboardInterrupt: pass
     finally:
         servo_controller_node.destroy_node()
         rclpy.shutdown()
