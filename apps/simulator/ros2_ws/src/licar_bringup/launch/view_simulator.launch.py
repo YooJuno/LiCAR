@@ -7,6 +7,13 @@ from launch_ros.actions import Node
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
 
+SIMULATOR_BRINGUP_PKG = 'licar_bringup' 
+CYCLONEDDS_URI = os.path.join(
+    get_package_share_directory(SIMULATOR_BRINGUP_PKG).replace(f'/src/licar_bringup', ''),
+    'cyclonedds.xml'
+)
+
+
 # Load environment variables from .env file
 HOME_PATH = os.environ['HOME']
 env_file = os.path.join(HOME_PATH, 'S13P21C206', '.env')
@@ -70,6 +77,9 @@ def generate_launch_description():
     ld.add_action(SetEnvironmentVariable('ROS_IP', SIMULATOR_PC_IP))
     ld.add_action(SetEnvironmentVariable('ROS_AUTOMATIC_DISCOVERY_RANGE', 'SUBSCRIBER'))
     ld.add_action(SetEnvironmentVariable('ROS_STATIC_PEERS', RASPBERRY_PI_IP))
+
+    ld.add_action(SetEnvironmentVariable('RMW_IMPLEMENTATION', 'rmw_cyclonedds_cpp'))
+    ld.add_action(SetEnvironmentVariable('CYCLONEDDS_URI', CYCLONEDDS_URI))
     # Add the commands to the launch description
     ld.add_action(gzserver_cmd)
     ld.add_action(gzclient_cmd)
