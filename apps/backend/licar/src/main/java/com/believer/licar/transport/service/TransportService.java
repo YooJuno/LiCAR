@@ -6,10 +6,7 @@ import com.believer.licar.prescription.entity.Prescription;
 import com.believer.licar.prescription.entity.PrescriptionDrug;
 import com.believer.licar.prescription.repository.DrugRepository;
 import com.believer.licar.prescription.repository.PrescriptionRepository;
-import com.believer.licar.transport.dto.RobotTransportInfoResponse;
-import com.believer.licar.transport.dto.TransportCreateRequest;
-import com.believer.licar.transport.dto.TransportDetailResponse;
-import com.believer.licar.transport.dto.TransportSimpleResponse;
+import com.believer.licar.transport.dto.*;
 import com.believer.licar.transport.entity.Transport;
 import com.believer.licar.transport.entity.TransportDrugRecognition;
 import com.believer.licar.transport.entity.TransportDrugRecognitionId;
@@ -195,5 +192,24 @@ public class TransportService {
         // notificationService.sendDrugRecognitionToNurse(transport.getNurse().getNurseId(), notification);
 
         notificationService.sendDrugRecognitionToPharmacist(transport.getPharmacist().getPharmacistId(), notification);
+    }
+
+    @Transactional(readOnly = true)
+    public TransportPrescriptionDetailResponse findPrescriptionDetailsForTransport(int transportId, int prescriptionId) {
+        Prescription prescription = prescriptionRepository.findById(prescriptionId)
+                .orElseThrow(() -> new CustomException(ErrorCode.PRESCRIPTION_NOT_FOUND));
+
+        Transport transport = findTransportEntityById(transportId);
+
+        boolean isPrescriptionInTransport = transport.getTransportPrescriptions().stream()
+                .anyMatch(tp -> tp.getPrescription().getPrescriptionId() == prescriptionId);
+
+        if (!isPrescriptionInTransport) {
+            throw new CustomException(ErrorCode.INVALID_INPUT_VALUE);
+        }
+
+        List<TransportDrugRecognition> recognitions = transport.getTransportDrugRecognitions();
+
+        return TransportPrescriptionDetailResponse.of(prescription, recognitions);
     }
 }
