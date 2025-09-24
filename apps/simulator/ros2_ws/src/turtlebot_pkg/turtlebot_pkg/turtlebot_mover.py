@@ -15,8 +15,13 @@ class TurtlebotMover(Node):
         yaml_path = '/home/dain/S13P21C206/apps/simulator/ros2_ws/src/turtlebot_pkg/config/cases.yaml'
 
 
-        with open(yaml_path, 'r') as f:
-            self.cases = yaml.safe_load(f)['cases']
+        self.cases = {
+            1:  {"action": "move", "x": -0.15, "y": 2.5},    # 의국
+            11: {"action": "move", "x": 1.6, "y": 19.0},     # 엘리베이터 앞
+            12: {"action": "move", "x": 1.85, "y": 21.2},    # 엘리베이터 안
+            301: {"action": "move", "x": -2.2, "y": -7.3},   # 301호
+            302: {"action": "move", "x": 9.0, "y": -7.3},    # 302호
+        }
 
         self.create_subscription(Int32, 'turtlebot_command', self.command_callback, 10)
         self.get_logger().info("✅ Mover node ready")
