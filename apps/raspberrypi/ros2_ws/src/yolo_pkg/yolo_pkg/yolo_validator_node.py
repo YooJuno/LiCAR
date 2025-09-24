@@ -16,7 +16,7 @@ class SystemState:
     VALIDATING = 1    # 검증 중
     VALIDATION_DONE = 2 # 검증 완료 (두 번째 태그를 기다림)
 
-API_ENDPOINT = "http://192.168.100.157:8080/api/v1/deliveries/requested-drugs"
+API_ENDPOINT = "http://192.168.100.157:8080/api/v1/transports/requested-drugs"
 
 class YoloValidatorNode(Node):
     def __init__(self):
