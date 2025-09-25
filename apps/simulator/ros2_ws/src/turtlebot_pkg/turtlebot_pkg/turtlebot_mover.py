@@ -11,15 +11,12 @@ class TurtlebotMover(Node):
         super().__init__('turtlebot_mover_node')
         self.navigator = BasicNavigator()
 
-        self.navigator.setMaximumLinearVelocity(1.0)
-        self.navigator.setMaximumAngularVelocity(2.0)
-
         self.create_subscription(Int32, '/turtlebot_command', self.command_callback, 10)
         self.get_logger().info("✅ Mover node ready")
 
         self.cases = {
             1:  {"action": "move", "x": -0.15, "y": 2.5},    # 의국
-            11: {"action": "move", "x": 1.9, "y": 19.4},     # 엘리베이터 앞
+            11: {"action": "move", "x": 1.9, "y": 20.4},     # 엘리베이터 앞
             12: {"action": "move", "x": 1.9, "y": 21.4},    # 엘리베이터 안
             301: {"action": "move", "x": -2.2, "y": -7.3},   # 301호
             302: {"action": "move", "x": 9.0, "y": -7.3},    # 302호
