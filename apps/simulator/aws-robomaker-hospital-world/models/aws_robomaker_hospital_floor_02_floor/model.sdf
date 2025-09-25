@@ -15,6 +15,7 @@
             <uri>model://aws_robomaker_hospital_floor_02_floor/meshes/aws_robomaker_hospital_floor_02_floor_collision.dae</uri>
           </mesh>
         </geometry>
+        <pose>0 0 0.31 0 0 0</pose>
         <surface>
           <friction>
             <ode>
