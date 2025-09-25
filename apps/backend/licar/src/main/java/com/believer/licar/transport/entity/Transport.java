@@ -54,10 +54,10 @@ public class Transport {
     @JoinColumn(name = "patient_id", nullable = false)
     private Patient patient;
 
-    @OneToMany(mappedBy = "transport")
+    @OneToMany(mappedBy = "transport", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TransportPrescription> transportPrescriptions = new ArrayList<>();
 
-    @OneToMany(mappedBy = "transport")
+    @OneToMany(mappedBy = "transport", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TransportDrugRecognition> transportDrugRecognitions = new ArrayList<>();
 
     @PrePersist

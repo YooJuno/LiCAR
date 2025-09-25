@@ -74,7 +74,7 @@ namespace licar_wpf.ViewModels
 
         public string PharmacistName => UserSession.CurrentUser?.Name;
 
-        public ICommand LoadDeliveriesCommand { get; }
+        public ICommand LoadTransportsCommand { get; }
 
         public PharmacistViewModel(NavigationService navigationService, PharmacistService pharmacistService, SseService sseService, ToastNotificationService toastService)
         {
@@ -83,12 +83,12 @@ namespace licar_wpf.ViewModels
             _sseService = sseService;
             _toastService = toastService;
 
-            LoadDeliveriesCommand = new RelayCommand(async (p) => await LoadTransports());
+            LoadTransportsCommand = new RelayCommand(async (p) => await LoadTransports());
 
             _sseService.TransportRequested += OnTransportRequested;
             _sseService.DrugRecognized += OnDrugRecognized;
 
-            LoadDeliveriesCommand.Execute(null);
+            LoadTransportsCommand.Execute(null);
         }
 
         private async Task LoadTransports()
@@ -193,7 +193,7 @@ namespace licar_wpf.ViewModels
             Application.Current.Dispatcher.Invoke(() =>
             {
                 NotificationList.Add(new Notification($"요청 알림 : {jsonData}"));
-                LoadDeliveriesCommand.Execute(null);
+                LoadTransportsCommand.Execute(null);
             });
         }
 
@@ -213,7 +213,7 @@ namespace licar_wpf.ViewModels
 
                     if (drugToUpdate != null)
                     {
-                        drugToUpdate.Recognized = recognizedDrugUpdate.Recognized;                    
+                        drugToUpdate.Recognized = recognizedDrugUpdate.Recognized;        
                     }
                 }
                 catch (Exception ex)
