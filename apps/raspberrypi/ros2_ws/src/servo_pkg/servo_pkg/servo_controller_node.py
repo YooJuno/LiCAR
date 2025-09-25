@@ -45,7 +45,7 @@ class ServoControllerNode(Node):
         
         self.get_logger().info('Servo Controller Node has been started.')
 
-    def set_angle(self, angle1, angle2):
+    def set_angles(self, angle1, angle2):
         """두 개의 서보 모터를 각각의 목표 각도로 이동시킵니다."""
         duty1 = 2 + (angle1 / 18)
         duty2 = 2 + (angle2 / 18)
@@ -69,7 +69,7 @@ class ServoControllerNode(Node):
         if msg.data:
             self.get_logger().info('Open command received. Opening the door.')
             lgpio.gpio_write(self.h, self.LED_GREEN_PIN, 0) # 문 열 때는 LED 끄기
-            self.set_angles(0, 180) # 문 여는 각도
+            self.set_angles(20, 160) # 문 여는 각도
 
     def validation_complete_callback(self, msg):
         if msg.data:
@@ -80,7 +80,7 @@ class ServoControllerNode(Node):
         if msg.data:
             self.get_logger().info('Close command received. Closing the door.')
             lgpio.gpio_write(self.h, self.LED_GREEN_PIN, 0) # 문 닫을 땐 LED 끄기
-            self.set_angle(90,90) # 문 닫는 각도
+            self.set_angles(90,90) # 문 닫는 각도
 
             # --- 추가: 문을 닫은 후, 완료 코드 발행 ---
             status_code_msg = Int32()
