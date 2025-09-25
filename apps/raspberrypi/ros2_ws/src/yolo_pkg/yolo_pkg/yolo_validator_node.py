@@ -4,6 +4,7 @@ import rclpy
 from rclpy.node import Node
 from std_msgs.msg import String, Bool
 from ultralytics import YOLO
+import paho.mqtt.client as mqtt # MQTT 클라이언트 라이브러리 import
 import cv2
 import json
 import torch
@@ -15,8 +16,13 @@ class SystemState:
     IDLE = 0          # 대기 중 (첫 번째 태그를 기다림)
     VALIDATING = 1    # 검증 중
     VALIDATION_DONE = 2 # 검증 완료 (두 번째 태그를 기다림)
+    WAITING_FOR_DRUGS = 3 # API 응답 대기 상태 추가
 
-API_ENDPOINT = "http://192.168.100.157:8080/api/v1/transports/requested-drugs"
+# MQTT 설정
+MQTT_BROKER_URL = "192.168.100.157"
+MQTT_PORT = 1883 # 일반적으로 MQTT는 1883, WebSocket은 다른 포트(예: 9001)를 사용. BE 서버 설정 확인 필요
+MQTT_TOPIC_REQUEST = "robots/status/1"
+MQTT_TOPIC_RESPONSE = "robots/response/1"
 
 class YoloValidatorNode(Node):
     def __init__(self):
@@ -30,7 +36,20 @@ class YoloValidatorNode(Node):
         self.close_publisher = self.create_publisher(Bool, 'close_door', 10)
         
         self.current_state = SystemState.IDLE
-        
+        self.lock = threading.Lock() # 스레드 간 상태 공유를 위한 Lock
+
+        # --- MQTT 클라이언트 설정 ---
+        self.mqtt_client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
+        self.mqtt_client.on_connect = self.on_mqtt_connect
+        self.mqtt_client.on_message = self.on_mqtt_message
+
+        try:
+            # 일반적인 MQTT TCP 연결 (더 표준적)
+            self.mqtt_client.connect(MQTT_BROKER_URL, MQTT_PORT, 60)
+            self.mqtt_client.loop_start() # 별도의 스레드에서 MQTT 네트워크 루프 실행
+        except Exception as e:
+            self.get_logger().error(f"Failed to connect to MQTT Broker: {e}")
+
         try:
             self.device = 'cpu'
             model_path = '/home/ssafy/Desktop/best.pt'
@@ -58,6 +77,18 @@ class YoloValidatorNode(Node):
         self.timer = self.create_timer(0.1, self.process_frame)
         self.get_logger().info('YOLO Validator Node has been started. Current state: IDLE')
 
+ ################################### 통신 코드 ######################################      
+    def on_mqtt_connect(self, client, userdata, flags, rc, properties):
+        if rc == 0:
+            self.get_logger().info("Connected successfully to MQTT Broker.")
+            # 연결 성공 시, 응답 토픽을 구독
+            client.subscribe(MQTT_TOPIC_RESPONSE)
+            self.get_logger().info(f"Subscribed to MQTT topic: {MQTT_TOPIC_RESPONSE}")
+        else:
+            self.get_logger().error(f"Failed to connect to MQTT Broker, return code {rc}\n")
+
+
+#################################### NFC 태그 코드 ######################################
     def nfc_tag_callback(self, msg):
         """NFC 태그 신호를 받았을 때, 현재 시스템 상태에 따라 다른 동작을 수행합니다."""
         if self.current_state == SystemState.IDLE:
