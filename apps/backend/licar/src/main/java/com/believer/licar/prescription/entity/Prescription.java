@@ -22,7 +22,7 @@ public class Prescription {
     private int prescriptionId;
 
     @Column(name = "prescription_date")
-    private LocalDate date;
+    private LocalDate prescriptionDate;
 
     @Column(name = "period")
     private Integer period;
@@ -39,7 +39,7 @@ public class Prescription {
 
     public Prescription(Patient patient, LocalDate date, Integer period, String counsellingNote) {
         this.patient = patient;
-        this.date = date;
+        this.prescriptionDate = date;
         this.period = period;
         this.counsellingNote = counsellingNote;
     }

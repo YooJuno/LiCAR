@@ -38,7 +38,7 @@ public class TransportDetailResponse {
             return PrescriptionInfo.builder()
                     .prescriptionId(prescription.getPrescriptionId())
                     .patientName(prescription.getPatient().getName())
-                    .prescriptionDate(prescription.getDate())
+                    .prescriptionDate(prescription.getPrescriptionDate())
                     .counsellingNote(prescription.getCounsellingNote())
                     .build();
         }
