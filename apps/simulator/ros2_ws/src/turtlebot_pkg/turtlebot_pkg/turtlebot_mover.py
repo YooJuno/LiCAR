@@ -16,8 +16,8 @@ class TurtlebotMover(Node):
 
         self.cases = {
             1:  {"action": "move", "x": -0.15, "y": 2.5},    # 의국
-            11: {"action": "move", "x": 1.9, "y": 20.4},     # 엘리베이터 앞
-            12: {"action": "move", "x": 1.9, "y": 21.4},    # 엘리베이터 안
+            11: {"action": "move", "x": 1.8, "y": 19.0},     # 엘리베이터 앞
+            12: {"action": "move", "x": 1.8, "y": 21.8},    # 엘리베이터 안
             301: {"action": "move", "x": -2.2, "y": -7.3},   # 301호
             302: {"action": "move", "x": 9.0, "y": -7.3},    # 302호
         }
