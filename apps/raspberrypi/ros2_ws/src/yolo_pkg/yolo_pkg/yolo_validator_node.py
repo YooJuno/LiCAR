@@ -9,21 +9,23 @@ import cv2
 import json
 import torch
 import os
-import requests
 
+import threading
 # 시스템의 상태를 명확하게 정의
 class SystemState:
-    IDLE = 0          # 대기 중 (첫 번째 태그를 기다림)
-    VALIDATING = 1    # 검증 중
-    VALIDATION_DONE = 2 # 검증 완료 (두 번째 태그를 기다림)
-    WAITING_FOR_DRUGS = 3 # API 응답 대기 상태 추가
+    IDLE = 0
+    VALIDATING = 2 # 순서를 다시 정리
+    VALIDATION_DONE = 3
+    WAITING_FOR_DRUGS = 1 # 첫 태그 후의 상태
 
 # MQTT 설정
 MQTT_BROKER_URL = "192.168.100.157"
-MQTT_PORT = 1883 # 일반적으로 MQTT는 1883, WebSocket은 다른 포트(예: 9001)를 사용. BE 서버 설정 확인 필요
+MQTT_PORT = 8080 # 일반적으로 MQTT는 1883, WebSocket은 다른 포트(예: 9001)를 사용. BE 서버 설정 확인 필요
 MQTT_TOPIC_REQUEST = "robots/status/1"
 MQTT_TOPIC_RESPONSE = "robots/response/1"
-
+MQTT_USERNAME = "robot"
+MQTT_PASSWORD = os.environ["MQTT_PASSWORD"]
+MQTT_WS_PATH = "/mqtt/"
 class YoloValidatorNode(Node):
     def __init__(self):
         super().__init__('yolo_validator_node')
@@ -39,12 +41,15 @@ class YoloValidatorNode(Node):
         self.lock = threading.Lock() # 스레드 간 상태 공유를 위한 Lock
 
         # --- MQTT 클라이언트 설정 ---
-        self.mqtt_client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
+        self.mqtt_client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2, transport="websockets")
         self.mqtt_client.on_connect = self.on_mqtt_connect
         self.mqtt_client.on_message = self.on_mqtt_message
+        self.mqtt_client.username_pw_set(MQTT_USERNAME, MQTT_PASSWORD)
+        self.mqtt_client.ws_set_options(path=MQTT_WS_PATH)
 
         try:
             # 일반적인 MQTT TCP 연결 (더 표준적)
+            self.get_logger().info(f"Attempting to connect to MQTT Broker at {MQTT_BROKER_URL}:{MQTT_PORT}...")
             self.mqtt_client.connect(MQTT_BROKER_URL, MQTT_PORT, 60)
             self.mqtt_client.loop_start() # 별도의 스레드에서 MQTT 네트워크 루프 실행
         except Exception as e:
@@ -84,54 +89,66 @@ class YoloValidatorNode(Node):
             # 연결 성공 시, 응답 토픽을 구독
             client.subscribe(MQTT_TOPIC_RESPONSE)
             self.get_logger().info(f"Subscribed to MQTT topic: {MQTT_TOPIC_RESPONSE}")
+        elif rc == 5:
+            self.get_logger().error("MQTT Connection refused: not authorized. Check username/password.")
         else:
             self.get_logger().error(f"Failed to connect to MQTT Broker, return code {rc}\n")
 
-
-#################################### NFC 태그 코드 ######################################
-    def nfc_tag_callback(self, msg):
-        """NFC 태그 신호를 받았을 때, 현재 시스템 상태에 따라 다른 동작을 수행합니다."""
-        if self.current_state == SystemState.IDLE:
-            if self.cap is None:
-                self.get_logger().error("Cannot start validation because camera is not available.")
-                return
-
-            self.get_logger().info("First NFC tag received. Starting validation process.")
-            try:
-                self.get_logger().info(f"Requesting drug list from: {API_ENDPOINT}")
-                response = requests.get(API_ENDPOINT, timeout=5)
-
-                if response.status_code == 200:
-                    drug_names = [drug['name'] for drug in response.json()]
-                    self.get_logger().info(f"SUCCESS: Received drug list: {drug_names}")
+    def on_mqtt_message(self, client, userdata, msg):
+        """MQTT 브로커로부터 메시지를 수신했을 때 호출되는 콜백 함수"""
+        with self.lock:
+            # 약품 목록 응답을 기다리는 상태일 때만 처리
+            if self.current_state == SystemState.WAITING_FOR_DRUGS:
+                try:
+                    payload_str = msg.payload.decode('utf-8')
+                    self.get_logger().info(f"Received message from MQTT topic '{msg.topic}': {payload_str}")
+                    
+                    drug_names = json.loads(payload_str) # BE에서 보낸 JSON 문자열을 파싱
                     
                     self.target_pills = {name: False for name in drug_names}
                     self.current_state = SystemState.VALIDATING
                     
-                    # "문 열어라" 명령 발행
+                    # 문 열기 명령 발행
                     open_msg = Bool(); open_msg.data = True
                     self.open_publisher.publish(open_msg)
                     self.get_logger().info("Published command to open the door.")
-                else:
-                    self.get_logger().error(f"API Error. Status Code: {response.status_code}")
+                except json.JSONDecodeError:
+                    self.get_logger().error(f"Failed to parse JSON from MQTT message: {msg.payload}")
+                    self.current_state = SystemState.IDLE # 파싱 실패 시, 다시 IDLE 상태로
+                except Exception as e:
+                    self.get_logger().error(f"Error processing MQTT message: {e}")
+                    self.current_state = SystemState.IDLE # 에러 시, 다시 IDLE 상태로
 
-            except requests.exceptions.RequestException as e:
-                self.get_logger().error(f"API request failed: {e}")
+#################################### NFC 태그 코드 ######################################
+    def nfc_tag_callback(self, msg):
+        with self.lock:
+            if self.current_state == SystemState.IDLE:
+                if self.cap is None:
+                    self.get_logger().error("Cannot start validation because camera is not available.")
+                    return
 
-        elif self.current_state == SystemState.VALIDATION_DONE:
-            self.get_logger().info("Second NFC tag received. Commanding door to close.")
-            # "문 닫아라" 명령 발행
-            close_msg = Bool(); close_msg.data = True
-            self.close_publisher.publish(close_msg)
-            
-            # 모든 상태를 초기화하여 다음 프로세스 준비
-            self.current_state = SystemState.IDLE
-            self.target_pills = {}
+                self.get_logger().info("First NFC tag received. Requesting drug list via MQTT...")
+                # 약품 목록을 요청하는 메시지 발행 (내용은 중요하지 않을 수 있음)
+                self.mqtt_client.publish(MQTT_TOPIC_REQUEST, payload="get_list")
+                # 상태를 "응답 대기"로 변경
+                self.current_state = SystemState.WAITING_FOR_DRUGS
+
+            elif self.current_state == SystemState.VALIDATION_DONE:
+                self.get_logger().info("Second NFC tag received. Commanding door to close.")
+                close_msg = Bool(); close_msg.data = True
+                self.close_publisher.publish(close_msg)
+                
+                self.current_state = SystemState.IDLE
+                self.target_pills = {}
 
     def process_frame(self):
+        with self.lock:
+            if self.current_state != SystemState.VALIDATING or not self.cap:
+                return
+        
         if self.current_state != SystemState.VALIDATING or not self.cap:
             return
-            
+        
         ret, frame = self.cap.read()
         if not ret: return
         
@@ -147,14 +164,15 @@ class YoloValidatorNode(Node):
                     self.get_logger().info(f"Found Target: {pill_name}! Status: {self.target_pills}")
 
         if self.target_pills and all(self.target_pills.values()):
-            self.get_logger().info('SUCCESS: All target drugs have been detected! Waiting for final tag.')
-            self.current_state = SystemState.VALIDATION_DONE
+            with self.lock:
+                self.get_logger().info('SUCCESS: All target drugs have been detected! Waiting for final tag.')
+                self.current_state = SystemState.VALIDATION_DONE
             
-            # "검증 완료" 신호 발행
             complete_msg = Bool(); complete_msg.data = True
             self.complete_publisher.publish(complete_msg)
 
     def destroy_node(self):
+        self.mqtt_client.loop_stop() # MQTT 루프 정지
         if self.cap: self.cap.release()
         super().destroy_node()
 
