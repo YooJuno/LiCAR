@@ -7,6 +7,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace licar_wpf.ViewModels
@@ -66,11 +67,16 @@ namespace licar_wpf.ViewModels
 
         private void Logout(object parameter)
         {
-            _sseService.Disconnect();
+            MessageBoxResult res = MessageBox.Show("로그아웃 하시겠습니까?", "로그아웃", MessageBoxButton.YesNo, MessageBoxImage.Question);
             
-            UserSession.Logout();
+            if (res == MessageBoxResult.Yes)
+            {
+                _sseService.Disconnect();
+            
+                UserSession.Logout();
 
-            _navigationService.NavigateTo(_loginViewModelFactory());
+                _navigationService.NavigateTo(_loginViewModelFactory());
+            }
         }
     }
 }

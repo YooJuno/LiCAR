@@ -26,7 +26,7 @@ public class TransportPrescriptionDetailResponse {
     private static class DrugWithRecognitionStatus {
 
         private final int drugId;
-        private final String drugName;
+        private final String name;
         private final Integer dosage;
         private final String unit;
         private final boolean isRecognized;
@@ -34,7 +34,7 @@ public class TransportPrescriptionDetailResponse {
         static DrugWithRecognitionStatus from(Drug drug, boolean isRecognized) {
             return DrugWithRecognitionStatus.builder()
                     .drugId(drug.getDrugId())
-                    .drugName(drug.getName())
+                    .name(drug.getName())
                     .dosage(drug.getDosage())
                     .unit(drug.getUnit())
                     .isRecognized(isRecognized)

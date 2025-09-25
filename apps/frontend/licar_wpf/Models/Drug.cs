@@ -9,6 +9,9 @@ namespace licar_wpf.Models
 {
     public class Drug
     {
+        [JsonPropertyName("drugId")]
+        public int DrugId { get; set; }
+
         [JsonPropertyName("name")]
         public string Name { get; set; }
 
@@ -20,5 +23,8 @@ namespace licar_wpf.Models
 
         [JsonPropertyName("unit")]
         public string Unit { get; set; }
+
+        [JsonPropertyName("recognized")]
+        public bool Recognized { get; set; }
     }
 }

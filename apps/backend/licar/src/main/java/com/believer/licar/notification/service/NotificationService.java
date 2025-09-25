@@ -52,7 +52,7 @@ public class NotificationService {
         SseEmitter emitter = pharmacistEmitters.get(pharmacistId);
 
         if (emitter != null) {
-            sendToClient(emitter, "deliveryRequest", notification);
+            sendToClient(emitter, "transportRequest", notification);
         }
     }
 
@@ -60,7 +60,7 @@ public class NotificationService {
         SseEmitter emitter = nurseEmitters.get(nurseId);
 
         if (emitter != null) {
-            sendToClient(emitter, "deliveryComplete", notification);
+            sendToClient(emitter, "transportComplete", notification);
         }
     }
 

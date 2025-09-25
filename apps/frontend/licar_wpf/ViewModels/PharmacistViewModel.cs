@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -21,6 +22,7 @@ namespace licar_wpf.ViewModels
         public ObservableCollection<Transport> TransportList { get; } = new ObservableCollection<Transport>();
         public ObservableCollection<Prescription> PrescriptionList { get; } = new ObservableCollection<Prescription>();
         public ObservableCollection<Notification> NotificationList { get; } = new ObservableCollection<Notification>();
+        public ObservableCollection<DrugViewModel> DrugList { get; } = new ObservableCollection<DrugViewModel>();
 
         private Transport _selectedTransport;
         public Transport SelectedTransport
@@ -54,17 +56,18 @@ namespace licar_wpf.ViewModels
             {
                 _selectedPrescription = value;
                 OnPropertyChanged();
-                LoadPrescriptionDetail(value);
+                //LoadPrescriptionDetail(value);
+                LoadPrescriptionDetailsForTransport(SelectedTransport, value);
             }
         }
 
-        private Prescription _prescriptionDetail;
-        public Prescription PrescriptionDetail
+        private Prescription _prescriptionDetails;
+        public Prescription PrescriptionDetails
         {
-            get => _prescriptionDetail;
+            get => _prescriptionDetails;
             set
             {
-                _prescriptionDetail = value;
+                _prescriptionDetails = value;
                 OnPropertyChanged();
             }
         }
@@ -82,7 +85,8 @@ namespace licar_wpf.ViewModels
 
             LoadDeliveriesCommand = new RelayCommand(async (p) => await LoadTransports());
 
-            _sseService.DeliveryRequested += OnDeliveryRequested;
+            _sseService.TransportRequested += OnTransportRequested;
+            _sseService.DrugRecognized += OnDrugRecognized;
 
             LoadDeliveriesCommand.Execute(null);
         }
@@ -103,7 +107,7 @@ namespace licar_wpf.ViewModels
             {
                 TransportDetails = null;
                 PrescriptionList.Clear();
-                PrescriptionDetail = null;
+                PrescriptionDetails = null;
                 return;
             }
 
@@ -130,7 +134,7 @@ namespace licar_wpf.ViewModels
         private async void LoadPrescriptionsForTransport(Transport delivery)
         {
             PrescriptionList.Clear();
-            PrescriptionDetail = null;
+            PrescriptionDetails = null;
             if (delivery == null) return;
 
             var prescriptions = await _pharmacistService.GetValidPrescriptionAsync(delivery.PatientId, DateTime.Now);
@@ -148,18 +152,76 @@ namespace licar_wpf.ViewModels
 
             var detail = await _pharmacistService.GetPrescriptionDetailAsync(prescription.PrescriptionId);
 
-            PrescriptionDetail = detail;
+            PrescriptionDetails = detail;
         }
 
-        private void OnDeliveryRequested(string jsonDate)
+        private async void LoadPrescriptionDetailsForTransport(Transport transport, Prescription prescription)
+        {
+            DrugList.Clear();
+            if (transport == null || prescription == null)
+            {
+                PrescriptionDetails = null;
+                return;
+            }
+
+            try
+            {
+                var details = await _pharmacistService.GetPrescriptionDetailForTransportAsync(transport.TransportId, prescription.PrescriptionId);
+
+                PrescriptionDetails = details;
+
+                if (details?.Drugs != null)
+                {
+                    foreach (var drugModel in details.Drugs)
+                    {
+                        DrugList.Add(new DrugViewModel(drugModel));
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"처방전 상세 정보를 불러오는 데 실패했습니다. \n{ex.Message}");
+                PrescriptionDetails = null;
+            }
+        }
+
+        private void OnTransportRequested(string jsonData)
         {
             // TODO : jsonDate 파싱을 하면 좋을 텐데요
             _toastService.Show("약 요청이 들어왔습니다!!!!!");
 
             Application.Current.Dispatcher.Invoke(() =>
             {
-                NotificationList.Add(new Notification($"요청 알림 : {jsonDate}"));
+                NotificationList.Add(new Notification($"요청 알림 : {jsonData}"));
                 LoadDeliveriesCommand.Execute(null);
+            });
+        }
+
+        private void OnDrugRecognized(string jsonData)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                try
+                {
+                    if (!DrugList.Any()) return;
+
+                    var recognizedDrugUpdate = JsonSerializer.Deserialize<Drug>(jsonData, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                    if (recognizedDrugUpdate == null) return;
+
+
+                    var drugToUpdate = DrugList.FirstOrDefault(d => d.DrugId == recognizedDrugUpdate.DrugId);
+
+                    if (drugToUpdate != null)
+                    {
+                        drugToUpdate.Recognized = recognizedDrugUpdate.Recognized;
+                        
+                        MessageBox.Show($"{PrescriptionDetails.Drugs[0].DrugId}:{recognizedDrugUpdate.DrugId}\n{drugToUpdate.Recognized}");                      
+                    }
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"[SSE Drug Recognition ERROR] {ex.Message}");
+                }
             });
         }
     }
