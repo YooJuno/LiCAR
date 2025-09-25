@@ -40,7 +40,7 @@ public class PrescriptionService {
         Patient patient = patientRepository.findById(request.getPatientId())
                 .orElseThrow(() -> new CustomException(ErrorCode.PATIENT_NOT_FOUND));
 
-        Prescription prescription = new Prescription(patient, request.getDate(), request.getPeriod(), request.getCounsellingNote());
+        Prescription prescription = new Prescription(patient, request.getPrescriptionDate(), request.getPeriod(), request.getCounsellingNote());
         Prescription savedPrescription = prescriptionRepository.save(prescription);
 
         for (Integer drugId : request.getDrugIds()) {

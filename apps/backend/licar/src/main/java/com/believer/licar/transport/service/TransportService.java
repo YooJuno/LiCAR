@@ -13,7 +13,6 @@ import com.believer.licar.transport.entity.TransportDrugRecognitionId;
 import com.believer.licar.transport.entity.TransportPrescription;
 import com.believer.licar.transport.enums.TransportStatus;
 import com.believer.licar.transport.repository.TransportDrugRecognitionRepository;
-import com.believer.licar.transport.repository.TransportPrescriptionRepository;
 import com.believer.licar.transport.repository.TransportRepository;
 import com.believer.licar.global.exception.CustomException;
 import com.believer.licar.global.exception.ErrorCode;

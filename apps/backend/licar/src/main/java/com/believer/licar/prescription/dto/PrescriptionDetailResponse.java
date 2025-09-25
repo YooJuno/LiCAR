@@ -15,7 +15,7 @@ public class PrescriptionDetailResponse {
 
     private final int prescriptionId;
     private final String patientName;
-    private final LocalDate date;
+    private final LocalDate prescriptionDate;
     private final Integer period;
     private final String counsellingNote;
     private final List<DrugInfo> drugs;
@@ -46,7 +46,7 @@ public class PrescriptionDetailResponse {
         return PrescriptionDetailResponse.builder()
                 .prescriptionId(prescription.getPrescriptionId())
                 .patientName(prescription.getPatient().getName())
-                .date(prescription.getDate())
+                .prescriptionDate(prescription.getPrescriptionDate())
                 .period(prescription.getPeriod())
                 .counsellingNote(prescription.getCounsellingNote())
                 .drugs(drugInfos)
