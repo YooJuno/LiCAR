@@ -90,7 +90,7 @@ namespace licar_wpf.ViewModels
             SearchCommand = new RelayCommand(async (p) => await SearchPatients());
             RequestDeliveryCommand = new RelayCommand(async (p) => await RequestDelivery(), (p) => SelectedPatient != null);
 
-            _sseService.DeliveryCompleted += OnDeliveryCompleted;
+            _sseService.TransportCompleted += OnTransportCompleted;
         }
 
         private async Task SearchPatients()
@@ -168,7 +168,7 @@ namespace licar_wpf.ViewModels
                 MessageBox.Show($"요청에 실패했습니다. \n{ex}", "실패", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-        private void OnDeliveryCompleted(string jsonData)
+        private void OnTransportCompleted(string jsonData)
         {
             // TODO : jsonData 파싱 후 메시지 디자인
             _toastService.Show("약 운반 완료!!!!!!!!!!!!!");

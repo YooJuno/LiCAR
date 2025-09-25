@@ -37,5 +37,10 @@ namespace licar_wpf.Services
         {
             return await _apiClient.GetAsync<Prescription>($"/api/v1/prescriptions/{prescriptionId}");
         }
+
+        public async Task<Prescription> GetPrescriptionDetailForTransportAsync (int transportId, int prescriptionId)
+        {
+            return await _apiClient.GetAsync<Prescription>($"/api/v1/transports/{transportId}/prescriptions/{prescriptionId}");
+        }
     }
 }

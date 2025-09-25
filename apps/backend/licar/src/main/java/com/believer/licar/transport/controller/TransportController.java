@@ -2,6 +2,7 @@ package com.believer.licar.transport.controller;
 
 import com.believer.licar.transport.dto.TransportCreateRequest;
 import com.believer.licar.transport.dto.TransportDetailResponse;
+import com.believer.licar.transport.dto.TransportPrescriptionDetailResponse;
 import com.believer.licar.transport.dto.TransportSimpleResponse;
 import com.believer.licar.transport.service.TransportService;
 import com.believer.licar.prescription.dto.DrugResponse;
@@ -70,6 +71,14 @@ public class TransportController {
     @GetMapping("/requested-drugs")
     public ResponseEntity<List<DrugResponse>> getRequestedDrugsForLatestTransport() {
         List<DrugResponse> response = transportService.findRequestedDrugsForLatestTransport();
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{transport_id}/prescriptions/{prescription_id}")
+    public ResponseEntity<TransportPrescriptionDetailResponse> getPrescriptionDetailsForTransport(
+            @PathVariable("transport_id") int transportId, @PathVariable("prescription_id") int prescriptionId) {
+        TransportPrescriptionDetailResponse response = transportService.findPrescriptionDetailsForTransport(transportId, prescriptionId);
 
         return ResponseEntity.ok(response);
     }

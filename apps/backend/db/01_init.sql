@@ -84,3 +84,13 @@ CREATE TABLE prescription_drugs (
     FOREIGN KEY (prescription_id) REFERENCES prescriptions (prescription_id),
     FOREIGN KEY (drug_id) REFERENCES drugs (drug_id)
 );
+
+-- 운송 정보_약 인식 상태 테이블
+CREATE TABLE transport_drug_recognitions (
+    transport_id    INTEGER NOT NULL,
+    drug_id         INTEGER NOT NULL,
+    is_recognized   BOOLEAN DEFAULT FALSE,
+    PRIMARY KEY (transport_id, drug_id),
+    FOREIGN KEY (transport_id) REFERENCES transports (transport_id),
+    FOREIGN KEY (drug_id) REFERENCES drugs (drug_id)
+);

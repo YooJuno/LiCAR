@@ -15,7 +15,7 @@ namespace licar_wpf.Models
         [JsonPropertyName("patientName")]
         public string PatientName { get; set; }
 
-        [JsonPropertyName("date")]
+        [JsonPropertyName("prescriptionDate")]
         public string Date { get; set; }
 
         [JsonPropertyName("period")]

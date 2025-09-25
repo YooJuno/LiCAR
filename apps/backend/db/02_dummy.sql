@@ -11,9 +11,9 @@ INSERT INTO pharmacists (name) VALUES
 
 -- 환자 테이블 (간호사 테이블의 nurse_id 참조)
 INSERT INTO patients (name, birthday, admission_date, room_number, nurse_id) VALUES
-('유준호', '2010-02-20', '2025-09-16', 206, 3),
-('유란', '2005-06-17', '2025-09-12', 105, 2),
-('김부각', '2001-07-22', '2025-09-07', 203, 1);
+('유준호', '2010-02-20', '2025-09-16', 301, 3),
+('유란', '2005-06-17', '2025-09-12', 301, 2),
+('김부각', '2001-07-22', '2025-09-07', 302, 1);
 
 -- 운송 정보 테이블 (간호사, 약사, 환자 테이블의 ID 참조)
 INSERT INTO transports (requested_time, sended_time, arrived_time, status, robot_id, nurse_id, pharmacist_id, patient_id) VALUES
@@ -57,3 +57,14 @@ INSERT INTO prescription_drugs (prescription_id, drug_id) VALUES
 (4, 2),
 (4, 3),
 (4, 5);
+
+-- 운송 정보_약 인식 상태 테이블
+INSERT INTO transport_drug_recognitions (transport_id, drug_id, is_recognized) VALUES
+(1, 7, FALSE),
+(1, 8, FALSE),
+(2, 7, FALSE),
+(2, 9, FALSE),
+(4, 1, FALSE),
+(4, 2, FALSE),
+(4, 3, FALSE),
+(4, 5, FALSE);

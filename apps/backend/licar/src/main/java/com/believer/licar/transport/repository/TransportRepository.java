@@ -7,4 +7,6 @@ import java.util.Optional;
 
 public interface TransportRepository extends JpaRepository<Transport, Integer> {
     Optional<Transport> findFirstByOrderByTransportIdDesc();
+
+    Optional<Transport> findFirstByRobotIdOrderByTransportIdDesc(int robotId);
 }

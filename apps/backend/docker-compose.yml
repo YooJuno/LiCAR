@@ -45,6 +45,16 @@ services:
     networks:
       - drug-network
 
+  mosquitto:
+    image: eclipse-mosquitto:2.0
+    container_name: mosquitto
+    ports:
+      - "9001:9001"
+    volumes:
+      - ./mosquitto:/mosquitto
+    networks:
+      - drug-network
+
 networks:
   drug-network:
     external: true

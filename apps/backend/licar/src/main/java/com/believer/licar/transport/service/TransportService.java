@@ -1,14 +1,18 @@
 package com.believer.licar.transport.service;
 
+import com.believer.licar.notification.dto.DrugRecognitionNotification;
+import com.believer.licar.prescription.entity.Drug;
 import com.believer.licar.prescription.entity.Prescription;
 import com.believer.licar.prescription.entity.PrescriptionDrug;
+import com.believer.licar.prescription.repository.DrugRepository;
 import com.believer.licar.prescription.repository.PrescriptionRepository;
-import com.believer.licar.transport.dto.TransportCreateRequest;
-import com.believer.licar.transport.dto.TransportDetailResponse;
-import com.believer.licar.transport.dto.TransportSimpleResponse;
+import com.believer.licar.transport.dto.*;
 import com.believer.licar.transport.entity.Transport;
+import com.believer.licar.transport.entity.TransportDrugRecognition;
+import com.believer.licar.transport.entity.TransportDrugRecognitionId;
 import com.believer.licar.transport.entity.TransportPrescription;
 import com.believer.licar.transport.enums.TransportStatus;
+import com.believer.licar.transport.repository.TransportDrugRecognitionRepository;
 import com.believer.licar.transport.repository.TransportPrescriptionRepository;
 import com.believer.licar.transport.repository.TransportRepository;
 import com.believer.licar.global.exception.CustomException;
@@ -43,7 +47,8 @@ public class TransportService {
     private final PharmacistRepository pharmacistRepository;
     private final PrescriptionService prescriptionService;
     private final PrescriptionRepository prescriptionRepository;
-    private final TransportPrescriptionRepository transportPrescriptionRepository;
+    private final TransportDrugRecognitionRepository transportDrugRecognitionRepository;
+    private final DrugRepository drugRepository;
 
     @Transactional
     public TransportDetailResponse requestTransport(TransportCreateRequest request) {
@@ -61,6 +66,10 @@ public class TransportService {
         validPrescriptions.forEach(prescription -> {
             TransportPrescription tp = new TransportPrescription(transport, prescription);
             transport.getTransportPrescriptions().add(tp);
+
+            prescription.getPrescriptionDrugs().forEach(pd -> {
+                transport.getTransportDrugRecognitions().add(new TransportDrugRecognition(transport, pd.getDrug()));
+            });
         });
 
         Transport savedTransport = transportRepository.save(transport);
@@ -155,5 +164,52 @@ public class TransportService {
                 .distinct()
                 .map(DrugResponse::from)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public RobotTransportInfoResponse getLatestTransportDetailsForRobot(int robotId) {
+        Transport latestTransport = transportRepository.findFirstByRobotIdOrderByTransportIdDesc(robotId)
+                .orElseThrow(() -> new CustomException(ErrorCode.TRANSPORT_NOT_FOUND));
+
+        return RobotTransportInfoResponse.from(latestTransport);
+    }
+
+    @Transactional
+    public void updateDrugRecognitionStatus(int transportId, int drugId) {
+        Transport transport = findTransportEntityById(transportId);
+        Drug drug = drugRepository.findById(drugId)
+                .orElseThrow(() -> new CustomException(ErrorCode.DRUG_NOT_FOUND));
+
+        TransportDrugRecognitionId id = new TransportDrugRecognitionId(transportId, drugId);
+        TransportDrugRecognition recognition = transportDrugRecognitionRepository.findById(id)
+                .orElseThrow(() -> new CustomException(ErrorCode.INVALID_INPUT_VALUE));
+
+        recognition.recognize();
+
+        // TODO
+        DrugRecognitionNotification notification = DrugRecognitionNotification.from(transport, drug, true);
+
+        // notificationService.sendDrugRecognitionToNurse(transport.getNurse().getNurseId(), notification);
+
+        notificationService.sendDrugRecognitionToPharmacist(transport.getPharmacist().getPharmacistId(), notification);
+    }
+
+    @Transactional(readOnly = true)
+    public TransportPrescriptionDetailResponse findPrescriptionDetailsForTransport(int transportId, int prescriptionId) {
+        Prescription prescription = prescriptionRepository.findById(prescriptionId)
+                .orElseThrow(() -> new CustomException(ErrorCode.PRESCRIPTION_NOT_FOUND));
+
+        Transport transport = findTransportEntityById(transportId);
+
+        boolean isPrescriptionInTransport = transport.getTransportPrescriptions().stream()
+                .anyMatch(tp -> tp.getPrescription().getPrescriptionId() == prescriptionId);
+
+        if (!isPrescriptionInTransport) {
+            throw new CustomException(ErrorCode.INVALID_INPUT_VALUE);
+        }
+
+        List<TransportDrugRecognition> recognitions = transport.getTransportDrugRecognitions();
+
+        return TransportPrescriptionDetailResponse.of(prescription, recognitions);
     }
 }

@@ -9,6 +9,7 @@
              Background="#F0F2F5" FontSize="14">
     <UserControl.Resources>
         <converters:StatusToKoreanConverter x:Key="StatusToKoreanConverter" />
+        <converters:RecognitionToBrushConverter x:Key="RecognitionToBrushConverter" />
     </UserControl.Resources>
     <Grid Margin="20">
         <Grid.ColumnDefinitions>
@@ -94,7 +95,7 @@
 
             <Border Grid.Row="2" Background="White" CornerRadius="5" Padding="15" >
                 <!--Visibility="{Binding SelectedPrescription, Converter={StaticResource NullToVisibilityConverter}}">-->
-                <StackPanel DataContext="{Binding PrescriptionDetail}">
+                <StackPanel DataContext="{Binding PrescriptionDetails}">
                     <TextBlock Text="처방전 상세 정보" FontSize="20" FontWeight="SemiBold" Margin="0,0,0,15"/>
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -121,11 +122,24 @@
         </Grid>
 
         <Border Grid.Column="2" Margin="20,0,0,0" Background="White" CornerRadius="5" Padding="15" >
-            <!--Visibility="{Binding PrescriptionDetail, Converter={StaticResource NullToVisibilityConverter}}">-->
+            <!--Visibility="{Binding PrescriptionDetails, Converter={StaticResource NullToVisibilityConverter}}">-->
             <DockPanel>
                 <TextBlock DockPanel.Dock="Top" Text="약 목록" FontSize="20" FontWeight="SemiBold" Margin="0,0,0,10"/>
-                <DataGrid ItemsSource="{Binding PrescriptionDetail.Drugs}"
+                <DataGrid ItemsSource="{Binding DrugList}"
                           AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False" VerticalScrollBarVisibility="Auto">
+                    <DataGrid.RowStyle>
+                        <Style TargetType="DataGridRow">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Recognized}" Value="True" >
+                                    <Setter Property="Background" Value="#DCFFDC" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Recognized}" Value="False" >
+                                    <Setter Property="Background" Value="#FFDCDC" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.RowStyle>
+                    
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="약 이름" Binding="{Binding Name}" Width="*"/>
                         <DataGridTextColumn Header="용량" Binding="{Binding Dosage}" Width="Auto"/>
