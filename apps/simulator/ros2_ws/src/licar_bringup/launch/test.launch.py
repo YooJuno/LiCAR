@@ -45,7 +45,7 @@ def generate_launch_description():
         PythonLaunchDescriptionSource(os.path.join(pkg_turtlebot3_gazebo, 'launch', 'robot_state_publisher.launch.py')),
         launch_arguments={'use_sim_time': use_sim_time}.items()
     )
-
+    
     # 터틀봇 스폰 (지연 실행)
     turtlebot_spawn = TimerAction(
         period=3.0,  # 3초 후 실행
@@ -58,7 +58,7 @@ def generate_launch_description():
                     '-file', os.path.join(pkg_turtlebot3_gazebo, 'models', 'turtlebot3_burger', 'model.sdf'),
                     '-x', '-5.0',
                     '-y', '-2.0',
-                    '-z', '0.5',
+                    '-z', '0.4',
                     '-unpause'
                 ],
                 output='screen'
