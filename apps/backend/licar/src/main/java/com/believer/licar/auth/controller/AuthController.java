@@ -6,6 +6,7 @@ import com.believer.licar.auth.dto.PharmacistLoginRequest;
 import com.believer.licar.auth.dto.PharmacistLoginResponse;
 import com.believer.licar.auth.service.AuthService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
+@Slf4j
 public class AuthController {
 
     private final AuthService authService;
@@ -23,6 +25,7 @@ public class AuthController {
     public ResponseEntity<NurseLoginResponse> loginNurse(@RequestBody NurseLoginRequest request) {
         NurseLoginResponse response = authService.loginNurse(request);
 
+        log.info("[ Nurse Login ] {}", response.getNurseId());
         return ResponseEntity.ok(response);
     }
 
@@ -30,6 +33,7 @@ public class AuthController {
     public ResponseEntity<PharmacistLoginResponse> loginPharmacist(@RequestBody PharmacistLoginRequest request) {
         PharmacistLoginResponse response = authService.loginPharmacist(request);
 
+        log.info("[ Pharmacist Login ] {}", response.getPharmacistId());
         return ResponseEntity.ok(response);
     }
 }

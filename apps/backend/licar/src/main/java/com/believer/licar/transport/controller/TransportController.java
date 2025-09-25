@@ -7,6 +7,7 @@ import com.believer.licar.transport.dto.TransportSimpleResponse;
 import com.believer.licar.transport.service.TransportService;
 import com.believer.licar.prescription.dto.DrugResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +17,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/transports")
 @RequiredArgsConstructor
+@Slf4j
 public class TransportController {
 
     private final TransportService transportService;
@@ -23,55 +25,62 @@ public class TransportController {
     // POST /transports
     @PostMapping
     public ResponseEntity<TransportDetailResponse> requestTransport(@RequestBody TransportCreateRequest request) {
-        TransportDetailResponse response = transportService.requestTransport(request);
+        TransportDetailResponse transport = transportService.requestTransport(request);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        log.info("[ Transport Create ] {}", transport.getTransportId());
+        return ResponseEntity.status(HttpStatus.CREATED).body(transport);
     }
 
     // PATCH /transports/{transport_id}/start
     @PatchMapping("/{transport_id}/start")
     public ResponseEntity<TransportSimpleResponse> startTransport(@PathVariable("transport_id") int transportId) {
-        TransportSimpleResponse response = transportService.startTransport(transportId);
+        TransportSimpleResponse transport = transportService.startTransport(transportId);
 
-        return ResponseEntity.ok(response);
+        log.info("[ Transport Start ] {}", transport.getTransportId());
+        return ResponseEntity.ok(transport);
     }
 
     // PATCH /transports/{id}/complete
     @PatchMapping("/{transport_id}/complete")
     public ResponseEntity<TransportSimpleResponse> completeTransport(@PathVariable("transport_id") int transportId) {
-        TransportSimpleResponse response = transportService.completeTransport(transportId);
+        TransportSimpleResponse transport = transportService.completeTransport(transportId);
 
-        return ResponseEntity.ok(response);
+        log.info("[ Transport Arrived ] {}", transport.getTransportId());
+        return ResponseEntity.ok(transport);
     }
 
     // GET /transports/{transport_id}
     @GetMapping("/{transport_id}")
     public ResponseEntity<TransportDetailResponse> getTransport(@PathVariable("transport_id") int transportId) {
-        TransportDetailResponse response = transportService.findTransportById(transportId);
+        TransportDetailResponse transport = transportService.findTransportById(transportId);
 
-        return ResponseEntity.ok(response);
+        log.info("[ Transport Detail ] {}", transport.getTransportId());
+        return ResponseEntity.ok(transport);
     }
 
     // GET /transports
     @GetMapping
     public ResponseEntity<List<TransportSimpleResponse>> getAllTransports() {
-        List<TransportSimpleResponse> response = transportService.findAllTransports();
+        List<TransportSimpleResponse> transports = transportService.findAllTransports();
 
-        return ResponseEntity.ok(response);
+        log.info("[ Transport List ] {}", transports.size());
+        return ResponseEntity.ok(transports);
     }
 
     // GET /transports/{transport_id}/valid-drugs
     @GetMapping("/{transport_id}/valid-drugs")
     public ResponseEntity<List<DrugResponse>> getValidDrugsForTransport(@PathVariable("transport_id") int transportId) {
-        List<DrugResponse> response = transportService.findValidDrugsForTransport(transportId);
+        List<DrugResponse> drugs = transportService.findValidDrugsForTransport(transportId);
 
-        return ResponseEntity.ok(response);
+        log.info("[ Drug List by transport ] {} - {}", transportId, drugs.size());
+        return ResponseEntity.ok(drugs);
     }
 
     @GetMapping("/requested-drugs")
     public ResponseEntity<List<DrugResponse>> getRequestedDrugsForLatestTransport() {
         List<DrugResponse> response = transportService.findRequestedDrugsForLatestTransport();
 
+        log.info("[ Drug List by latest transport ] {} ", response.size());
         return ResponseEntity.ok(response);
     }
 
@@ -80,6 +89,7 @@ public class TransportController {
             @PathVariable("transport_id") int transportId, @PathVariable("prescription_id") int prescriptionId) {
         TransportPrescriptionDetailResponse response = transportService.findPrescriptionDetailsForTransport(transportId, prescriptionId);
 
+        log.info("[ Prescription Detail by transport & prescription ] {}", response.getPrescriptionId());
         return ResponseEntity.ok(response);
     }
 }

@@ -103,7 +103,7 @@ public class TransportService {
 
         // SSE
         NotificationCompleteResponse notification = NotificationCompleteResponse.from(transport);
-        notificationService.setToNurse(transport.getNurse().getNurseId(), notification);
+        notificationService.sendToNurse(transport.getNurse().getNurseId(), notification);
 
         return TransportSimpleResponse.from(transport);
     }
@@ -185,7 +185,6 @@ public class TransportService {
 
         recognition.recognize();
 
-        // TODO
         DrugRecognitionNotification notification = DrugRecognitionNotification.from(transport, drug, true);
 
         // notificationService.sendDrugRecognitionToNurse(transport.getNurse().getNurseId(), notification);

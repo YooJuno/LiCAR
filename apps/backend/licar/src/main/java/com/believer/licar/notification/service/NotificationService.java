@@ -56,7 +56,7 @@ public class NotificationService {
         }
     }
 
-    public void setToNurse(Integer nurseId, NotificationCompleteResponse notification) {
+    public void sendToNurse(Integer nurseId, NotificationCompleteResponse notification) {
         SseEmitter emitter = nurseEmitters.get(nurseId);
 
         if (emitter != null) {
