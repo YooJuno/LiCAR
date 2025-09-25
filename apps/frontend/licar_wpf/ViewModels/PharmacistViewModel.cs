@@ -213,9 +213,7 @@ namespace licar_wpf.ViewModels
 
                     if (drugToUpdate != null)
                     {
-                        drugToUpdate.Recognized = recognizedDrugUpdate.Recognized;
-                        
-                        MessageBox.Show($"{PrescriptionDetails.Drugs[0].DrugId}:{recognizedDrugUpdate.DrugId}\n{drugToUpdate.Recognized}");                      
+                        drugToUpdate.Recognized = recognizedDrugUpdate.Recognized;                    
                     }
                 }
                 catch (Exception ex)
