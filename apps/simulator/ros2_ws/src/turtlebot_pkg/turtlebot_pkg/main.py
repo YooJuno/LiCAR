@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import rclpy
 from rclpy.node import Node
-from std_msgs.msg import Int32, Bool
+from std_msgs.msg import Int32, Bool, String
 
 class TurtlebotMain(Node):
     def __init__(self):
@@ -14,6 +14,9 @@ class TurtlebotMain(Node):
 
         # 목적지 신호를 mover로 보내는 퍼블리셔
         self.mover_pub = self.create_publisher(Int32, '/turtlebot_command', 10)
+        # 도착 신호 퍼블리셔
+        # self.elevator_pub = self.create_publisher(String, '/gazebo/world/elevator', 10)
+        # self.arrival_pub = self.create_publisher(Bool, '/turtlebot/arrived', 10)
 
         # 상태 변수
         self.door_triggered = False
@@ -46,6 +49,12 @@ class TurtlebotMain(Node):
             self.get_logger().info("🚪 문 열림 신호 수신")
             self.process_next_step()
 
+        # else:  # 문 닫힘
+        #     if self.door_open:  # 직전에 열렸었음 → 이제 닫힘 감지
+        #         self.door_open = False
+        #         self.get_logger().info("🚪 문 닫힘 감지 → 엘리베이터 3층 이동 명령 전송")
+        #         self.elevator_pub.publish(String(data="2"))
+
     def setup_route(self, dest):
         # 301, 302번 병실도 엘리베이터 경유
         if dest == 1:  # 의국은 엘리베이터를 거쳐야 한다.
@@ -62,6 +71,7 @@ class TurtlebotMain(Node):
     def process_next_step(self):
         if self.current_step >= len(self.route):
             self.get_logger().info("✅ 목적지 도착 완료!")
+            self.arrival_pub.publish(Bool(data=True))
             self.route = []
             self.current_step = 0
             self.door_triggered = False
