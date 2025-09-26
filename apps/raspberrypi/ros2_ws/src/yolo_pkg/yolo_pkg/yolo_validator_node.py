@@ -11,7 +11,6 @@ import torch
 import os
 import threading
 
-# 시스템의 상태를 명확하게 정의
 class SystemState:
     IDLE = 0
     WAITING_FOR_DRUGS = 1 # MQTT 응답 대기 상태
