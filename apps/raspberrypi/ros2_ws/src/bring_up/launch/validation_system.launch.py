@@ -35,15 +35,12 @@ def generate_launch_description():
 
     return LaunchDescription([
         ExecuteProcess(
-            cmd=create_sudo_command('nfc_pkg', 'nfc_reader_node', 'nfc_reader_node'),
+            cmd=create_sudo_command('nfc_pkg', 'hardware_controller_node', 'hardware_controller_node'),
             output='screen'
         ),
         ExecuteProcess(
             cmd=create_sudo_command('yolo_pkg', 'yolo_validator_node', 'yolo_validator_node'),
             output='screen'
         ),
-        ExecuteProcess(
-            cmd=create_sudo_command('servo_pkg', 'servo_controller_node', 'servo_controller_node'),
-            output='screen'
-        ),
+
     ])
