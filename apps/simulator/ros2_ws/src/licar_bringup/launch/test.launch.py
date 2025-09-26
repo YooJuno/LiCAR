@@ -56,8 +56,8 @@ def generate_launch_description():
                 arguments=[
                     '-entity', 'turtlebot3_burger',
                     '-file', os.path.join(pkg_turtlebot3_gazebo, 'models', 'turtlebot3_burger', 'model.sdf'),
-                    '-x', '-5.0',
-                    '-y', '-2.0',
+                    '-x', '-0.15',
+                    '-y', '2.5',
                     '-z', '0.4',
                     '-unpause'
                 ],
