@@ -20,7 +20,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'nfc_reader_node = nfc_pkg.nfc_reader_node:main',
+            'hardware_controller_node = nfc_pkg.hardware_controller_node:main',
         ],
     },
 )
