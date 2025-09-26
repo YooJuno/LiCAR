@@ -83,6 +83,27 @@
       <uri>model://ground_plane</uri>
       <pose>0 0 -0.1 0 -0 0</pose>
     </include>
+    <gui>
+    <camera name='user_camera'>
+      <pose frame=''>-5.5 -10.0 2.0 0 0 1.5</pose>
+      <view_controller>orbit</view_controller>
+      <projection_type>perspective</projection_type>
+    </camera>
+
+    <camera name='main_entrance'>
+      <pose>-1.5 19.8 1.5 0 0.2 -1.57</pose>
+    </camera>
+
+    <camera name='second_floor'>
+      <pose>0 0 3.5 0 0.3 0</pose>
+    </camera>
+
+    <camera name='third_floor'>
+      <pose>0 0 6.5 0 0.3 0</pose>
+    </camera>
+  </gui>
+
+
     <model name="aws_robomaker_hospital_floor_01_floor_1">
       <include>
         <uri>model://aws_robomaker_hospital_floor_01_floor</uri>
@@ -3866,4 +3887,13 @@
       </include>
     </model>
   </world>
+    <!-- GUI Camera Presets -->
+    <gui fullscreen="0">
+      <camera name="user_camera">
+        <pose frame="">-6.0 -2.0 2.0 0 0.3 0</pose>
+        <view_controller>orbit</view_controller>
+        <projection_type>perspective</projection_type>
+      </camera>
+    </gui>
+
 </sdf>
