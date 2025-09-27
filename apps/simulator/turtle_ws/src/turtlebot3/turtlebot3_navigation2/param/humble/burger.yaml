@@ -126,13 +126,13 @@ controller_server:
       debug_trajectory_details: True
       min_vel_x: 0.0
       min_vel_y: 0.0
-      max_vel_x: 0.65           # [수정] 최대 직진 속도 2배 증가
+      max_vel_x: 0.8           #최대 직진 속도 2배 증가
       max_vel_y: 0.0
-      max_vel_theta: 1.5        # [수정] 최대 회전 속도 증가
+      max_vel_theta: 1.5        #최대 회전 속도 증가
       min_speed_xy: 0.0
-      max_speed_xy: 0.65        # [수정] 최대 속도 2배 증가
+      max_speed_xy: 0.8        #최대 속도 2배 증가
       min_speed_theta: 0.0
-      acc_lim_x: 3.5            # [수정] 가속도 증가
+      acc_lim_x: 3.5            #가속도 증가
       acc_lim_y: 0.0
       acc_lim_theta: 3.2
       decel_lim_x: -2.5
@@ -177,7 +177,7 @@ local_costmap:
       width: 3
       height: 3
       resolution: 0.05
-      robot_radius: 0.2          # [수정] 로봇 반지름 2배 증가
+      robot_radius: 0.2 
       plugins: ["obstacle_layer", "voxel_layer", "inflation_layer"]
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
@@ -231,7 +231,7 @@ global_costmap:
       global_frame: map
       robot_base_frame: base_link
       use_sim_time: True
-      robot_radius: 0.2          # [수정] 로봇 반지름 2배 증가
+      robot_radius: 0.2  
       resolution: 0.05
       track_unknown_space: true
       plugins: ["static_layer", "obstacle_layer", "voxel_layer", "inflation_layer"]
