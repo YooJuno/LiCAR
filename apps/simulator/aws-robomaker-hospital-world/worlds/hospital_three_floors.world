@@ -85,21 +85,9 @@
     </include>
     <gui>
     <camera name='user_camera'>
-      <pose frame=''>-5.5 -10.0 2.0 0 0 1.5</pose>
+      <pose frame=''>-5.5 -1.0 2.6 0 0.3 1.0</pose>
       <view_controller>orbit</view_controller>
       <projection_type>perspective</projection_type>
-    </camera>
-
-    <camera name='main_entrance'>
-      <pose>-1.5 19.8 1.5 0 0.2 -1.57</pose>
-    </camera>
-
-    <camera name='second_floor'>
-      <pose>0 0 3.5 0 0.3 0</pose>
-    </camera>
-
-    <camera name='third_floor'>
-      <pose>0 0 6.5 0 0.3 0</pose>
     </camera>
   </gui>
 
@@ -139,20 +127,6 @@
         <pose>1.51134 19.487 0.19 0 -0 0</pose>
       </include>
     </model>
-    <!-- <model name="aws_robomaker_hospital_elevator_01_car_1">
-      <include>
-        <uri>model://aws_robomaker_hospital_elevator_01_car</uri>
-        <static>true</static>
-        <pose>-1.49587 19.35 0.19 0 -0 0</pose>
-      </include>
-    </model>
-    <model name="aws_robomaker_hospital_elevator_01_car_2">
-      <include>
-        <uri>model://aws_robomaker_hospital_elevator_01_car</uri>
-        <static>true</static>
-        <pose>1.5407 19.35 0.19 0 -0 0</pose>
-      </include>
-    </model> -->
 
     <!-- Custom elevator with ROS2 control -->
     <model name="elevator">
@@ -168,14 +142,14 @@
         <static>true</static>
         <pose>-1.51 19.35 0.19 0 -0 0</pose>
       </include>
-    </model>
+    </model> -->
     <model name="aws_robomaker_hospital_elevator_01_door_2">
       <include>
         <uri>model://aws_robomaker_hospital_elevator_01_door</uri>
         <static>true</static>
         <pose>1.52843 19.3627 0.19 0 -0 0</pose>
       </include>
-    </model> -->
+    </model>
     <model name="aws_robomaker_hospital_curtain_half_open_01_1">
       <include>
         <uri>model://aws_robomaker_hospital_curtain_half_open_01</uri>
@@ -761,7 +735,7 @@
       <include>
         <uri>model://aws_robomaker_hospital_ramp_01</uri>
         <static>true</static>
-        <pose>-1.70996 16.3685 0 0 -0 0</pose>
+        <pose>-1.70996 15.739805 0 0 -0 0</pose>
       </include>
     </model>
     <model name="AnesthesiaMachine_1">
@@ -1110,7 +1084,7 @@
     <model name="MaleVisitorOnPhone_1">
       <include>
         <uri>model://MaleVisitorOnPhone</uri>
-        <static>true</static>
+        <static>false</static>
         <pose>-0.760316 7.58474 0 0 0 -1.14974</pose>
       </include>
     </model>
@@ -1421,14 +1395,14 @@
         <static>true</static>
         <pose>-1.51 19.35 3.19 0 -0 0</pose>
       </include>
-    </model>
+    </model> -->
     <model name="floor_1_aws_robomaker_hospital_elevator_01_door_2">
       <include>
         <uri>model://aws_robomaker_hospital_elevator_01_door</uri>
         <static>true</static>
         <pose>1.52843 19.3627 3.19 0 -0 0</pose>
       </include>
-    </model> -->
+    </model>
     <model name="floor_1_aws_robomaker_hospital_curtain_half_open_01_1">
       <include>
         <uri>model://aws_robomaker_hospital_curtain_half_open_01</uri>
@@ -2014,7 +1988,7 @@
       <include>
         <uri>model://aws_robomaker_hospital_ramp_01</uri>
         <static>true</static>
-        <pose>-1.70996 16.3685 3.0 0 -0 0</pose>
+        <pose>-1.70996 15.739805 3.0 0 -0 0</pose>
       </include>
     </model>
     <model name="floor_1_AnesthesiaMachine_1">
@@ -2674,14 +2648,14 @@
         <static>true</static>
         <pose>-1.51 19.35 6.19 0 -0 0</pose>
       </include>
-    </model>
+    </model> -->
     <model name="floor_2_aws_robomaker_hospital_elevator_01_door_2">
       <include>
         <uri>model://aws_robomaker_hospital_elevator_01_door</uri>
         <static>true</static>
         <pose>1.52843 19.3627 6.19 0 -0 0</pose>
       </include>
-    </model> -->
+    </model>
     <model name="floor_2_aws_robomaker_hospital_curtain_half_open_01_1">
       <include>
         <uri>model://aws_robomaker_hospital_curtain_half_open_01</uri>
@@ -3267,7 +3241,7 @@
       <include>
         <uri>model://aws_robomaker_hospital_ramp_01</uri>
         <static>true</static>
-        <pose>-1.70996 16.3685 6.0 0 -0 0</pose>
+        <pose>-1.70996 15.739805 6.0 0 -0 0</pose>
       </include>
     </model>
     <model name="floor_2_AnesthesiaMachine_1">
@@ -3834,7 +3808,7 @@
       <include>
         <uri>model://Scrubs</uri>
         <static>true</static>
-        <pose>-9.75875 -2.67552 6.0 0 -0 0</pose>
+        <pose>-6.22113 -7.94739 6.0 0 -0 0</pose>
       </include>
     </model>
     <model name="floor_2_BPCart_1">
