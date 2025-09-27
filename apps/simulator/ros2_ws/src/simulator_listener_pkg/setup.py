@@ -11,7 +11,7 @@ setup(
         ('share/ament_index/resource_index/packages', ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
         # launch 파일을 쓴다면 아래 폴더/파일도 실제로 존재해야 합니다
-        ('share/' + package_name + '/launch', ['launch/listener.launch.py']),
+        # ('share/' + package_name + '/launch', ['launch/listener.launch.py']),
     ],
     install_requires=['setuptools'],
     zip_safe=True,
@@ -23,7 +23,7 @@ setup(
     entry_points={
         'console_scripts': [
             # 왼쪽: 실행 파일 이름, 오른쪽: 모듈.함수
-            'listener = simulator_listener_pkg.listener_node:main',
+            # 'listener = simulator_listener_pkg.listener_node:main',
         ],
     },
 )

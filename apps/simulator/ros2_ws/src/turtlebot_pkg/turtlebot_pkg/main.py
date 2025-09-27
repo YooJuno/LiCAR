@@ -1,93 +1,108 @@
 #!/usr/bin/env python3
 import rclpy
 from rclpy.node import Node
-from std_msgs.msg import Int32, Bool, String
+from std_msgs.msg import Int32, Bool
 
 class TurtlebotMain(Node):
     def __init__(self):
         super().__init__('turtlebot_main_node')
 
-        # 목적지 신호를 수신하는 구독자
+        # === 구독자 (Subscribers) ===
         self.create_subscription(Int32, '/turtlebot_target', self.target_callback, 10)
-        # 엘리베이터 문 상태를 수신하는 구독자
-        self.create_subscription(Bool, '/elevator/door_state', self.door_callback, 10)
+        self.create_subscription(Bool, '/turtlebot/move_complete', self.move_complete_callback, 10)
 
-        # 목적지 신호를 mover로 보내는 퍼블리셔
+        # === 퍼블리셔 (Publishers) ===
         self.mover_pub = self.create_publisher(Int32, '/turtlebot_command', 10)
-        # 도착 신호 퍼블리셔
-        # self.elevator_pub = self.create_publisher(String, '/gazebo/world/elevator', 10)
-        # self.arrival_pub = self.create_publisher(Bool, '/turtlebot/arrived', 10)
 
-        # 상태 변수
-        self.door_triggered = False
+        # === 상태 변수 (State Variables) ===
         self.route = []
-        self.current_step = 0
-        self.pending_target = None
+        self.current_step_index = 0
+        self.state = "IDLE"  # IDLE, MOVING, WAITING
+
+        self.wait_time = 3.0         # 대기 시간(초)
+        self.wait_timer = None       # 타이머 객체 저장용
 
         self.get_logger().info("✅ Main node ready, waiting for target...")
 
+    # === 목적지 신호 수신 ===
     def target_callback(self, msg: Int32):
         dest = msg.data
-        self.get_logger().info(f"🎯 목적지 요청: {dest}")
+        self.get_logger().info(f"🎯 목적지 요청 수신: {dest}")
 
-        if dest not in [1, 301, 302]:  # 1번, 301번, 302번만 처리
+        # 허용된 목적지만 처리
+        if dest not in [1000, 301]:
             self.get_logger().warn(f"등록되지 않은 목적지: {dest}")
             return
 
-        # 목적지가 이미 이동 중이면 대기
-        if self.route:
-            self.get_logger().info(f"이동 중 → 요청 저장: {dest}")
-            self.pending_target = dest
-            return
+        # === 현재 작업 무시하고 새 목적지로 강제 전환 ===
+        if self.wait_timer:
+            self.wait_timer.cancel()
+            self.wait_timer = None
 
-        # 1번, 301번, 302번은 모두 엘리베이터를 경유해야 함
+        self.get_logger().info(f"⚡ 새로운 목적지 [{dest}] 요청 → 현재 작업 중단 후 재시작")
+        self.state = "IDLE"
+        self.route = []
+        self.current_step_index = 0
+
+        # 새 경로 세팅 및 실행
         self.setup_route(dest)
-
-    def door_callback(self, msg: Bool):
-        if msg.data and not self.door_triggered:  # 문 열림 신호
-            self.door_triggered = True
-            self.get_logger().info("🚪 문 열림 신호 수신")
-            self.process_next_step()
-
-        # else:  # 문 닫힘
-        #     if self.door_open:  # 직전에 열렸었음 → 이제 닫힘 감지
-        #         self.door_open = False
-        #         self.get_logger().info("🚪 문 닫힘 감지 → 엘리베이터 3층 이동 명령 전송")
-        #         self.elevator_pub.publish(String(data="2"))
-
-    def setup_route(self, dest):
-        # 301, 302번 병실도 엘리베이터 경유
-        if dest == 1:  # 의국은 엘리베이터를 거쳐야 한다.
-            self.route = [11, 12, 1]
-        elif dest == 301:  # 301호도 엘리베이터를 거쳐야 한다.
-            self.route = [11, 12, 301]
-        elif dest == 302:  # 302호도 엘리베이터를 거쳐야 한다.
-            self.route = [11, 12, 302]
-
-        self.current_step = 0
-        self.door_triggered = False
         self.process_next_step()
 
-    def process_next_step(self):
-        if self.current_step >= len(self.route):
-            self.get_logger().info("✅ 목적지 도착 완료!")
-            self.arrival_pub.publish(Bool(data=True))
-            self.route = []
-            self.current_step = 0
-            self.door_triggered = False
+    # === 경로 세팅 ===
+    def setup_route(self, dest):
+        self.get_logger().info(f"🗺️ 목적지 [{dest}] 경로 설정 시작")
 
-            if self.pending_target:
-                target = self.pending_target
-                self.pending_target = None
-                self.setup_route(target)
+        if dest == 1:
+            self.route = [11, 12, 1]
+        elif dest == 301:
+            self.route = [11, 12, 301]
 
+        self.current_step_index = 0
+
+    # === 이동 완료 콜백 ===
+    def move_complete_callback(self, msg: Bool):
+        if not msg.data or self.state != "MOVING":
             return
 
-        # 목적지 이동 신호를 퍼블리시
-        step_id = self.route[self.current_step]
-        self.get_logger().info(f"🚀 Step {step_id} 으로 이동 시작")
-        self.mover_pub.publish(Int32(data=step_id))
-        self.current_step += 1
+        step_id = self.route[self.current_step_index - 1]
+        self.get_logger().info(f"✅ Step {step_id} 이동 완료!")
+
+        # 11번 / 12번 도착 시 3초 대기
+        if step_id in [11, 12]:
+            self.get_logger().info(f"⏳ 대기 지점({step_id}) 도착. {self.wait_time}초 대기...")
+            self.state = "WAITING"
+            self.wait_timer = self.create_timer(self.wait_time, self.timer_callback)
+        else:
+            self.process_next_step()
+
+    # === 대기 타이머 콜백 ===
+    def timer_callback(self):
+        if self.wait_timer:
+            self.wait_timer.cancel()
+            self.wait_timer = None
+
+        if self.state == "WAITING":
+            self.get_logger().info("⏰ 대기 완료! 다음 스텝으로 진행합니다.")
+            self.process_next_step()
+
+    # === 다음 스텝 실행 ===
+    def process_next_step(self):
+        if self.current_step_index >= len(self.route):
+            self.get_logger().info("🎉 최종 목적지 도착 완료!")
+            self.state = "IDLE"
+            self.route = []
+            return
+
+        step_id = self.route[self.current_step_index]
+        self.get_logger().info(f"🚀 Step {step_id} 이동 시작...")
+
+        self.state = "MOVING"
+        msg = Int32()
+        msg.data = step_id
+        self.mover_pub.publish(msg)
+
+        self.current_step_index += 1
+
 
 def main(args=None):
     rclpy.init(args=args)
@@ -95,6 +110,7 @@ def main(args=None):
     rclpy.spin(node)
     node.destroy_node()
     rclpy.shutdown()
+
 
 if __name__ == "__main__":
     main()
