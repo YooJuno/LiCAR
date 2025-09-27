@@ -18,14 +18,14 @@ namespace licar_wpf.Services
 
         public async Task<Nurse> LoginNurseAsync(int nurseId, string name)
         {
-            var requestBody = new { nurse_id = nurseId, name };
+            var requestBody = new { nurseId, name };
 
             return await _apiClient.PostAsync<Nurse>("/api/v1/auth/nurse/login", requestBody);
         }
 
         public async Task<Pharmacist> LoginPharmacistAsync(int pharmacistId, string name)
         {
-            var requestBody = new { pharmacist_id = pharmacistId, name };
+            var requestBody = new { pharmacistId, name };
 
             return await _apiClient.PostAsync<Pharmacist>("/api/v1/auth/pharmacist/login", requestBody);
         }

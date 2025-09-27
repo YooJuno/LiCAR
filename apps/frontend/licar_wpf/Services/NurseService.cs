@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace licar_wpf.Services
 {
@@ -16,10 +17,15 @@ namespace licar_wpf.Services
             _apiClient = client;
         }
 
+        public async Task<List<Patient>> GetPatientsAsync()
+        {
+            return await _apiClient.GetAsync<List<Patient>>($"/api/v1/patients");
+        }
+
         public async Task<List<Patient>> SearchPatientsAsync(string name)
         {
             return await _apiClient.GetAsync<List<Patient>>($"/api/v1/patients?name={name}");
-        }
+        }   
 
         public async Task<Patient> GetPatientDetailAsync(int patientId)
         {

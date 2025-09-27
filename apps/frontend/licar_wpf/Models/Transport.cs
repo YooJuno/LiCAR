@@ -15,8 +15,8 @@ namespace licar_wpf.Models
         [JsonPropertyName("requestedTime")]
         public DateTime RequestedTime { get; set; }
 
-        [JsonPropertyName("sendedTime")]
-        public DateTime? SendedTime { get; set; }
+        [JsonPropertyName("sentTime")]
+        public DateTime? SentTime { get; set; }
 
         [JsonPropertyName("arrivedTime")]
         public DateTime? ArrivedTime { get; set; }

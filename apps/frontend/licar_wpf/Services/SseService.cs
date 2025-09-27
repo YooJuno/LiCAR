@@ -35,8 +35,8 @@ namespace licar_wpf.Services
 
             try
             {
-                var response = await _httpClient.GetAsync(requestUrl, HttpCompletionOption.ResponseHeadersRead, _cancellationTokenSource.Token);
-                response.EnsureSuccessStatusCode();
+                var response = await _httpClient.GetAsync(requestUrl, HttpCompletionOption.ResponseHeadersRead, _cancellationTokenSource.Token);                
+                response.EnsureSuccessStatusCode();                
 
                 using (var stream = await response.Content.ReadAsStreamAsync())
                 using (var reader = new StreamReader(stream))
@@ -53,7 +53,7 @@ namespace licar_wpf.Services
                             var data = dataLine.Substring("data:".Length).Trim();
 
                             if (eventType == "transportRequest")
-                            {
+                            {                                
                                 TransportRequested?.Invoke(data);
                             }
                             else if (eventType == "transportComplete")

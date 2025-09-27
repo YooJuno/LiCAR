@@ -15,8 +15,8 @@ namespace licar_wpf
         {
             base.OnStartup(e);
 
-            string apiBaseUrl = "https://j13c206.p.ssafy.io";
-            //string apiBaseUrl = "http://192.168.100.157";
+            //string apiBaseUrl = "https://j13c206.p.ssafy.io";
+            string apiBaseUrl = "http://localhost";
 
             var apiClient = new ApiClient(apiBaseUrl);
             var navigationService = new NavigationService();

@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -13,7 +15,6 @@ namespace licar_wpf.ViewModels
 {
     public partial class NurseViewModel : ViewModelBase
     {
-        private readonly NavigationService _navigationService;
         private readonly NurseService _nurseService;
         private readonly SseService _sseService;
         private readonly ToastNotificationService _toastService;
@@ -36,7 +37,7 @@ namespace licar_wpf.ViewModels
                 LoadPatientDetails(value);
                 LoadValidPrescriptionsAsync(value);
 
-                (RequestDeliveryCommand as RelayCommand)?.RaiseCanExecuteChanged();
+                (RequestTransportCommand as RelayCommand)?.RaiseCanExecuteChanged();
             }
         }
 
@@ -78,28 +79,50 @@ namespace licar_wpf.ViewModels
         public string NurseName => UserSession.CurrentUser?.Name;
 
         public ICommand SearchCommand { get; }
-        public RelayCommand RequestDeliveryCommand { get; }
+        public RelayCommand RequestTransportCommand { get; }
 
         public NurseViewModel(NavigationService navigationService, NurseService nurseService, SseService sseService, ToastNotificationService toastService)
         {
-            _navigationService = navigationService;
             _nurseService = nurseService;
             _sseService = sseService;
             _toastService = toastService;
 
             SearchCommand = new RelayCommand(async (p) => await SearchPatients());
-            RequestDeliveryCommand = new RelayCommand(async (p) => await RequestDelivery(), (p) => SelectedPatient != null);
+            RequestTransportCommand = new RelayCommand(async (p) => await RequestTransport(), (p) => SelectedPatient != null);
 
             _sseService.TransportCompleted += OnTransportCompleted;
         }
 
+        public void CleanUp()
+        {
+            _sseService.TransportCompleted -= OnTransportCompleted;
+        }
+
         private async Task SearchPatients()
         {
-            PatientList.Clear();
-            var patients = await _nurseService.SearchPatientsAsync(SearchKeyword);
-            foreach (var patient in patients)
+            try
             {
-                PatientList.Add(patient);
+                IEnumerable<Patient> patients;
+
+                if (string.IsNullOrWhiteSpace(SearchKeyword))
+                {
+                    patients = await _nurseService.GetPatientsAsync();
+                }
+                else
+                {
+                    patients = await _nurseService.SearchPatientsAsync(SearchKeyword);
+                }
+
+                PatientList.Clear();
+
+                foreach (Patient patient in patients)
+                {
+                    PatientList.Add(patient);
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[ Patient Search ERROR] {ex.Message}");
             }
         }
 
@@ -149,14 +172,11 @@ namespace licar_wpf.ViewModels
             }
         }
 
-        private async Task RequestDelivery()
+        private async Task RequestTransport()
         {
             try
             {
-                var random = new Random();
-                //int pharmacistId = random.Next(1, 4);
-
-                var result = await _nurseService.RequestTransportAsync(1, UserSession.CurrentUser.Id, 1, SelectedPatient.PatientId);
+                var result = await _nurseService.RequestTransportAsync(1, UserSession.CurrentUser.Id, 1, PatientDetails.PatientId);
 
                 Application.Current.Dispatcher.Invoke(() =>
                 {
@@ -168,10 +188,27 @@ namespace licar_wpf.ViewModels
                 MessageBox.Show($"요청에 실패했습니다. \n{ex}", "실패", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
+        private class TransportCompletedMessage
+        {
+            [JsonPropertyName("transportId")]
+            public int TransportId { get; set; }
+
+            [JsonPropertyName("successTime")]
+            public DateTime SuccessTime { get; set; }
+
+            [JsonPropertyName("nurseId")]
+            public int NurseId { get; set; }
+
+            [JsonPropertyName("pharmacistId")]
+            public int PharmacistId { get; set; }
+        }
+
         private void OnTransportCompleted(string jsonData)
         {
-            // TODO : jsonData 파싱 후 메시지 디자인
-            _toastService.Show("약 운반 완료!!!!!!!!!!!!!");
+            var message = JsonSerializer.Deserialize<TransportCompletedMessage>(jsonData);
+
+            _toastService.Show($"요청 번호 {message.TransportId}이 운반되었습니다.");
 
             Application.Current.Dispatcher.Invoke(() =>
             {
