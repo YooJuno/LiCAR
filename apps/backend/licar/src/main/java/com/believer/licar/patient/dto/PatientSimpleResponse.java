@@ -8,14 +8,14 @@ import lombok.Getter;
 @Builder
 public class PatientSimpleResponse {
 
-    private final int patientID;
-    private final String name;
+    private final int patientId;
+    private final String patientName;
     private final Integer roomNumber;
 
     public static PatientSimpleResponse from(Patient patient) {
         return PatientSimpleResponse.builder()
-                .patientID(patient.getPatientId())
-                .name(patient.getName())
+                .patientId(patient.getPatientId())
+                .patientName(patient.getName())
                 .roomNumber(patient.getRoomNumber())
                 .build();
     }

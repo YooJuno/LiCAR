@@ -42,7 +42,7 @@ public class TransportPrescriptionDetailResponse {
         }
     }
 
-    public static TransportPrescriptionDetailResponse of(Prescription prescription, List<TransportDrugRecognition> recognitions) {
+    public static TransportPrescriptionDetailResponse from(Prescription prescription, List<TransportDrugRecognition> recognitions) {
 
         Map<Integer, Boolean> recognitionMap = recognitions.stream()
                 .collect(Collectors.toMap(

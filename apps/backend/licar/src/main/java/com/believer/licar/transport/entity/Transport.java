@@ -29,8 +29,8 @@ public class Transport {
     @Column(name = "requested_time")
     private LocalDateTime requestedTime;
 
-    @Column(name = "sended_time")
-    private LocalDateTime sendedTime;
+    @Column(name = "sent_time")
+    private LocalDateTime sentTime;
 
     @Column(name = "arrived_time")
     private LocalDateTime arrivedTime;
@@ -75,7 +75,7 @@ public class Transport {
 
     public void startTransit() {
         this.status = TransportStatus.in_transit;
-        this.sendedTime = LocalDateTime.now();
+        this.sentTime = LocalDateTime.now();
     }
 
     public void completeTransport() {
