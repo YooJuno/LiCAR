@@ -5,6 +5,7 @@ import rclpy
 from rclpy.node import Node
 from std_msgs.msg import Int32, Bool
 from geometry_msgs.msg import PoseStamped
+from sensor_msgs.msg import JointState
 from nav2_simple_commander.robot_navigator import BasicNavigator, TaskResult
 
 class TurtlebotMover(Node):
@@ -14,8 +15,8 @@ class TurtlebotMover(Node):
 
         self.create_subscription(Int32, '/turtlebot_command', self.command_callback, 10)
         self.create_subscription(Bool, '/elevator/door_state', self.door_state_callback, 10)
-        # 엘리베이터 층 정보 구독 (층 변경 감지용)
-        self.create_subscription(Int32, '/elevator/current_floor', self.elevator_floor_callback, 10)
+        # 엘리베이터 joint states 구독 (층 변경 감지용)
+        self.create_subscription(JointState, '/elevator/joint_states', self.elevator_joint_callback, 10)
         self.completion_pub = self.create_publisher(Bool, '/turtlebot/move_complete', 10)
 
         # ⭐ 네비게이션 상태와 타이머를 관리할 변수 추가
@@ -30,6 +31,7 @@ class TurtlebotMover(Node):
         self.elevator_moving = False  # 엘리베이터 이동 중 여부
         self.current_floor = 2  # 현재 층 (기본값 2층)
         self.target_floor = None  # 목표 층
+        self.elevator_control_timer = None  # 엘리베이터 제어 타이머
         
         self.get_logger().info("✅ Mover node ready")
 
@@ -65,6 +67,11 @@ class TurtlebotMover(Node):
             self.navigator.cancelTask()
             if self.nav_timer:
                 self.nav_timer.cancel()
+
+        # 엘리베이터 제어 타이머도 취소
+        if self.elevator_control_timer:
+            self.elevator_control_timer.cancel()
+            self.elevator_control_timer = None
         
         cmd = msg.data
         if cmd == 0:
@@ -73,6 +80,9 @@ class TurtlebotMover(Node):
             self.is_navigating = False
             if self.nav_timer:
                 self.nav_timer.cancel()
+            if self.elevator_control_timer:
+                self.elevator_control_timer.cancel()
+                self.elevator_control_timer = None
             return
 
         # 현재 라우트 저장
@@ -127,14 +137,9 @@ class TurtlebotMover(Node):
                         # 층간 이동: 엘리베이터 이용 (11,22,33 제외한 2자리)
                         self.target_floor = to_floor - 1  # data는 층-1
                         self.just_completed_floor_change = True
-                        self.get_logger().info(f"📍 Route {self.current_route} 위치 도착 - {from_floor}층에서 {to_floor}층(data:{self.target_floor})으로 이동 후 완료")
 
-                        # 도착 시 문이 이미 닫혀있다면 즉시 엘리베이터 명령 전송
-                        if not self.current_door_state:
-                            self.get_logger().info("🚪 문이 이미 닫힘 상태, 즉시 엘리베이터 명령 전송")
-                            self.send_elevator_command()
-                        else:
-                            self.get_logger().info("🚪 문이 완전히 닫힐 때까지 대기...")
+                        self.get_logger().info(f"📍 Route {self.current_route} 위치 도착 - {from_floor}층에서 {to_floor}층(data:{self.target_floor})으로 이동 후 완료")
+                        self.get_logger().info("🚪 문 닫힘 이벤트에서 엘리베이터 제어 시작 대기 중...")
                         # 층간 이동 route는 목표 층 도착 후 문이 열릴 때 완료 처리
                 elif self.current_route in [1, 2, 3]:
                     # 1, 2, 3: 엘리베이터 탑승 신호 (문이 열리면 완료)
@@ -191,21 +196,51 @@ class TurtlebotMover(Node):
                     self.elevator_moving = False
                     self.target_floor = None
 
-        # 문이 닫힌 상태로 변했을 때 (층간 이동 완료 후에만)
-        elif not door_open and prev_door_state and self.just_completed_floor_change:
-            self.get_logger().info(f"🚪 엘리베이터 문 완전히 닫힘 감지 - {self.target_floor}층으로 이동 명령 전송")
-            self.send_elevator_command()
+        # 문이 닫힌 상태로 변했을 때 - 위치 기반으로 타이머 기반 엘리베이터 제어
+        elif not door_open and prev_door_state:
+            current_pos = self.get_current_position()
+            if current_pos and current_pos[1] >= 20.8 and self.just_completed_floor_change and not self.elevator_command_sent:
+                self.get_logger().info(f"🚪 엘리베이터 문 닫힘 + 위치 확인 (y={current_pos[1]:.1f}) - 엘리베이터 제어 준비")
 
-    def elevator_floor_callback(self, msg: Int32):
-        """엘리베이터 현재 층 정보 콜백"""
-        prev_floor = self.current_floor
-        self.current_floor = msg.data
+                # 네비게이션 즉시 취소
+                if self.is_navigating:
+                    self.navigator.cancelTask()
+                    self.is_navigating = False
+                    if self.nav_timer:
+                        self.nav_timer.cancel()
+                    self.get_logger().info("🛑 네비게이션 취소 완료")
 
-        if prev_floor != self.current_floor:
-            self.get_logger().info(f"🏢 엘리베이터 층 변경: {prev_floor}층 → {self.current_floor}층")
-            if self.current_floor == self.target_floor and self.elevator_command_sent:
-                self.elevator_moving = True
-                self.get_logger().info(f"🎯 {self.target_floor}층 도착 완료 - 문 열림 대기 중...")
+                # 2초 후 엘리베이터 명령 전송 (타이밍 개선)
+                self.elevator_control_timer = self.create_timer(2.0, self.delayed_elevator_command)
+                self.get_logger().info("⏱️ 2초 후 엘리베이터 명령 전송 예정")
+
+    def elevator_joint_callback(self, msg: JointState):
+        """엘리베이터 joint states 콜백 - lift position으로 층 계산"""
+        if "elevator::lift" in msg.name:
+            idx = msg.name.index("elevator::lift")
+            lift_pos = msg.position[idx]
+
+            # 층 계산: position / 3.0 + 1 (0->1층, 3->2층, 6->3층)
+            calculated_floor = round(lift_pos / 3.0) + 1
+            calculated_floor = max(1, min(3, calculated_floor))  # 1-3층 제한
+
+            prev_floor = self.current_floor
+            if prev_floor != calculated_floor:
+                self.current_floor = calculated_floor
+                self.get_logger().info(f"🏢 엘리베이터 층 변경: {prev_floor}층 → {self.current_floor}층 (pos: {lift_pos:.2f})")
+
+                if self.current_floor == self.target_floor and self.elevator_command_sent:
+                    self.elevator_moving = True
+                    self.get_logger().info(f"🎯 {self.target_floor}층 도착 완료 - 문 열림 대기 중...")
+
+    def delayed_elevator_command(self):
+        """타이머를 통한 지연된 엘리베이터 명령 전송"""
+        if self.elevator_control_timer:
+            self.elevator_control_timer.cancel()
+            self.elevator_control_timer = None
+
+        self.get_logger().info("⏰ 타이머 완료 - 엘리베이터 명령 전송")
+        self.send_elevator_command()
 
     def send_elevator_command(self):
         """엘리베이터 목표 층 이동 명령 전송"""
