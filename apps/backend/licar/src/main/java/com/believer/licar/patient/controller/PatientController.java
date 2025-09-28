@@ -25,7 +25,7 @@ public class PatientController {
     public ResponseEntity<PatientSimpleResponse> createPatient(@RequestBody PatientCreateRequest request) {
         PatientSimpleResponse createdPatient = patientService.createPatient(request);
 
-        log.info("[ Patient Add ] {}", createdPatient.getPatientID());
+        log.info("[ Patient Add ] {}", createdPatient.getPatientId());
         return ResponseEntity.status(HttpStatus.CREATED).body(createdPatient);
     }
 
@@ -34,7 +34,7 @@ public class PatientController {
     public ResponseEntity<List<PatientSimpleResponse>> getAllPatients() {
         List<PatientSimpleResponse> patients = patientService.findAllPatients();
 
-        log.info("[ Patient List ]");
+        log.info("[ Patient List ] {}", patients.size());
         return ResponseEntity.ok(patients);
     }
 

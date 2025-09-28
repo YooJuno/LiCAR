@@ -30,7 +30,7 @@ CREATE TABLE patients (
 CREATE TABLE transports (
     transport_id    SERIAL      PRIMARY KEY,
     requested_time  TIMESTAMP,
-    sended_time     TIMESTAMP,
+    sent_time     TIMESTAMP,
     arrived_time    TIMESTAMP,
     status transport_status DEFAULT 'requested',
     robot_id        INTEGER     NOT NULL,
@@ -38,9 +38,9 @@ CREATE TABLE transports (
     pharmacist_id   INTEGER     NOT NULL,
     patient_id      INTEGER     NOT NULL,
     CHECK (
-        (sended_time IS NULL OR requested_time <= sended_time) 
+        (sent_time IS NULL OR requested_time <= sent_time) 
         AND 
-        (arrived_time IS NULL OR sended_time <= arrived_time)
+        (arrived_time IS NULL OR sent_time <= arrived_time)
     ),
     FOREIGN KEY (nurse_id) REFERENCES nurses (nurse_id),
     FOREIGN KEY (pharmacist_id) REFERENCES pharmacists (pharmacist_id),

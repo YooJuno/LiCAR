@@ -23,14 +23,14 @@ public class AuthService {
     private final PharmacistRepository pharmacistRepository;
 
     public NurseLoginResponse loginNurse(NurseLoginRequest request) {
-        Nurse nurse = nurseRepository.findByNurseIdAndName(request.getNurse_id(), request.getName())
+        Nurse nurse = nurseRepository.findByNurseIdAndName(request.getNurseId(), request.getName())
                 .orElseThrow(() -> new CustomException(ErrorCode.NURSE_AUTHENTICATION_FAILED));
 
         return NurseLoginResponse.from(nurse);
     }
 
     public PharmacistLoginResponse loginPharmacist(PharmacistLoginRequest request) {
-        Pharmacist pharmacist = pharmacistRepository.findByPharmacistIdAndName((request.getPharmacist_id()), request.getName())
+        Pharmacist pharmacist = pharmacistRepository.findByPharmacistIdAndName((request.getPharmacistId()), request.getName())
                 .orElseThrow(() -> new CustomException(ErrorCode.PHARMACIST_AUTHENTICATION_FAILED));
 
         return PharmacistLoginResponse.from(pharmacist);

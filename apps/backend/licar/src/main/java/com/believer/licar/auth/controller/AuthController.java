@@ -23,6 +23,7 @@ public class AuthController {
 
     @PostMapping("/nurse/login")
     public ResponseEntity<NurseLoginResponse> loginNurse(@RequestBody NurseLoginRequest request) {
+        log.info("{} {}", request.getNurseId(), request.getName());
         NurseLoginResponse response = authService.loginNurse(request);
 
         log.info("[ Nurse Login ] {}", response.getNurseId());

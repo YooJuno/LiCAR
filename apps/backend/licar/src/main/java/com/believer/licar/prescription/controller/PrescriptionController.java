@@ -52,7 +52,7 @@ public class PrescriptionController {
         List<PrescriptionSimpleResponse> prescriptions = prescriptionService.findAllPrescriptions();
 
         log.info("[ Prescription List ] {}", prescriptions.size());
-        return ResponseEntity.ok(prescriptionService.findAllPrescriptions());
+        return ResponseEntity.ok(prescriptions);
     }
 
     // GET /prescriptions/{prescription_id}

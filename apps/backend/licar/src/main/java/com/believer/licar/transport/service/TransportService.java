@@ -122,15 +122,6 @@ public class TransportService {
     }
 
     @Transactional(readOnly = true)
-    public List<DrugResponse> findValidDrugsForTransportRequest(int transportId) {
-        Transport transport = findTransportEntityById(transportId);
-        Patient patient = transport.getPatient();
-        LocalDate requestDate = transport.getRequestedTime().toLocalDate();
-
-        return prescriptionService.findValidDrugsForPatient(patient.getPatientId(), requestDate);
-    }
-
-    @Transactional(readOnly = true)
     public List<DrugResponse> findValidDrugsForTransport(int transportId) {
         Transport transport = findTransportEntityById(transportId);
         int patientId = transport.getPatient().getPatientId();
@@ -208,6 +199,6 @@ public class TransportService {
 
         List<TransportDrugRecognition> recognitions = transport.getTransportDrugRecognitions();
 
-        return TransportPrescriptionDetailResponse.of(prescription, recognitions);
+        return TransportPrescriptionDetailResponse.from(prescription, recognitions);
     }
 }

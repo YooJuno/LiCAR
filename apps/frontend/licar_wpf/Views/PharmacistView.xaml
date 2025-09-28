@@ -25,7 +25,7 @@
                           AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False" VerticalScrollBarVisibility="Auto">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="요청 번호" Binding="{Binding TransportId}" Width="Auto"/>
-                        <DataGridTextColumn Header="상태" Binding="{Binding Status}" Width="*"/>
+                        <DataGridTextColumn Header="상태" Binding="{Binding Status, Converter={StaticResource StatusToKoreanConverter}}" Width="*"/>
                         <DataGridTextColumn Header="간호사" Binding="{Binding NurseName}" Width="*"/>
                     </DataGrid.Columns>
                 </DataGrid>
@@ -61,13 +61,13 @@
                         <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding RequestedTime, StringFormat='{}{0:yyyy-MM-dd HH:mm}'}" Margin="2" />
 
                         <TextBlock Grid.Row="1" Grid.Column="0" Text="운반 시작 : " HorizontalAlignment="Right" FontWeight="SemiBold" />
-                        <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding SendedTime, StringFormat='{}{0:yyyy-MM-dd HH:mm}'}" Margin="2" />
+                        <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding SentTime, StringFormat='{}{0:yyyy-MM-dd HH:mm}'}" Margin="2" />
 
                         <TextBlock Grid.Row="2" Grid.Column="0" Text="도착 시작 : " HorizontalAlignment="Right" FontWeight="SemiBold" />
                         <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding ArrivedTime, StringFormat='{}{0:yyyy-MM-dd HH:mm}'}" Margin="2" />
 
                         <TextBlock Grid.Row="3" Grid.Column="0" Text="현재 상태 : " HorizontalAlignment="Right" FontWeight="SemiBold" />
-                        <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding Status , Converter={StaticResource StatusToKoreanConverter}}" Margin="2" />
+                        <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding Status, Converter={StaticResource StatusToKoreanConverter}}" Margin="2" />
 
                         <TextBlock Grid.Row="4" Grid.Column="0" Text="로봇 번호 : " HorizontalAlignment="Right" FontWeight="SemiBold" />
                         <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding RobotId}" Margin="2" />

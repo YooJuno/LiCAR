@@ -17,7 +17,7 @@ public class TransportDetailResponse {
 
     private final int transportId;
     private final LocalDateTime requestedTime;
-    private final LocalDateTime sendedTime;
+    private final LocalDateTime sentTime;
     private final LocalDateTime arrivedTime;
     private final TransportStatus status;
     private final Integer robotId;
@@ -52,7 +52,7 @@ public class TransportDetailResponse {
         return TransportDetailResponse.builder()
                 .transportId(transport.getTransportId())
                 .requestedTime(transport.getRequestedTime())
-                .sendedTime(transport.getSendedTime())
+                .sentTime(transport.getSentTime())
                 .arrivedTime(transport.getArrivedTime())
                 .status(transport.getStatus())
                 .robotId(transport.getRobotId())

@@ -25,6 +25,7 @@ public class TransportController {
     // POST /transports
     @PostMapping
     public ResponseEntity<TransportDetailResponse> requestTransport(@RequestBody TransportCreateRequest request) {
+        log.info("{} {} {} {}", request.getRobotId(), request.getNurseId(), request.getPharmacistId(), request.getPatientId());
         TransportDetailResponse transport = transportService.requestTransport(request);
 
         log.info("[ Transport Create ] {}", transport.getTransportId());
@@ -40,7 +41,7 @@ public class TransportController {
         return ResponseEntity.ok(transport);
     }
 
-    // PATCH /transports/{id}/complete
+    // PATCH /transports/{transport_id}/complete
     @PatchMapping("/{transport_id}/complete")
     public ResponseEntity<TransportSimpleResponse> completeTransport(@PathVariable("transport_id") int transportId) {
         TransportSimpleResponse transport = transportService.completeTransport(transportId);
@@ -76,6 +77,7 @@ public class TransportController {
         return ResponseEntity.ok(drugs);
     }
 
+    // GET /transports/requested-drugs
     @GetMapping("/requested-drugs")
     public ResponseEntity<List<DrugResponse>> getRequestedDrugsForLatestTransport() {
         List<DrugResponse> response = transportService.findRequestedDrugsForLatestTransport();

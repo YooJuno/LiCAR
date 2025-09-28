@@ -72,7 +72,16 @@ namespace licar_wpf.ViewModels
             if (res == MessageBoxResult.Yes)
             {
                 _sseService.Disconnect();
-            
+
+                if (CurrentViewModel is NurseViewModel nurseVm)
+                {
+                    nurseVm.CleanUp();
+                }
+                else if (CurrentViewModel is PharmacistViewModel pharmacistVm)
+                {
+                    pharmacistVm.CleanUp();
+                }
+
                 UserSession.Logout();
 
                 _navigationService.NavigateTo(_loginViewModelFactory());

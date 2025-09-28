@@ -11,7 +11,7 @@ import java.time.LocalDate;
 public class PatientDetailResponse {
 
     private final int patientId;
-    private final String name;
+    private final String patientName;
     private final LocalDate birthday;
     private final LocalDate admissionDate;
     private final LocalDate dischargeDate;
@@ -21,7 +21,7 @@ public class PatientDetailResponse {
     public static PatientDetailResponse from(Patient patient) {
         return PatientDetailResponse.builder()
                 .patientId(patient.getPatientId())
-                .name(patient.getName())
+                .patientName(patient.getName())
                 .birthday(patient.getBirthday())
                 .admissionDate(patient.getAdmissionDate())
                 .dischargeDate(patient.getDischargeDate())

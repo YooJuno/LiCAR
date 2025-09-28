@@ -3,7 +3,6 @@ package com.believer.licar.notification.service;
 import com.believer.licar.notification.dto.DrugRecognitionNotification;
 import com.believer.licar.notification.dto.NotificationCompleteResponse;
 import com.believer.licar.notification.dto.NotificationRequestResponse;
-import com.believer.licar.prescription.entity.Drug;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -12,6 +11,9 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -20,7 +22,8 @@ public class NotificationService {
 
     private final Map<Integer, SseEmitter> pharmacistEmitters = new ConcurrentHashMap<>();
     private final Map<Integer, SseEmitter> nurseEmitters = new ConcurrentHashMap<>();
-    private static final Long DEFAULT_TIMEOUT = 60 * 60 * 1000L;
+    private static final Long DEFAULT_TIMEOUT = 12 * 60 * 60 * 1000L;
+    private final ScheduledExecutorService heartbeatScheduler = Executors.newSingleThreadScheduledExecutor();
 
     public SseEmitter subscribePharmacist(Integer pharmacistId) {
         SseEmitter emitter = new SseEmitter(DEFAULT_TIMEOUT);
@@ -31,6 +34,14 @@ public class NotificationService {
         emitter.onError((e) -> pharmacistEmitters.remove(pharmacistId));
 
         sendToClient(emitter, "connect", "Connection successful. [pharmacist = " + pharmacistId + " ]");
+
+        heartbeatScheduler.scheduleAtFixedRate(() -> {
+            try {
+                emitter.send(SseEmitter.event().comment("heartbeat"));
+            } catch (IOException e) {
+                log.error("[ SSE Pharmacist {} error] {}", pharmacistId, e.getMessage());
+            }
+        }, 1, 3, TimeUnit.MINUTES);
 
         return emitter;
     }
@@ -45,6 +56,14 @@ public class NotificationService {
 
         sendToClient(emitter, "connect", "Connection successful. [nurse = " + nurseId + " ]");
 
+        heartbeatScheduler.scheduleAtFixedRate(() -> {
+            try {
+                emitter.send(SseEmitter.event().comment("heartbeat"));
+            } catch (IOException e) {
+                log.error("[ SSE Nurse {} error] {}", nurseId, e.getMessage());
+            }
+        }, 1, 3, TimeUnit.MINUTES);
+
         return emitter;
     }
 
@@ -52,6 +71,7 @@ public class NotificationService {
         SseEmitter emitter = pharmacistEmitters.get(pharmacistId);
 
         if (emitter != null) {
+            log.info("[ SSE : Transport Request ] {} {}", pharmacistId, notification.getTransportId());
             sendToClient(emitter, "transportRequest", notification);
         }
     }
@@ -60,6 +80,7 @@ public class NotificationService {
         SseEmitter emitter = nurseEmitters.get(nurseId);
 
         if (emitter != null) {
+            log.info("[ SSE : Transport Arrived ] {} {}", nurseId, notification.getTransportId());
             sendToClient(emitter, "transportComplete", notification);
         }
     }
