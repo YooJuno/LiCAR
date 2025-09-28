@@ -6,6 +6,7 @@
 	    <geometry>
           <mesh>
             <uri>model://aws_robomaker_hospital_ramp_01/meshes/aws_robomaker_hospital_ramp_01_visual.dae</uri>
+            <scale>1.0 1.5 1.0</scale>
           </mesh>
         </geometry>
       </visual>
@@ -13,6 +14,7 @@
         <geometry>
           <mesh>
             <uri>model://aws_robomaker_hospital_ramp_01/meshes/aws_robomaker_hospital_ramp_01_collision.dae</uri>
+            <scale>1.0 1.5 1.0</scale>
           </mesh>
         </geometry>
       </collision>    
