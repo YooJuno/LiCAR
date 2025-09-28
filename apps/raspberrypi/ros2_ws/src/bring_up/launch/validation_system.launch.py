@@ -4,9 +4,9 @@ from launch.actions import ExecuteProcess
 
 # --- 모든 경로와 설정을 하드코딩된 절대 경로로 명확하게 정의 ---
 # 이 방식은 현재 환경에서 가장 확실하게 동작합니다.
-ROS_SETUP_SCRIPT = "/home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/install/setup.bash"
+ROS_SETUP_SCRIPT = "/home/ssafy/git3/S13P21C206/apps/raspberrypi/ros2_ws/install/setup.bash"
 VENV_SITE_PACKAGES = "/home/ssafy/juno/.venv/lib/python3.12/site-packages"
-CYCLONEDDS_URI = "/home/ssafy/git/S13P21C206/apps/raspberrypi/ros2_ws/cyclonedds.xml" # <--- xml 파일의 절대 경로
+CYCLONEDDS_URI = "/home/ssafy/git3/S13P21C206/apps/raspberrypi/ros2_ws/cyclonedds.xml" # <--- xml 파일의 절대 경로
 
 ROS_DOMAIN_ID = "1"
 RASPBERRY_PI_IP = "192.168.100.246"

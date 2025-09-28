@@ -21,7 +21,7 @@ class SystemState:
     MANUAL_OPEN_DONE = 6
 
 # MQTT 설정
-MQTT_WS_URL = "192.168.100.157"
+MQTT_WS_URL = "j13c206.p.ssafy.io"
 MQTT_WS_PORT = 9001
 MQTT_WS_PATH = "/mqtt"
 MQTT_TOPIC_REQUEST_DRUGS = "robots/status/1"
@@ -58,7 +58,7 @@ class YoloValidatorNode(Node):
         self.mqtt_client.username_pw_set(MQTT_USERNAME, MQTT_PASSWORD)
 
         try:
-            self.get_logger().info(f"Connecting to MQTT Broker at ws://{MQTT_WS_URL}:{MQTT_WS_PORT}{MQTT_WS_PATH}...")
+            self.get_logger().info(f"Connecting to MQTT Broker at wss://{MQTT_WS_URL}:{MQTT_WS_PORT}{MQTT_WS_PATH}...")
             self.mqtt_client.connect(MQTT_WS_URL, MQTT_WS_PORT, 60)
             self.mqtt_client.loop_start()
         except Exception as e:
@@ -123,7 +123,7 @@ class YoloValidatorNode(Node):
                 
                 # with self._lock 안에서 데이터 처리 및 상태 변경
                 with self._lock:
-                    self.transport_id = data.get('transport_id')
+                    self.transport_id = data.get('transportId')
                     drugs_list = data.get('drugs', [])
                     
                     if not self.transport_id or not drugs_list:
@@ -133,7 +133,7 @@ class YoloValidatorNode(Node):
 
                     drug_names = []
                     for drug in drugs_list:
-                        drug_name, drug_id = drug.get('name'), drug.get('drug_id')
+                        drug_name, drug_id = drug.get('name'), drug.get('drugId')
                         if drug_name and drug_id:
                             drug_names.append(drug_name)
                             self.drug_id_map[drug_name] = drug_id
@@ -236,7 +236,7 @@ class YoloValidatorNode(Node):
                         
                         drug_id_to_send = self.drug_id_map.get(pill_name)
                         if self.transport_id is not None and drug_id_to_send is not None:
-                            payload = {"transport_id": self.transport_id, "drug_id": drug_id_to_send}
+                            payload = {"transportId": self.transport_id, "drugId": drug_id_to_send}
                             self.mqtt_client.publish(MQTT_TOPIC_RECOGNITION_UPDATE, json.dumps(payload))
                             self.get_logger().info(f"Published recognition update: {payload}")
 
