@@ -11,7 +11,7 @@ import java.util.List;
 public class PrescriptionCreateRequest {
 
     private int patientId;
-    private LocalDate date;
+    private LocalDate prescriptionDate;
     private Integer period;
     private String counsellingNote;
     private List<Integer> drugIds;

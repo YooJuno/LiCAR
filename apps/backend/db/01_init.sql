@@ -1,5 +1,5 @@
 -- ENUM 타입 정의
-CREATE TYPE delivery_status AS ENUM ('requested', 'in_transit', 'completed');
+CREATE TYPE transport_status AS ENUM ('requested', 'in_transit', 'completed');
 
 -- 간호사 테이블
 CREATE TABLE nurses (
@@ -27,20 +27,20 @@ CREATE TABLE patients (
 );
 
 -- 운송 정보 테이블
-CREATE TABLE deliveries (
-    delivery_id     SERIAL      PRIMARY KEY,
-    request_time    TIMESTAMP,
-    send_time       TIMESTAMP,
-    success_time    TIMESTAMP,
-    status delivery_status DEFAULT 'requested',
+CREATE TABLE transports (
+    transport_id    SERIAL      PRIMARY KEY,
+    requested_time  TIMESTAMP,
+    sent_time     TIMESTAMP,
+    arrived_time    TIMESTAMP,
+    status transport_status DEFAULT 'requested',
     robot_id        INTEGER     NOT NULL,
     nurse_id        INTEGER     NOT NULL,
     pharmacist_id   INTEGER     NOT NULL,
     patient_id      INTEGER     NOT NULL,
     CHECK (
-        (send_time IS NULL OR request_time <= send_time) 
+        (sent_time IS NULL OR requested_time <= sent_time) 
         AND 
-        (success_time IS NULL OR send_time <= success_time)
+        (arrived_time IS NULL OR sent_time <= arrived_time)
     ),
     FOREIGN KEY (nurse_id) REFERENCES nurses (nurse_id),
     FOREIGN KEY (pharmacist_id) REFERENCES pharmacists (pharmacist_id),
@@ -58,6 +58,15 @@ CREATE TABLE prescriptions (
     FOREIGN KEY (patient_id) REFERENCES patients (patient_id)
 );
 
+-- 운송 정보_처방전 테이블
+CREATE TABLE transport_prescriptions (
+    transport_id    INTEGER NOT NULL,
+    prescription_id INTEGER NOT NULL,
+    PRIMARY KEY (transport_id, prescription_id),
+    FOREIGN KEY (transport_id) REFERENCES transports (transport_id),
+    FOREIGN KEY (prescription_id) REFERENCES prescriptions (prescription_id)
+);
+
 -- 약 정보 테이블
 CREATE TABLE drugs (
     drug_id SERIAL      PRIMARY KEY,
@@ -73,5 +82,15 @@ CREATE TABLE prescription_drugs (
     drug_id         INTEGER NOT NULL,
     PRIMARY KEY (prescription_id, drug_id),
     FOREIGN KEY (prescription_id) REFERENCES prescriptions (prescription_id),
+    FOREIGN KEY (drug_id) REFERENCES drugs (drug_id)
+);
+
+-- 운송 정보_약 인식 상태 테이블
+CREATE TABLE transport_drug_recognitions (
+    transport_id    INTEGER NOT NULL,
+    drug_id         INTEGER NOT NULL,
+    is_recognized   BOOLEAN DEFAULT FALSE,
+    PRIMARY KEY (transport_id, drug_id),
+    FOREIGN KEY (transport_id) REFERENCES transports (transport_id),
     FOREIGN KEY (drug_id) REFERENCES drugs (drug_id)
 );

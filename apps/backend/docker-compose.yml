@@ -45,6 +45,15 @@ services:
     networks:
       - drug-network
 
+  mosquitto:
+    container_name: mosquitto
+    build:
+      context: ./mqtt
+    ports:
+      - "9001:9001"
+    networks:
+      - drug-network
+
 networks:
   drug-network:
     external: true

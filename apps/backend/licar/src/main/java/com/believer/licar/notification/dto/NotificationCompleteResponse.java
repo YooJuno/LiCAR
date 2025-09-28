@@ -1,6 +1,6 @@
 package com.believer.licar.notification.dto;
 
-import com.believer.licar.delivery.entity.Delivery;
+import com.believer.licar.transport.entity.Transport;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -10,17 +10,17 @@ import java.time.LocalDateTime;
 @Builder
 public class NotificationCompleteResponse {
 
-    private final int deliveryId;
+    private final int transportId;
     private final LocalDateTime successTime;
     private final int nurseId;
     private final int pharmacistId;
 
-    public static NotificationCompleteResponse from(Delivery delivery) {
+    public static NotificationCompleteResponse from(Transport transport) {
         return NotificationCompleteResponse.builder()
-                .deliveryId(delivery.getDeliveryId())
-                .successTime(delivery.getSuccessTime())
-                .nurseId(delivery.getNurse().getNurseId())
-                .pharmacistId(delivery.getPharmacist().getPharmacistId())
+                .transportId(transport.getTransportId())
+                .successTime(transport.getArrivedTime())
+                .nurseId(transport.getNurse().getNurseId())
+                .pharmacistId(transport.getPharmacist().getPharmacistId())
                 .build();
     }
 }

@@ -8,6 +8,7 @@ import lombok.Getter;
 @Getter
 @Builder
 public class DrugResponse {
+    private final int drugId;
     private final String name;
     private final String form;
     private final Integer dosage;
@@ -15,6 +16,7 @@ public class DrugResponse {
 
     public static DrugResponse from(Drug drug) {
         return DrugResponse.builder()
+                .drugId(drug.getDrugId())
                 .name(drug.getName())
                 .form(drug.getForm())
                 .dosage(drug.getDosage())

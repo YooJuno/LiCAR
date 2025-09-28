@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace licar_wpf.Services
 {
@@ -16,17 +17,22 @@ namespace licar_wpf.Services
             _apiClient = client;
         }
 
+        public async Task<List<Patient>> GetPatientsAsync()
+        {
+            return await _apiClient.GetAsync<List<Patient>>($"/api/v1/patients");
+        }
+
         public async Task<List<Patient>> SearchPatientsAsync(string name)
         {
             return await _apiClient.GetAsync<List<Patient>>($"/api/v1/patients?name={name}");
-        }
+        }   
 
         public async Task<Patient> GetPatientDetailAsync(int patientId)
         {
             return await _apiClient.GetAsync<Patient>($"/api/v1/patients/{patientId}");
         }
 
-        public async Task<Delivery> RequestDeliveryAsync(int robotId, int nurseId, int pharmacistId, int patientId)
+        public async Task<Transport> RequestTransportAsync(int robotId, int nurseId, int pharmacistId, int patientId)
         {
             var requestBody = new
             {
@@ -36,7 +42,7 @@ namespace licar_wpf.Services
                 patientId
             };
 
-            return await _apiClient.PostAsync<Delivery>($"/api/v1/deliveries", requestBody);
+            return await _apiClient.PostAsync<Transport>($"/api/v1/transports", requestBody);
         }
 
         public async Task<List<Prescription>> GetValidPrescriptionsAsync(int patientId, DateTime date)

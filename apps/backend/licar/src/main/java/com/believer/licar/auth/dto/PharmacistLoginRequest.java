@@ -7,6 +7,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PharmacistLoginRequest {
 
-    private int pharmacist_id;
+    private int pharmacistId;
     private String name;
 }

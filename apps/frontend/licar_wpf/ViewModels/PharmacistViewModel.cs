@@ -1,10 +1,9 @@
 ﻿using licar_wpf.Models;
 using licar_wpf.Services;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -13,26 +12,39 @@ namespace licar_wpf.ViewModels
 {
     public class PharmacistViewModel : ViewModelBase
     {
-        private readonly NavigationService _navigationService;
         private readonly PharmacistService _pharmacistService;
         private readonly SseService _sseService;
         private readonly ToastNotificationService _toastService;
 
-        public ObservableCollection<Delivery> DeliveryList { get; } = new ObservableCollection<Delivery>();
+        public ObservableCollection<Transport> TransportList { get; } = new ObservableCollection<Transport>();
         public ObservableCollection<Prescription> PrescriptionList { get; } = new ObservableCollection<Prescription>();
-        public ObservableCollection<Notification> NotificationList { get; } = new ObservableCollection<Notification>();
+        public ObservableCollection<DrugViewModel> DrugList { get; } = new ObservableCollection<DrugViewModel>();
 
-        private Delivery _selectedDelivery;
-        public Delivery SelectedDelivery
+        private bool _isBusy;
+        public bool IsBusy
         {
-            get => _selectedDelivery;
+            get => _isBusy;
+            set { _isBusy = value; OnPropertyChanged(); }
+        }
+
+        private Transport _selectedTransport;
+        public Transport SelectedTransport
+        {
+            get => _selectedTransport;
             set
             {
-                _selectedDelivery = value;
-                OnPropertyChanged();
-                LoadPrescriptionsForDelivery(value);
+                if (_selectedTransport != value)
+                {
+                    _selectedTransport = value;
+                    OnPropertyChanged();
+
+                    LoadDetailsForSelectedTransport();
+                }
             }
         }
+
+        private Transport _transportDetails;
+        public Transport TransportDetails { get; private set; }
 
         private Prescription _selectedPrescription;
         public Prescription SelectedPrescription
@@ -40,84 +52,170 @@ namespace licar_wpf.ViewModels
             get => _selectedPrescription;
             set
             {
-                _selectedPrescription = value;
-                OnPropertyChanged();
-                LoadPrescriptionDetail(value);
+                if (_selectedPrescription != value)
+                {
+                    _selectedPrescription = value;
+                    OnPropertyChanged();
+
+                    LoadPrescriptionDetailsAsync();
+                }
             }
         }
 
-        private Prescription _prescriptionDetail;
-        public Prescription PrescriptionDetail
-        {
-            get => _prescriptionDetail;
-            set
-            {
-                _prescriptionDetail = value;
-                OnPropertyChanged();
-            }
-        }
+        private Prescription _prescriptionDetails;
+        public Prescription PrescriptionDetails { get; private set; }
 
-        public string PharmacistName => UserSession.CurrentUser?.Name;
-
-        public ICommand LoadDeliveriesCommand { get; }
+        public ICommand LoadTransportsCommand { get; }
 
         public PharmacistViewModel(NavigationService navigationService, PharmacistService pharmacistService, SseService sseService, ToastNotificationService toastService)
         {
-            _navigationService = navigationService;
             _pharmacistService = pharmacistService;
             _sseService = sseService;
             _toastService = toastService;
 
-            LoadDeliveriesCommand = new RelayCommand(async (p) => await LoadDeliveries());
+            LoadTransportsCommand = new RelayCommand(async (p) => await LoadTransportsAsync(), (p) => !IsBusy);
 
-            _sseService.DeliveryRequested += OnDeliveryRequested;
-
-            LoadDeliveriesCommand.Execute(null);
+            _sseService.TransportRequested += OnTransportRequested;
+            _sseService.DrugRecognized += OnDrugRecognized;
+            LoadTransportsCommand.Execute(null);
         }
 
-        private async Task LoadDeliveries()
+        public void CleanUp()
         {
-            DeliveryList.Clear();
-            var deliveries = await _pharmacistService.GetDeliveriesAsync();
-            foreach (var deliver in deliveries)
+            _sseService.TransportRequested -= OnTransportRequested;
+            _sseService.DrugRecognized -= OnDrugRecognized;
+        }
+
+        private async Task LoadTransportsAsync()
+        {
+            IsBusy = true;
+            try
             {
-                DeliveryList.Add(deliver);
+                TransportList.Clear();
+                var transports = await _pharmacistService.GetTransportsAsync();
+                foreach (var transport in transports)
+                {
+                    TransportList.Add(transport);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"운반 목록을 불러오는 데 실패했습니다: {ex.Message}", "오류", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                IsBusy = false;
             }
         }
 
-        private async void LoadPrescriptionsForDelivery(Delivery delivery)
+        private async void LoadDetailsForSelectedTransport()
         {
             PrescriptionList.Clear();
-            PrescriptionDetail = null;
-            if (delivery == null) return;
 
-            var prescriptions = await _pharmacistService.GetValidPrescriptionAsync(delivery.PatientId, DateTime.Now);
-            foreach (var prescription in prescriptions)
+            TransportDetails = null;
+            PrescriptionDetails = null;
+            DrugList.Clear();
+
+            OnPropertyChanged(nameof(TransportDetails));
+            OnPropertyChanged(nameof(PrescriptionDetails));
+
+            if (SelectedTransport == null) return;
+
+            IsBusy = true;
+            try
             {
-                PrescriptionList.Add(prescription);
+                var details = await _pharmacistService.GetTransportDetailAsync(SelectedTransport.TransportId);
+                TransportDetails = details;
+                OnPropertyChanged(nameof(TransportDetails));
+
+                if (details?.Prescriptions != null)
+                {
+                    foreach (var prescription in details.Prescriptions)
+                    {
+                        PrescriptionList.Add(prescription);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"운반 상세 정보를 불러오는 데 실패했습니다: {ex.Message}", "오류", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                IsBusy = false;
             }
         }
 
-        private async void LoadPrescriptionDetail(Prescription prescription)
+        private async void LoadPrescriptionDetailsAsync()
         {
-            if (prescription == null) return;
+            DrugList.Clear();
+            PrescriptionDetails = null;
 
-            if (prescription.Drugs != null && prescription.Drugs.Count > 0) return;
+            OnPropertyChanged(nameof(PrescriptionDetails));
 
-            var detail = await _pharmacistService.GetPrescriptionDetailAsync(prescription.PrescriptionId);
+            if (SelectedTransport == null || SelectedPrescription == null) return;
 
-            PrescriptionDetail = detail;
+            IsBusy = true;
+            try
+            {
+                var details = await _pharmacistService.GetPrescriptionDetailForTransportAsync(SelectedTransport.TransportId, SelectedPrescription.PrescriptionId);
+                PrescriptionDetails = details;
+                OnPropertyChanged(nameof(PrescriptionDetails));
+
+                if (details?.Drugs != null)
+                {
+                    foreach (var drugModel in details.Drugs)
+                    {
+                        DrugList.Add(new DrugViewModel(drugModel));
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"처방전 상세 정보를 불러오는 데 실패했습니다: {ex.Message}", "오류", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
         }
 
-        private void OnDeliveryRequested(string jsonDate)
+        private void OnTransportRequested(string jsonData)
         {
-            // TODO : jsonDate 파싱을 하면 좋을 텐데요
-            _toastService.Show("약 요청이 들어왔습니다!!!!!");
+            _toastService.Show("새로운 약 운반 요청이 도착했습니다.");
 
             Application.Current.Dispatcher.Invoke(() =>
             {
-                NotificationList.Add(new Notification($"요청 알림 : {jsonDate}"));
-                LoadDeliveriesCommand.Execute(null);
+                if (!IsBusy)
+                {
+                    LoadTransportsCommand.Execute(null);
+                }
+            });
+        }
+
+        private void OnDrugRecognized(string jsonData)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                try
+                {
+                    if (!DrugList.Any()) return;
+
+                    var recognizedDrugUpdate = JsonSerializer.Deserialize<Drug>(jsonData, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                    if (recognizedDrugUpdate == null) return;
+
+
+                    var drugToUpdate = DrugList.FirstOrDefault(d => d.DrugId == recognizedDrugUpdate.DrugId);
+
+                    if (drugToUpdate != null)
+                    {
+                        drugToUpdate.Recognized = recognizedDrugUpdate.Recognized;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"[SSE Drug Recognition ERROR] {ex.Message}");
+                }
             });
         }
     }

@@ -12,7 +12,7 @@ namespace licar_wpf.Models
         [JsonPropertyName("patientId")]
         public int PatientId { get; set; }
 
-        [JsonPropertyName("name")]
+        [JsonPropertyName("patientName")]
         public string Name { get; set; }
 
         [JsonPropertyName("roomNumber")]

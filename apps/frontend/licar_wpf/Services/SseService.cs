@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace licar_wpf.Services
 {
@@ -15,8 +16,9 @@ namespace licar_wpf.Services
         private HttpClient _httpClient;
         private CancellationTokenSource _cancellationTokenSource;
 
-        public event Action<string> DeliveryRequested;
-        public event Action<string> DeliveryCompleted;
+        public event Action<string> TransportRequested;
+        public event Action<string> TransportCompleted;
+        public event Action<string> DrugRecognized;
 
         public async Task ConnectAsync(UserRole role, int id)
         {
@@ -33,8 +35,8 @@ namespace licar_wpf.Services
 
             try
             {
-                var response = await _httpClient.GetAsync(requestUrl, HttpCompletionOption.ResponseHeadersRead, _cancellationTokenSource.Token);
-                response.EnsureSuccessStatusCode();
+                var response = await _httpClient.GetAsync(requestUrl, HttpCompletionOption.ResponseHeadersRead, _cancellationTokenSource.Token);                
+                response.EnsureSuccessStatusCode();                
 
                 using (var stream = await response.Content.ReadAsStreamAsync())
                 using (var reader = new StreamReader(stream))
@@ -50,13 +52,17 @@ namespace licar_wpf.Services
                             var dataLine = await reader.ReadLineAsync();
                             var data = dataLine.Substring("data:".Length).Trim();
 
-                            if (eventType == "deliveryRequest")
-                            {
-                                DeliveryRequested?.Invoke(data);
+                            if (eventType == "transportRequest")
+                            {                                
+                                TransportRequested?.Invoke(data);
                             }
-                            else if (eventType == "deliveryComplete")
+                            else if (eventType == "transportComplete")
                             {
-                                DeliveryCompleted?.Invoke(data);
+                                TransportCompleted?.Invoke(data);
+                            }
+                            else if (eventType == "drugRecognized")
+                            {
+                                DrugRecognized?.Invoke(data);
                             }
                         }
                     }

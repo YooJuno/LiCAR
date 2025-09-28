@@ -13,14 +13,14 @@ public class PrescriptionSimpleResponse {
     private final int prescriptionId;
     private final int patientId;
     private final String patientName;
-    private final LocalDate date;
+    private final LocalDate prescriptionDate;
 
     public static PrescriptionSimpleResponse from(Prescription prescription) {
         return PrescriptionSimpleResponse.builder()
                 .prescriptionId(prescription.getPrescriptionId())
                 .patientId(prescription.getPatient().getPatientId())
                 .patientName(prescription.getPatient().getName())
-                .date(prescription.getDate())
+                .prescriptionDate(prescription.getPrescriptionDate())
                 .build();
     }
 }
