@@ -29,9 +29,10 @@ class TurtlebotMover(Node):
         self.current_door_state = False  # 현재 문 상태 저장
         self.elevator_command_sent = False  # 엘리베이터 명령 전송 여부
         self.elevator_moving = False  # 엘리베이터 이동 중 여부
-        self.current_floor = 2  # 현재 층 (기본값 2층)
+        self.current_floor = 1  # 현재 층 (기본값 1층)
         self.target_floor = None  # 목표 층
-        self.elevator_control_timer = None  # 엘리베이터 제어 타이머
+        self.retry_count = 0  # 재시도 횟수
+        self.max_retries = 2  # 최대 재시도 횟수
         
         self.get_logger().info("✅ Mover node ready")
 
@@ -43,13 +44,13 @@ class TurtlebotMover(Node):
             2: {"x": 1.8, "y": 19.0},   # 2층 엘리베이터 탑승
             3: {"x": 1.8, "y": 19.0},   # 3층 엘리베이터 탑승
             11: {"x": -0.15, "y": 2.5}, # 1층에서 1층 (간호사실)
-            12: {"x": 1.8, "y": 21.8},  # 1층에서 2층
-            13: {"x": 1.8, "y": 21.8},  # 1층에서 3층
-            21: {"x": 1.8, "y": 21.8},  # 2층에서 1층
+            12: {"x": 1.8, "y": 21.7},  # 1층에서 2층 (엘리베이터 내부)
+            13: {"x": 1.8, "y": 21.7},  # 1층에서 3층 (엘리베이터 내부)
+            21: {"x": 1.8, "y": 21.7},  # 2층에서 1층 (엘리베이터 내부)
             22: {"x": -0.15, "y": 2.5}, # 2층에서 2층 (간호사실)
-            23: {"x": 1.8, "y": 21.8},  # 2층에서 3층
-            31: {"x": 1.8, "y": 21.8},  # 3층에서 1층
-            32: {"x": 1.8, "y": 21.8},  # 3층에서 2층
+            23: {"x": 1.8, "y": 21.7},  # 2층에서 3층 (엘리베이터 내부)
+            31: {"x": 1.8, "y": 21.7},  # 3층에서 1층 (엘리베이터 내부)
+            32: {"x": 1.8, "y": 21.7},  # 3층에서 2층 (엘리베이터 내부)
             33: {"x": -0.15, "y": 2.5}, # 3층에서 3층 (간호사실)
             101: {"x": -2.2, "y": -7.3}, # 1층 01호 (301과 같은 위치)
             102: {"x": 9.0, "y": -7.3},  # 1층 02호 (302와 같은 위치)
@@ -68,10 +69,6 @@ class TurtlebotMover(Node):
             if self.nav_timer:
                 self.nav_timer.cancel()
 
-        # 엘리베이터 제어 타이머도 취소
-        if self.elevator_control_timer:
-            self.elevator_control_timer.cancel()
-            self.elevator_control_timer = None
         
         cmd = msg.data
         if cmd == 0:
@@ -80,13 +77,16 @@ class TurtlebotMover(Node):
             self.is_navigating = False
             if self.nav_timer:
                 self.nav_timer.cancel()
-            if self.elevator_control_timer:
-                self.elevator_control_timer.cancel()
-                self.elevator_control_timer = None
             return
 
-        # 현재 라우트 저장
+        # 현재 라우트 저장 및 엘리베이터 상태 초기화
         self.current_route = cmd
+        self.just_completed_floor_change = False
+        self.just_completed_elevator_boarding = False
+        self.elevator_command_sent = False
+        self.elevator_moving = False
+        self.target_floor = None
+        self.retry_count = 0  # 새 명령 시작 시 재시도 횟수 초기화
 
         waypoint = self.waypoints.get(cmd)
         if not waypoint:
@@ -135,19 +135,20 @@ class TurtlebotMover(Node):
                         self.completion_pub.publish(completion_msg)
                     else:
                         # 층간 이동: 엘리베이터 이용 (11,22,33 제외한 2자리)
-                        self.target_floor = to_floor - 1  # data는 층-1
-                        self.just_completed_floor_change = True
+                        self.get_logger().info(f"📍 Route {self.current_route} 위치 도착 - {from_floor}층에서 {to_floor}층으로 이동 예정")
+                        self.get_logger().info("🚪 main으로 완료 신호 전송 - 엘리베이터 제어는 main에서 처리")
 
-                        self.get_logger().info(f"📍 Route {self.current_route} 위치 도착 - {from_floor}층에서 {to_floor}층(data:{self.target_floor})으로 이동 후 완료")
-                        self.get_logger().info("🚪 문 닫힘 이벤트에서 엘리베이터 제어 시작 대기 중...")
-                        # 층간 이동 route는 목표 층 도착 후 문이 열릴 때 완료 처리
+                        # main으로 완료 신호 전송 (main에서 엘리베이터 제어 처리)
+                        completion_msg = Bool()
+                        completion_msg.data = True
+                        self.completion_pub.publish(completion_msg)
                 elif self.current_route in [1, 2, 3]:
                     # 1, 2, 3: 엘리베이터 탑승 신호 (문이 열리면 완료)
                     if self.current_door_state:
                         completion_msg = Bool()
                         completion_msg.data = True
                         self.completion_pub.publish(completion_msg)
-                        self.get_logger().info(f"✅ Route {self.current_route} 목표 완료 (문 열림 상태)")
+                        self.get_logger().info(f"✅ Route {self.current_route} 목표 완료 (도착 시 문이 이미 열림)")
                     else:
                         self.get_logger().info(f"📍 Route {self.current_route} 위치 도착 - 문이 열릴 때까지 대기...")
                         self.just_completed_elevator_boarding = True
@@ -161,6 +162,18 @@ class TurtlebotMover(Node):
                 self.get_logger().warn("⚠️ Goal was canceled!")
             elif result == TaskResult.FAILED:
                 self.get_logger().error("❌ Goal failed!")
+                # 재시도 로직
+                if self.retry_count < self.max_retries:
+                    self.retry_count += 1
+                    self.get_logger().info(f"🔄 Goal 실패 - 재시도 {self.retry_count}/{self.max_retries}")
+                    # 2초 후 재시도
+                    self.create_timer(2.0, self.retry_navigation)
+                else:
+                    self.get_logger().error(f"❌ 최대 재시도 횟수 초과 - Route {self.current_route} 실패")
+                    # 실패 신호를 main으로 전송 (또는 다른 처리)
+                    completion_msg = Bool()
+                    completion_msg.data = False  # 실패 신호
+                    self.completion_pub.publish(completion_msg)
             else:
                 self.get_logger().error(f"❓ Move failed with unknown result: {result}")
 
@@ -183,36 +196,7 @@ class TurtlebotMover(Node):
                 self.get_logger().info(f"✅ Route {self.current_route} 목표 완료 (문 열림 감지)")
                 self.just_completed_elevator_boarding = False
 
-            # 층간 이동에서 엘리베이터 명령 전송 후 실제로 목표 층에 도착하고 문이 열리면 완료
-            if self.just_completed_floor_change and self.elevator_command_sent and self.current_floor == self.target_floor:
-                current_pos = self.get_current_position()
-                if current_pos and current_pos[1] >= 20.6:
-                    completion_msg = Bool()
-                    completion_msg.data = True
-                    self.completion_pub.publish(completion_msg)
-                    self.get_logger().info(f"✅ Route {self.current_route} 목표 완료 ({self.target_floor}층 실제 도착 후 문 열림)")
-                    self.just_completed_floor_change = False
-                    self.elevator_command_sent = False
-                    self.elevator_moving = False
-                    self.target_floor = None
-
-        # 문이 닫힌 상태로 변했을 때 - 위치 기반으로 타이머 기반 엘리베이터 제어
-        elif not door_open and prev_door_state:
-            current_pos = self.get_current_position()
-            if current_pos and current_pos[1] >= 20.8 and self.just_completed_floor_change and not self.elevator_command_sent:
-                self.get_logger().info(f"🚪 엘리베이터 문 닫힘 + 위치 확인 (y={current_pos[1]:.1f}) - 엘리베이터 제어 준비")
-
-                # 네비게이션 즉시 취소
-                if self.is_navigating:
-                    self.navigator.cancelTask()
-                    self.is_navigating = False
-                    if self.nav_timer:
-                        self.nav_timer.cancel()
-                    self.get_logger().info("🛑 네비게이션 취소 완료")
-
-                # 2초 후 엘리베이터 명령 전송 (타이밍 개선)
-                self.elevator_control_timer = self.create_timer(2.0, self.delayed_elevator_command)
-                self.get_logger().info("⏱️ 2초 후 엘리베이터 명령 전송 예정")
+            # 층간 이동은 이제 main에서 처리하므로 mover에서는 제거
 
     def elevator_joint_callback(self, msg: JointState):
         """엘리베이터 joint states 콜백 - lift position으로 층 계산"""
@@ -233,30 +217,33 @@ class TurtlebotMover(Node):
                     self.elevator_moving = True
                     self.get_logger().info(f"🎯 {self.target_floor}층 도착 완료 - 문 열림 대기 중...")
 
-    def delayed_elevator_command(self):
-        """타이머를 통한 지연된 엘리베이터 명령 전송"""
-        if self.elevator_control_timer:
-            self.elevator_control_timer.cancel()
-            self.elevator_control_timer = None
 
-        self.get_logger().info("⏰ 타이머 완료 - 엘리베이터 명령 전송")
-        self.send_elevator_command()
+    def retry_navigation(self):
+        """실패한 네비게이션 재시도"""
+        if self.current_route is None:
+            self.get_logger().error("재시도할 라우트가 없습니다")
+            return
 
-    def send_elevator_command(self):
-        """엘리베이터 목표 층 이동 명령 전송"""
-        self.door_was_open = False
-        self.elevator_command_sent = True
+        waypoint = self.waypoints.get(self.current_route)
+        if not waypoint:
+            self.get_logger().error(f"알 수 없는 명령: {self.current_route}")
+            return
 
-        # gz topic 명령 실행 (목표 층 = 맨 왼쪽 숫자 - 1)
-        elevator_command = str(self.target_floor)
-        try:
-            cmd = ['gz', 'topic', '-p', '/gazebo/world/elevator', '-m', f'data: "{elevator_command}"']
-            subprocess.run(cmd, check=True)
-            self.get_logger().info(f"✅ 엘리베이터 {self.target_floor}층 이동 명령 전송 완료")
-        except subprocess.CalledProcessError as e:
-            self.get_logger().error(f"❌ 엘리베이터 명령 전송 실패: {e}")
-        except Exception as e:
-            self.get_logger().error(f"❌ 예상치 못한 오류: {e}")
+        x, y = waypoint['x'], waypoint['y']
+
+        self.get_logger().info(f"🔄 {self.current_route}번 지점 ({x}, {y})으로 재시도합니다.")
+
+        goal_pose = self.create_pose(x, y)
+        self.navigator.goToPose(goal_pose)
+        self.is_navigating = True
+        # 1초마다 check_nav_status 함수를 호출하는 타이머를 시작합니다.
+        self.nav_timer = self.create_timer(1.0, self.check_nav_status)
+
+    # def send_elevator_command(self):
+    #     """엘리베이터 목표 층 이동 명령 전송 - 이제 main에서 처리"""
+    #     # 이 기능은 main.py에서 처리하도록 변경됨
+    #     pass
+
 
     def create_pose(self, x, y, yaw=0.0):
         pose = PoseStamped()
